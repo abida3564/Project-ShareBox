@@ -70,3 +70,7 @@ Accounts previously saved in Render's temporary `data/database.json` are not aut
 ## Student ID card storage
 
 Student ID card images are stored privately as PostgreSQL `BYTEA` data. They are not exposed through a public URL.
+
+## Admin dashboard
+
+After deployment, open `sharebox-admin.html` from the GitHub Pages site. Enter the same `ADMIN_KEY` configured in Render. The key is stored only in the current browser tab (`sessionStorage`). The dashboard shows users, products/resources, search, and verification controls.

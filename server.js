@@ -337,6 +337,55 @@ app.get('/api/admin/users', async (req, res) => {
   }
 });
 
+
+app.get('/api/admin/products', async (req, res) => {
+  if (!process.env.ADMIN_KEY || req.headers['x-admin-key'] !== process.env.ADMIN_KEY) {
+    return res.status(401).json({ message: 'Unauthorized.' });
+  }
+  try {
+    const result = await pool.query(
+      `SELECT id, owner_id, owner_name, data, created_at
+       FROM products ORDER BY created_at DESC`,
+    );
+    const products = result.rows.map((row) => ({
+      ...row.data,
+      id: row.id,
+      ownerId: row.owner_id,
+      ownerName: row.owner_name,
+      createdAt: row.created_at,
+    }));
+    return res.json({ count: result.rowCount, products });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not load products.' });
+  }
+});
+
+app.patch('/api/admin/users/:id/verification', async (req, res) => {
+  if (!process.env.ADMIN_KEY || req.headers['x-admin-key'] !== process.env.ADMIN_KEY) {
+    return res.status(401).json({ message: 'Unauthorized.' });
+  }
+  const status = String(req.body?.status || '').toLowerCase();
+  if (!['pending', 'approved', 'rejected'].includes(status)) {
+    return res.status(400).json({ message: 'Invalid verification status.' });
+  }
+  try {
+    const result = await pool.query(
+      `UPDATE users
+       SET id_verification_status = $1, verified = $2
+       WHERE id = $3
+       RETURNING id, name, email, department, academic_year, student_id,
+                 id_card_file_name, id_verification_status, verified, created_at`,
+      [status, status === 'approved', req.params.id],
+    );
+    if (!result.rowCount) return res.status(404).json({ message: 'User not found.' });
+    return res.json({ user: result.rows[0] });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not update verification.' });
+  }
+});
+
 app.use((err, _req, res, _next) => {
   console.error(err);
   return res.status(400).json({ message: err.message || 'Request failed.' });

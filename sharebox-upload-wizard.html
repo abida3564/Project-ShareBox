@@ -202,6 +202,7 @@ button{font-family:inherit}
 .tips ul{margin:0; padding:0}
 
 /* Tags */
+.tag-input-wrap{display:flex;gap:10px;align-items:center;margin-bottom:10px}.tag-input-wrap .input{flex:1}@media(max-width:560px){.tag-input-wrap{flex-direction:column;align-items:stretch}.tag-input-wrap .btn{width:100%!important}}
 .tag-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
 .tag{display:inline-flex; align-items:center; gap:6px; background:var(--green-tint); border:1px solid rgba(14,138,92,.2); color:var(--green-strong); font-size:.78rem; font-weight:600; border-radius:var(--r-full); padding:5px 12px; animation:pop .4s var(--spring)}
 [data-theme="dark"] .tag{color:var(--green)}
@@ -474,17 +475,21 @@ button{font-family:inherit}
         <div class="field"><label for="f-neg">Negotiation</label><select class="select" id="f-neg"><option value="yes">Negotiable through message</option><option value="no">Fixed terms</option></select></div>
       </div>
       <div class="field">
-        <label>Tags</label>
+        <label for="f-tag-input">Tags</label>
+        <div class="tag-input-wrap">
+          <input class="input" id="f-tag-input" type="text" placeholder="Type a tag and press Enter" autocomplete="off">
+          <button class="btn btn-secondary" type="button" id="addTagBtn" style="width:auto;height:48px">Add tag</button>
+        </div>
         <div class="tag-row" id="tagRow"></div>
-        <div class="tag-row" id="tagSuggestRow" aria-label="AI suggested tags"></div>
-        <span class="hint">Tap a suggestion to add it.</span>
+        <div class="tag-row" id="tagSuggestRow" aria-label="Suggested tags"></div>
+        <span class="hint">Type your own tag or tap a suggestion. Tags are optional.</span>
       </div>
     </div>
 
     <div class="step-nav">
       <button class="btn btn-secondary" onclick="go(2)">Back</button>
       <div class="right">
-        <button class="btn btn-primary" id="s3next" disabled onclick="go(4)">Continue</button>
+        <button class="btn btn-primary" id="s3next" onclick="go(4)">Continue</button>
       </div>
     </div>
   </section>
@@ -780,6 +785,10 @@ function buildRail(){
 }
 function go(n){
   if(n > maxReached + 1) return;
+  if(current===3 && n===4){
+    const name=document.getElementById('f-name').value.trim();
+    if(name.length<3){toast('Enter an item name with at least 3 characters');document.getElementById('f-name').focus();return;}
+  }
   if(n === 7 && current !== 7) return; /* publish only via the button */
   current = n; maxReached = Math.max(maxReached, n);
   document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active', parseInt(s.dataset.step,10)===n));
@@ -891,7 +900,27 @@ function renderTags(){
   document.getElementById('tagRow').innerHTML = tags.map((t,i)=>
     '<span class="tag">'+t+'<button aria-label="Remove tag '+t+'" onclick="tags.splice('+i+',1); renderTags();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>').join('');
 }
-function addTag(t){ if(!tags.includes(t)){ tags.push(t); renderTags(); } }
+function addTag(t){
+  const clean=String(t||'').trim().replace(/\s+/g,' ');
+  if(!clean) return;
+  if(!tags.some(x=>x.toLowerCase()===clean.toLowerCase())){ tags.push(clean); renderTags(); }
+  const input=document.getElementById('f-tag-input');
+  if(input) input.value='';
+}
+function addTypedTag(){
+  const input=document.getElementById('f-tag-input');
+  if(input) addTag(input.value);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const input=document.getElementById('f-tag-input');
+  const btn=document.getElementById('addTagBtn');
+  if(btn) btn.addEventListener('click',addTypedTag);
+  if(input){
+    input.addEventListener('keydown',e=>{
+      if(e.key==='Enter'||e.key===','){e.preventDefault();addTypedTag();}
+    });
+  }
+});
 const AI_TAGS = [
   [/esp32|arduino|raspberry|iot|sensor|micro/i, ['ESP32','WiFi + Bluetooth','Beginner friendly','Project kit']],
   [/calc|casio|fx/i, ['Exam approved','Scientific','Battery included']],
@@ -901,7 +930,7 @@ const AI_TAGS = [
 ];
 function onTitle(){
   const v = document.getElementById('f-name').value;
-  document.getElementById('s3next').disabled = v.trim().length < 3;
+  document.getElementById('s3next').disabled = false;
   const hit = AI_TAGS.find(([re])=>re.test(v));
   const sugg = hit ? hit[1] : (v.trim().length >= 3 ? ['Good condition','UITS','Quick pickup'] : []);
   document.getElementById('tagSuggestRow').innerHTML = sugg.filter(s=>!tags.includes(s)).map(s=>
@@ -1076,11 +1105,20 @@ const oldDel=window.delPhoto,oldMove=window.movePhoto;window.delPhoto=function(i
 window.addPhoto=function(){document.getElementById('realPhotoInput').click()};
 window.openCamera=async function(){if(!navigator.mediaDevices?.getUserMedia){document.getElementById('cameraInput').click();return}try{const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});const modal=document.createElement('div');modal.className='sb-camera-modal';modal.innerHTML='<div class="sb-camera-box"><video autoplay playsinline></video><div class="sb-camera-actions"><button class="btn btn-primary" id="sbSnap">Capture</button><button class="btn btn-secondary" id="sbClose">Close</button></div></div>';document.body.appendChild(modal);const v=modal.querySelector('video');v.srcObject=stream;const close=()=>{stream.getTracks().forEach(t=>t.stop());modal.remove()};modal.querySelector('#sbClose').onclick=close;modal.querySelector('#sbSnap').onclick=()=>{const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);photos.push(c.toDataURL('image/jpeg',.78));renderRealPhotos();document.getElementById('s2next').disabled=false;close()}}catch(e){document.getElementById('cameraInput').click()}};
 const oldPreview=window.buildPreview;window.buildPreview=function(){oldPreview();const thumb=document.querySelector('#previewCard .thumb');if(photos[0])thumb.style.backgroundImage='url('+photos[0]+')',thumb.style.backgroundSize='cover',thumb.style.backgroundPosition='center'};
-window.publish=function(){
+window.publish=async function(){
  const u=ShareBox.currentUser();if(!u){location.href='sharebox-auth.html?next=sharebox-upload-wizard.html';return}
- const d=ShareBox.db(),type=listType||'borrow';const item={id:crypto.randomUUID(),ownerId:u.id,ownerName:u.name,name:document.getElementById('f-name').value.trim(),category:chosenCategory(),subcategory:chosenSubcategory(),location:chosenLocation(),description:document.getElementById('f-desc').value,condition:document.getElementById('f-cond').value,contact:document.getElementById('f-contact').value.trim(),damageCost:Number(document.getElementById('f-damage').value||0),negotiable:document.getElementById('f-neg').value==='yes',type,photos:[...photos],createdAt:new Date().toISOString(),deposit:Number((type==='rent'?document.getElementById('p-rdep'):document.getElementById('p-bdep'))?.value||0),perHour:Number(document.getElementById('p-rhour')?.value||0),perDay:Number(document.getElementById('p-rday')?.value||0),perWeek:Number(document.getElementById('p-rweek')?.value||0),sellPrice:Number(document.getElementById('p-sprice')?.value||0)};
- if(!item.name||!item.contact){toast('Item name and contact number are required');return} ShareBox.api('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)}).then(out=>{d.products.unshift(out.product);ShareBox.save(d);ShareBox.addNotification(item.name+' was published in real time',u.id);}).catch(err=>toast(err.message||'Could not publish item'));
- current=7;maxReached=7;document.querySelectorAll('.step').forEach(x=>x.classList.toggle('active',x.dataset.step==='7'));buildRail();window.scrollTo({top:0});chime();confetti(110);countUp('rReach',340);countUp('rDays',5);countUp('rTrust',3);
+ const d=ShareBox.db(),type=listType||'borrow';
+ const item={id:crypto.randomUUID(),ownerId:u.id,ownerName:u.name,name:document.getElementById('f-name').value.trim(),brand:document.getElementById('f-brand').value.trim(),model:document.getElementById('f-model').value.trim(),purchaseYear:document.getElementById('f-year').value,estimatedValue:Number(document.getElementById('f-value').value||0),category:chosenCategory(),subcategory:chosenSubcategory(),location:chosenLocation(),description:document.getElementById('f-desc').value.trim(),condition:document.getElementById('f-cond').value,contact:document.getElementById('f-contact').value.trim(),damageCost:Number(document.getElementById('f-damage').value||0),negotiable:document.getElementById('f-neg').value==='yes',tags:[...tags],type,photos:[...photos],createdAt:new Date().toISOString(),deposit:Number((type==='rent'?document.getElementById('p-rdep'):document.getElementById('p-bdep'))?.value||0),perHour:Number(document.getElementById('p-rhour')?.value||0),perDay:Number(document.getElementById('p-rday')?.value||0),perWeek:Number(document.getElementById('p-rweek')?.value||0),sellPrice:Number(document.getElementById('p-sprice')?.value||0)};
+ if(!item.name){toast('Item name is required');go(3);return}
+ if(!item.contact){toast('Contact number is required');go(3);return}
+ const publishBtn=document.querySelector('[data-step="6"] .btn-primary');
+ const oldLabel=publishBtn?.innerHTML; if(publishBtn){publishBtn.disabled=true;publishBtn.textContent='Publishing…';}
+ try{
+   const out=await ShareBox.api('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)});
+   d.products=d.products.filter(p=>p.id!==out.product.id);d.products.unshift(out.product);ShareBox.save(d);ShareBox.addNotification(item.name+' was published in real time',u.id);
+   current=7;maxReached=7;document.querySelectorAll('.step').forEach(x=>x.classList.toggle('active',x.dataset.step==='7'));buildRail();window.scrollTo({top:0});chime();confetti(110);countUp('rReach',340);countUp('rDays',5);countUp('rTrust',3);
+ }catch(err){toast(err.message||'Could not publish item');}
+ finally{if(publishBtn){publishBtn.disabled=false;publishBtn.innerHTML=oldLabel;}}
 };
 })();
 </script>
