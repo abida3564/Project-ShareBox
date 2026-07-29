@@ -1,25 +1,212 @@
-# ShareBox — a campus resource-sharing platform for verified university students.
-## Share More. Spend Less. Waste Less.
+# ShareBox
 
-## PostgreSQL backend
+### Smart Campus Resource Sharing Platform
 
-The backend now uses Render PostgreSQL instead of temporary JSON-file storage. See `POSTGRES-DEPLOY.md` for the exact deployment steps. Required environment variables are `DATABASE_URL`, `JWT_SECRET`, `FRONTEND_URL`, and optionally `ADMIN_KEY`.
+🔗 **Live Website:**  
+** https://keyacse.github.io/ShareBox/**
 
+---
 
-## Database-backed resource management
+## About
 
-- **Browse:** `sharebox-resources.html` shows approved public products.
-- **My Resources:** `sharebox-resources.html?view=mine` shows only the logged-in user's products, with edit/delete.
-- **Profile and Dashboard:** totals and views are loaded from PostgreSQL.
-- **Admin:** `sharebox-admin.html` uses a PostgreSQL-backed admin account and can approve/reject/delete products.
+ShareBox is a smart campus resource-sharing platform developed for UITS students. It enables students to borrow, rent, sell, donate, and share useful items within the university community. The platform also provides a Need Board, messaging system, profile management, and an admin dashboard to create a secure and organized resource-sharing experience.
 
-### Admin credentials on Render
+---
 
-Set:
+## Features
 
-```text
-ADMIN_EMAIL=admin@sharebox.local
-ADMIN_PASSWORD=your_strong_private_password
+- Student Registration with Student ID Verification
+- Secure Login & Authentication
+- Browse Campus Resources
+- Borrow, Rent, Sell & Donate Items
+- My Resources Management
+- Need Board
+- User Messaging
+- Profile & Account Management
+- Profile & Cover Photo Upload
+- Settings Management
+- Admin Dashboard
+- User & Product Management
+- PostgreSQL Database Integration
+- Responsive Design
+
+---
+
+## Technologies Used
+
+| Category | Technologies |
+|----------|--------------|
+| Programming Languages | HTML5, CSS3, JavaScript, SQL |
+| Backend | Node.js, Express.js |
+| Database | PostgreSQL |
+| Authentication | JWT, bcrypt.js |
+| File Upload | Multer |
+| Frontend Hosting | GitHub Pages |
+| Backend Hosting | Render |
+| Development Tools | Visual Studio Code, Git, GitHub |
+
+---
+
+## System Workflow
+
+```
+User
+   │
+   ▼
+Frontend (GitHub Pages)
+   │
+REST API
+   │
+   ▼
+Node.js + Express.js
+   │
+   ▼
+PostgreSQL Database
 ```
 
-If `ADMIN_PASSWORD` is absent, the existing `ADMIN_KEY` becomes the initial admin password. Redeploy once after setting the variables.
+---
+
+## User Roles
+
+### Student
+
+- Register and Login
+- Browse Resources
+- Upload Resource Posts
+- Edit & Delete Own Posts
+- Post on Need Board
+- Send Messages
+- Update Profile
+- Upload Profile & Cover Photos
+- Manage Account Settings
+
+### Admin
+
+- Secure Admin Login
+- View Registered Users
+- View Resource Posts
+- Search Users & Products
+- Verify Users
+- Delete Users & Posts
+- Monitor Dashboard Statistics
+
+---
+
+## Database Tables
+
+| Table | Description |
+|-------|-------------|
+| users | User Information |
+| products | Resource Posts |
+| needs | Need Board Posts |
+| messages | User Messages |
+| notifications | Notifications |
+| admins | Admin Information |
+
+---
+
+## Project Structure
+
+```
+ShareBox/
+│
+├── index.html
+├── sharebox-login.html
+├── sharebox-register.html
+├── sharebox-dashboard.html
+├── sharebox-resources.html
+├── sharebox-upload.html
+├── sharebox-needs.html
+├── sharebox-messages.html
+├── sharebox-settings.html
+├── sharebox-account.html
+├── sharebox-admin.html
+│
+├── app-core.js
+├── api-config.js
+├── server.js
+├── schema.sql
+├── package.json
+├── render.yaml
+└── README.md
+```
+
+---
+
+## Installation
+
+### Clone Repository
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_LINK
+```
+
+### Open Project
+
+```bash
+cd ShareBox
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Create `.env`
+
+```env
+DATABASE_URL=YOUR_DATABASE_URL
+JWT_SECRET=YOUR_SECRET_KEY
+ADMIN_EMAIL=YOUR_ADMIN_EMAIL
+ADMIN_PASSWORD=YOUR_ADMIN_PASSWORD
+PORT=5000
+```
+
+### Run Backend
+
+```bash
+npm start
+```
+
+---
+
+## Deployment
+
+| Component | Platform |
+|-----------|----------|
+| Frontend | GitHub Pages |
+| Backend | Render |
+| Database | Render PostgreSQL |
+
+---
+
+## Team Members
+
+| Name | Student ID |
+|------|------------|
+| Arpa Bhowmik | U220 |
+| Yeasmin Kabir Keya | U205 |
+| Fahima Abida Chowdhury | U210 |
+
+---
+
+## Future Improvements
+
+- Product Ratings & Reviews
+- Online Payment Integration
+- Recommendation System
+- QR-based Student Verification
+- Mobile Application
+
+---
+
+## License
+
+This project is developed for academic and educational purposes.
+
+---
+
+## Acknowledgement
+
+We sincerely thank our respected faculty mentors for their continuous guidance, valuable feedback, and support throughout the development of this project.
