@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E8A5C">
+<meta name="description" content="ShareBox borrowing journey — from request to deposit refund, end to end.">
+<title>Borrow ESP32 Kit — ShareBox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SHAREBOX BORROW JOURNEY · Neo Glass + Soft 3D language
+   ============================================================ */
+:root{
+  --green:#0E8A5C; --green-strong:#0A6B47; --green-hi:#1FA774;
+  --green-tint:rgba(14,138,92,.1); --green-glow:rgba(14,138,92,.32);
+  --amber:#B57312; --amber-tint:rgba(181,115,18,.12);
+  --red:#C24C3B; --red-tint:rgba(194,76,59,.12);
+  --blue:#2E6FA8; --blue-tint:rgba(46,111,168,.12);
+
+  --bg:#EEF3EC;
+  --ink:#141F19; --ink-soft:#51645A; --ink-faint:#87978D;
+  --glass:rgba(255,255,255,.62);
+  --glass-strong:rgba(255,255,255,.8);
+  --glass-soft:rgba(255,255,255,.4);
+  --glass-line:rgba(255,255,255,.75);
+  --glass-edge:rgba(20,31,25,.07);
+  --overlay:rgba(20,31,25,.4);
+  --grad-band:linear-gradient(125deg,#0A6B47,#0E8A5C 52%,#1FA774);
+  --sheen:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.5) 50%, transparent 60%);
+
+  --e-1:0 1px 2px rgba(20,31,25,.03), 0 4px 14px rgba(20,31,25,.05);
+  --e-2:0 2px 8px rgba(20,31,25,.04), 0 18px 44px rgba(20,31,25,.10);
+  --e-3:0 4px 16px rgba(20,31,25,.06), 0 36px 90px rgba(20,31,25,.18);
+  --inner-light:inset 0 1px 0 rgba(255,255,255,.85);
+
+  --font-display:"Bricolage Grotesque","Inter",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,sans-serif;
+  --s-1:.25rem; --s-2:.5rem; --s-3:.75rem; --s-4:1rem;
+  --s-5:1.5rem; --s-6:2rem; --s-7:3rem; --s-8:4rem;
+  --r-md:16px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+  --ease:cubic-bezier(.22,.8,.36,1);
+  --spring:cubic-bezier(.34,1.45,.5,1);
+  --t-fast:.16s; --t-med:.32s; --t-slow:.6s;
+  --topbar-h:72px; --max:900px;
+}
+[data-theme="dark"]{
+  --bg:#0A100D;
+  --ink:#EAF1EB; --ink-soft:#9DAFA3; --ink-faint:#66786C;
+  --green:#43CE97; --green-strong:#6ADFB1; --green-hi:#2FBE88;
+  --green-tint:rgba(67,206,151,.1); --green-glow:rgba(67,206,151,.3);
+  --amber:#E0A34A; --amber-tint:rgba(224,163,74,.13);
+  --red:#E27A6A; --red-tint:rgba(226,122,106,.13);
+  --blue:#6FA8DC; --blue-tint:rgba(111,168,220,.13);
+  --glass:rgba(21,32,26,.58);
+  --glass-strong:rgba(24,37,30,.8);
+  --glass-soft:rgba(24,37,30,.36);
+  --glass-line:rgba(255,255,255,.09);
+  --glass-edge:rgba(0,0,0,.4);
+  --overlay:rgba(0,0,0,.6);
+  --grad-band:linear-gradient(125deg,#0F5C40,#159A69 52%,#2FBE88);
+  --sheen:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.14) 50%, transparent 60%);
+  --e-1:0 1px 3px rgba(0,0,0,.25), 0 4px 16px rgba(0,0,0,.3);
+  --e-2:0 2px 8px rgba(0,0,0,.3), 0 20px 48px rgba(0,0,0,.45);
+  --e-3:0 4px 18px rgba(0,0,0,.4), 0 40px 100px rgba(0,0,0,.6);
+  --inner-light:inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:.95rem; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; transition:background var(--t-med) var(--ease), color var(--t-med) var(--ease)}
+h1,h2,h3,h4{font-family:var(--font-display); line-height:1.12; margin:0; letter-spacing:-.02em}
+p{margin:0}
+a{color:var(--green); text-decoration:none}
+img,svg{display:block; max-width:100%}
+button{font-family:inherit}
+::selection{background:var(--green-glow)}
+:focus{outline:none}
+:focus-visible{outline:2.5px solid var(--green); outline-offset:2px; border-radius:6px; box-shadow:0 0 0 5px var(--green-glow)}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+.skip-link{position:fixed; top:-100px; left:var(--s-4); z-index:400; background:var(--green); color:#fff; padding:var(--s-2) var(--s-4); border-radius:12px; font-weight:600; transition:top var(--t-fast) var(--ease)}
+.skip-link:focus{top:var(--s-4)}
+
+/* Ambient */
+.ambient{position:fixed; inset:0; z-index:-2; overflow:hidden; pointer-events:none}
+.blob{position:absolute; border-radius:50%; filter:blur(90px); opacity:.55; will-change:transform}
+.blob.b1{width:560px; height:560px; background:radial-gradient(circle,#BFE6D2,transparent 65%); top:-160px; left:-120px; animation:drift1 26s ease-in-out infinite}
+.blob.b2{width:640px; height:640px; background:radial-gradient(circle,#D5E8DC,transparent 65%); bottom:-220px; right:-160px; animation:drift2 32s ease-in-out infinite}
+[data-theme="dark"] .blob.b1{background:radial-gradient(circle,rgba(28,84,62,.9),transparent 65%)}
+[data-theme="dark"] .blob.b2{background:radial-gradient(circle,rgba(20,58,44,.9),transparent 65%)}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(70px,50px) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-80px,-60px) scale(1.08)}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important}
+  .blob{display:none}
+}
+
+/* Glass + components */
+.glass{background:var(--glass); backdrop-filter:blur(15px) saturate(1.3); -webkit-backdrop-filter:blur(15px) saturate(1.3); border:1px solid var(--glass-line); box-shadow:var(--e-1), var(--inner-light), 0 0 0 1px var(--glass-edge); border-radius:var(--r-lg); transition:transform var(--t-med) var(--spring), box-shadow var(--t-med) var(--ease), background var(--t-med) var(--ease)}
+.glass-hover:hover{transform:translateY(-4px); box-shadow:var(--e-2), var(--inner-light); background:var(--glass-strong)}
+
+.btn{position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; gap:9px; font-weight:600; font-size:.92rem; line-height:1; border-radius:var(--r-md); border:1px solid transparent; padding:0 1.35rem; height:47px; cursor:pointer; white-space:nowrap; text-decoration:none!important; transition:transform var(--t-fast) var(--spring), box-shadow var(--t-med) var(--ease), background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
+.btn:hover{transform:translateY(-2px) scale(1.02)}
+.btn:active{transform:translateY(1px) scale(.98)}
+.btn:disabled{opacity:.45; cursor:not-allowed; transform:none; animation:none}
+.btn-primary{background:linear-gradient(160deg,var(--green-hi),var(--green) 45%,var(--green-strong)); color:#fff; border-color:rgba(255,255,255,.25); box-shadow:0 6px 20px var(--green-glow), var(--inner-light); animation:glowPulse 3.2s ease-in-out infinite}
+[data-theme="dark"] .btn-primary{color:#07110C}
+@keyframes glowPulse{0%,100%{box-shadow:0 6px 20px var(--green-glow)}50%{box-shadow:0 6px 30px var(--green-glow), 0 0 0 5px rgba(14,138,92,.07)}}
+.btn-primary::after{content:""; position:absolute; inset:0; background:var(--sheen); transform:translateX(-120%); transition:transform .7s var(--ease)}
+.btn-primary:hover::after{transform:translateX(120%)}
+.btn-secondary{background:var(--glass); backdrop-filter:blur(10px); color:var(--ink); border-color:var(--glass-line); box-shadow:var(--e-1), var(--inner-light)}
+.btn-secondary:hover{border-color:var(--green); color:var(--green)}
+.btn-danger{background:var(--red-tint); color:var(--red); border-color:rgba(194,76,59,.3)}
+.btn-danger:hover{border-color:var(--red)}
+.btn-sm{height:37px; padding:0 1rem; font-size:.84rem; border-radius:12px}
+.btn-block{width:100%}
+.btn-tertiary{background:none; border:none; color:var(--green); font-weight:600; padding:0; height:auto; cursor:pointer; font-size:.86rem}
+.btn-tertiary:hover{text-decoration:underline}
+.btn-icon{width:42px; height:42px; padding:0; border-radius:14px; background:transparent; border:1px solid transparent; color:var(--ink-soft); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:all var(--t-fast) var(--spring); flex:none}
+.btn-icon:hover{background:var(--glass-strong); color:var(--ink); transform:scale(1.08); border-color:var(--glass-line); box-shadow:var(--e-1)}
+.btn-icon svg{width:20px; height:20px}
+.ripple{position:absolute; border-radius:50%; background:currentColor; opacity:.2; transform:scale(0); animation:ripple .55s var(--ease) forwards; pointer-events:none}
+@keyframes ripple{to{transform:scale(3.4); opacity:0}}
+
+.badge{display:inline-flex; align-items:center; gap:6px; font-size:.73rem; font-weight:600; padding:4px 11px; border-radius:var(--r-full); line-height:1.4; backdrop-filter:blur(6px)}
+.badge svg{width:12px; height:12px; flex:none}
+.badge-green{background:var(--green-tint); color:var(--green-strong); border:1px solid rgba(14,138,92,.18)}
+[data-theme="dark"] .badge-green{color:var(--green); border-color:rgba(67,206,151,.2)}
+.badge-amber{background:var(--amber-tint); color:var(--amber); border:1px solid rgba(181,115,18,.18)}
+.badge-blue{background:var(--blue-tint); color:var(--blue); border:1px solid rgba(46,111,168,.18)}
+.badge-neutral{background:var(--glass-soft); color:var(--ink-soft); border:1px solid var(--glass-line)}
+
+.avatar{width:38px; height:38px; border-radius:var(--r-full); background:linear-gradient(135deg,var(--green-hi),var(--green-strong)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.86rem; border:2px solid rgba(255,255,255,.5); cursor:pointer; flex:none; box-shadow:var(--e-1)}
+
+/* Topbar */
+.topbar{position:sticky; top:var(--s-3); z-index:90; height:var(--topbar-h); margin:var(--s-3) var(--s-4) 0; background:var(--glass); backdrop-filter:blur(18px) saturate(1.4); border:1px solid var(--glass-line); border-radius:var(--r-lg); box-shadow:var(--e-2), var(--inner-light); display:flex; align-items:center; gap:var(--s-3); padding:0 var(--s-4); max-width:calc(var(--max) + 2rem); margin-inline:auto; width:calc(100% - 2rem)}
+.brand{display:flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none!important}
+.brand .wordmark{font-family:var(--font-display); font-weight:800; font-size:1.15rem; letter-spacing:-.02em}
+.topbar .grow{flex:1}
+.topbar .ttl{font-size:.86rem; font-weight:600; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+/* Page + journey rail */
+.page{max-width:var(--max); margin:0 auto; padding:var(--s-6) var(--s-4) var(--s-8)}
+.rail{display:flex; gap:6px; margin-bottom:var(--s-6); padding:var(--s-3); position:sticky; top:calc(var(--topbar-h) + var(--s-3) + var(--s-3)); z-index:60}
+.rail .rstep{flex:1; display:flex; flex-direction:column; gap:7px; background:none; border:none; cursor:pointer; padding:4px 2px; border-radius:10px}
+.rail .rstep:disabled{cursor:not-allowed}
+.rail .bar{height:5px; border-radius:3px; background:var(--glass-soft); box-shadow:inset 0 1px 2px rgba(0,0,0,.06); overflow:hidden; position:relative}
+.rail .bar::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg,var(--green-hi),var(--green-strong)); border-radius:3px; transform:scaleX(0); transform-origin:left; transition:transform .5s var(--spring); box-shadow:0 0 8px var(--green-glow)}
+.rail .rstep.done .bar::after,.rail .rstep.now .bar::after{transform:scaleX(1)}
+.rail .rstep.now .bar::after{background:linear-gradient(90deg,var(--green-hi),var(--green))}
+.rail .rl{font-size:.62rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:left}
+.rail .rstep.now .rl{color:var(--green-strong)}
+[data-theme="dark"] .rail .rstep.now .rl{color:var(--green)}
+.rail .rstep.done .rl{color:var(--ink-soft)}
+
+/* Steps */
+.step{display:none}
+.step.active{display:block; animation:stepIn .5s var(--spring)}
+@keyframes stepIn{from{opacity:0; transform:translateY(18px) scale(.985)}to{opacity:1; transform:none}}
+.step-head{margin-bottom:var(--s-5)}
+.step-head .eyebrow{font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--green); margin-bottom:6px}
+.step-head h1{font-size:clamp(1.4rem,3vw,1.85rem); font-weight:800}
+.step-head p{color:var(--ink-soft); font-size:.92rem; margin-top:6px}
+.step-nav{display:flex; justify-content:space-between; gap:var(--s-3); margin-top:var(--s-6); flex-wrap:wrap}
+.step-nav .right{display:flex; gap:var(--s-3); margin-left:auto}
+
+/* Fields */
+.field{display:flex; flex-direction:column; gap:6px}
+.field label{font-size:.82rem; font-weight:600}
+.field .hint{font-size:.74rem; color:var(--ink-faint)}
+.input,.textarea{width:100%; background:var(--glass-soft); color:var(--ink); border:1px solid var(--glass-line); border-radius:var(--r-md); padding:0 var(--s-4); height:47px; font-size:.92rem; font-family:inherit; transition:all var(--t-med) var(--ease)}
+.textarea{height:auto; min-height:88px; padding:var(--s-3) var(--s-4); resize:vertical; line-height:1.5}
+.input:focus,.textarea:focus{background:var(--glass-strong); border-color:var(--green); box-shadow:0 0 0 4px var(--green-glow); outline:none}
+
+/* Item summary */
+.summary{display:flex; gap:var(--s-4); padding:var(--s-4); align-items:center; flex-wrap:wrap}
+.summary .sthumb{width:110px; height:82px; border-radius:14px; background:linear-gradient(135deg,var(--glass-soft),var(--green-tint)); display:flex; align-items:center; justify-content:center; color:var(--ink-faint); flex:none; box-shadow:var(--e-1), var(--inner-light)}
+.summary .sthumb svg{width:38px; height:38px; opacity:.6}
+.summary .sinfo{flex:1; min-width:200px}
+.summary .sinfo h3{font-size:1.05rem}
+.summary .sinfo .meta{display:flex; gap:var(--s-2); margin-top:8px; flex-wrap:wrap}
+.summary .owner{display:flex; align-items:center; gap:10px; flex:none}
+.summary .owner .pfp{width:44px; height:44px; border-radius:var(--r-full); background:linear-gradient(135deg,#2E6FA8,#1F4E78); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; flex:none; box-shadow:0 0 0 3px var(--green-tint)}
+.summary .owner strong{display:block; font-size:.88rem}
+.summary .owner span{font-size:.74rem; color:var(--ink-soft)}
+.mini-facts{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-3); margin-top:var(--s-4)}
+.mfact{padding:var(--s-3) var(--s-4); text-align:center}
+.mfact strong{display:block; font-family:var(--font-display); font-size:1.05rem; font-weight:800; font-variant-numeric:tabular-nums}
+.mfact span{font-size:.72rem; color:var(--ink-soft)}
+
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-4)}
+.pad{padding:var(--s-5)}
+
+/* Pricing */
+.price-rows{display:flex; flex-direction:column; gap:12px; font-size:.92rem}
+.price-rows .row{display:flex; justify-content:space-between; align-items:center; opacity:0; transform:translateX(-10px); transition:all .45s var(--spring)}
+.price-rows .row.show{opacity:1; transform:none}
+.price-rows .row strong{font-variant-numeric:tabular-nums}
+.price-rows .total{border-top:1px dashed var(--glass-edge); padding-top:12px; font-weight:700; font-size:1.02rem}
+.save-band{background:var(--grad-band); border-radius:var(--r-md); color:#fff; padding:var(--s-4); display:flex; align-items:center; gap:var(--s-3); margin-top:var(--s-4); box-shadow:0 8px 22px var(--green-glow), var(--inner-light)}
+[data-theme="dark"] .save-band{color:#F2FBF6}
+.save-band svg{width:22px; height:22px; flex:none}
+.save-band strong{font-family:var(--font-display); font-size:1.2rem; font-variant-numeric:tabular-nums}
+
+/* Agreement */
+.acc{border-bottom:1px solid var(--glass-edge)}
+.acc:last-child{border-bottom:none}
+.acc > button{width:100%; background:none; border:none; cursor:pointer; text-align:left; padding:var(--s-4) var(--s-5); display:flex; justify-content:space-between; align-items:center; gap:var(--s-3); font-size:.93rem; font-weight:600; color:var(--ink)}
+.acc > button svg{width:16px; height:16px; color:var(--green); flex:none; transition:transform var(--t-med) var(--spring)}
+.acc > button[aria-expanded="true"] svg{transform:rotate(45deg)}
+.acc .body{max-height:0; overflow:hidden; transition:max-height var(--t-med) var(--ease)}
+.acc .body p{padding:0 var(--s-5) var(--s-4); font-size:.86rem; color:var(--ink-soft)}
+.agree-row{display:flex; align-items:center; gap:12px; padding:var(--s-4) var(--s-5); background:var(--green-tint); border-radius:var(--r-md); margin-top:var(--s-4); cursor:pointer; border:1px solid rgba(14,138,92,.18)}
+.agree-row input{width:19px; height:19px; accent-color:var(--green); cursor:pointer; flex:none}
+.agree-row span{font-size:.9rem; font-weight:600}
+
+/* Success hero */
+.success-hero{text-align:center; padding:var(--s-6) var(--s-5)}
+.check-ring{width:88px; height:88px; margin:0 auto var(--s-4); border-radius:50%; background:var(--green-tint); display:flex; align-items:center; justify-content:center; animation:pop .55s var(--spring); box-shadow:0 0 0 12px rgba(14,138,92,.05)}
+.check-ring svg{width:42px; height:42px; color:var(--green-strong)}
+[data-theme="dark"] .check-ring svg{color:var(--green)}
+@keyframes pop{0%{transform:scale(.35); opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+.req-id{display:inline-flex; align-items:center; gap:9px; font-family:var(--font-display); font-weight:700; font-size:.95rem; background:var(--glass-strong); border:1px dashed var(--glass-edge); border-radius:var(--r-full); padding:9px 18px; margin-top:var(--s-4); font-variant-numeric:tabular-nums}
+.notif-prefs{display:flex; flex-direction:column; gap:var(--s-3); margin-top:var(--s-4); text-align:left}
+.pref{display:flex; align-items:center; justify-content:space-between; gap:var(--s-3); padding:var(--s-3) var(--s-4)}
+.pref span{font-size:.88rem; font-weight:500}
+.switch{position:relative; width:46px; height:26px; flex:none; background:var(--glass-soft); border:1px solid var(--glass-line); border-radius:var(--r-full); cursor:pointer; transition:background var(--t-fast) var(--ease)}
+.switch::after{content:""; position:absolute; top:2px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff; box-shadow:var(--e-1); transition:transform var(--t-med) var(--spring)}
+.switch[aria-checked="true"]{background:var(--green)}
+.switch[aria-checked="true"]::after{transform:translateX(19px)}
+
+/* Owner approval */
+.owner-view{border-left:3px solid var(--blue)}
+.chatline{display:flex; gap:10px; align-items:flex-start; background:var(--glass-soft); border-radius:var(--r-md); padding:var(--s-3) var(--s-4); font-size:.86rem; margin-top:var(--s-4)}
+.chatline .pfp{width:28px; height:28px; border-radius:var(--r-full); background:linear-gradient(135deg,#2E6FA8,#1F4E78); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.62rem; font-weight:700; flex:none}
+
+/* QR */
+.qr-duo{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-4)}
+.qr-cell{padding:var(--s-5); text-align:center}
+.qr-frame{width:170px; height:170px; border-radius:var(--r-md); background:var(--glass-strong); border:1px solid var(--glass-line); padding:14px; position:relative; overflow:hidden; margin:var(--s-4) auto; box-shadow:var(--e-1), var(--inner-light); animation:qrPulse 2.8s ease-in-out infinite}
+@keyframes qrPulse{0%,100%{box-shadow:var(--e-1), 0 0 0 0 var(--green-glow)}50%{box-shadow:var(--e-1), 0 0 0 10px transparent}}
+.qr-frame svg{width:100%; height:100%; color:var(--ink)}
+.qr-frame .scanline{position:absolute; left:10px; right:10px; height:3px; border-radius:2px; background:var(--green); box-shadow:0 0 14px var(--green); animation:scan 2.6s ease-in-out infinite}
+@keyframes scan{0%,100%{top:8%}50%{top:90%}}
+.qr-cell h3{font-size:.98rem}
+.qr-cell p{font-size:.8rem; color:var(--ink-soft)}
+.countdown{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:800; font-size:1.35rem; font-variant-numeric:tabular-nums; color:var(--green-strong); background:var(--green-tint); border:1px solid rgba(14,138,92,.2); border-radius:var(--r-full); padding:8px 20px; margin-top:var(--s-3)}
+[data-theme="dark"] .countdown{color:var(--green)}
+.countdown svg{width:18px; height:18px}
+
+/* Live timeline */
+.live-tl{list-style:none; margin:0; padding:var(--s-5)}
+.lt{display:flex; gap:14px; position:relative; padding-bottom:var(--s-5); opacity:.42; transition:opacity .5s var(--ease)}
+.lt:last-child{padding-bottom:0}
+.lt::before{content:""; position:absolute; left:17px; top:38px; bottom:0; width:2px; background:var(--glass-edge)}
+.lt:last-child::before{display:none}
+.lt .li{width:36px; height:36px; border-radius:var(--r-full); flex:none; display:flex; align-items:center; justify-content:center; z-index:1; background:var(--glass-strong); border:2px solid var(--glass-edge); color:var(--ink-faint); box-shadow:var(--e-1); transition:all .45s var(--spring)}
+.lt .li svg{width:15px; height:15px}
+.lt strong{display:block; font-size:.92rem}
+.lt span{font-size:.76rem; color:var(--ink-soft)}
+.lt.done{opacity:1}
+.lt.done .li{background:linear-gradient(160deg,var(--green-hi),var(--green-strong)); border-color:transparent; color:#fff; box-shadow:0 6px 14px var(--green-glow); animation:pop .5s var(--spring)}
+[data-theme="dark"] .lt.done .li{color:#07110C}
+.lt.now{opacity:1}
+.lt.now .li{border-color:var(--green); color:var(--green); animation:qrPulse 2.4s ease-in-out infinite}
+.tools-row{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s-3); margin-top:var(--s-4)}
+.tool{display:flex; flex-direction:column; align-items:center; gap:8px; padding:var(--s-4) var(--s-2); text-align:center; font-size:.76rem; font-weight:600; cursor:pointer; background:var(--glass-soft); border:1px solid var(--glass-line); border-radius:var(--r-md); color:var(--ink); transition:all var(--t-med) var(--spring)}
+.tool:hover{transform:translateY(-3px); background:var(--glass-strong); box-shadow:var(--e-1)}
+.tool svg{width:19px; height:19px; color:var(--green)}
+.tool.warn svg{color:var(--red)}
+
+/* Return photos */
+.photo-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s-3)}
+.photo{aspect-ratio:1; border-radius:14px; border:1.5px dashed var(--glass-edge); background:var(--glass-soft); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; cursor:pointer; color:var(--ink-faint); font-size:.7rem; font-weight:600; transition:all var(--t-med) var(--spring)}
+.photo:hover{transform:translateY(-3px); border-color:var(--green); color:var(--green)}
+.photo svg{width:20px; height:20px}
+.photo.shot{border-style:solid; border-color:var(--green); background:var(--green-tint); color:var(--green-strong); animation:pop .45s var(--spring)}
+[data-theme="dark"] .photo.shot{color:var(--green)}
+.inspect{display:flex; align-items:center; gap:12px; padding:var(--s-4); margin-top:var(--s-4)}
+.spinner{width:20px; height:20px; border-radius:50%; border:2.5px solid var(--glass-edge); border-top-color:var(--green); animation:spin .7s linear infinite; flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Refund celebrate */
+.wow-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-3); margin-top:var(--s-5)}
+.wow{padding:var(--s-4); text-align:center}
+.wow strong{display:block; font-family:var(--font-display); font-size:1.35rem; font-weight:800; font-variant-numeric:tabular-nums; color:var(--green-strong)}
+[data-theme="dark"] .wow strong{color:var(--green)}
+.wow span{font-size:.72rem; color:var(--ink-soft)}
+.ach{display:flex; align-items:center; gap:var(--s-3); background:var(--grad-band); color:#fff; border-radius:var(--r-md); padding:var(--s-4); margin-top:var(--s-4); box-shadow:0 10px 26px var(--green-glow), var(--inner-light); animation:pop .6s var(--spring)}
+[data-theme="dark"] .ach{color:#F2FBF6}
+.ach .ai{width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; flex:none; font-size:1.3rem}
+.ach strong{display:block; font-size:.95rem}
+.ach span{font-size:.78rem; opacity:.88}
+
+/* Review */
+.star-row{display:flex; gap:6px; justify-content:center; margin:var(--s-4) 0}
+.star{background:none; border:none; cursor:pointer; color:var(--glass-edge); padding:4px; transition:transform var(--t-fast) var(--spring), color var(--t-fast) var(--ease)}
+.star svg{width:34px; height:34px}
+.star:hover{transform:scale(1.2) rotate(-6deg)}
+.star.on{color:var(--amber)}
+.rep-row{display:flex; align-items:center; gap:12px; padding:var(--s-3) var(--s-4); cursor:pointer}
+.rep-row input{width:17px; height:17px; accent-color:var(--red); cursor:pointer}
+.rep-row span{font-size:.86rem; color:var(--ink-soft)}
+
+/* Confetti + toast */
+.confetti{position:fixed; top:-14px; z-index:340; width:9px; height:15px; border-radius:3px; pointer-events:none; animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(108vh) rotate(680deg); opacity:.9}}
+.toast-region{position:fixed; bottom:var(--s-5); right:var(--s-5); z-index:320; display:flex; flex-direction:column; gap:var(--s-2); width:min(370px, calc(100vw - 32px)); pointer-events:none}
+.toast{background:var(--glass-strong); backdrop-filter:blur(18px) saturate(1.5); color:var(--ink); border:1px solid var(--glass-line); border-radius:var(--r-md); box-shadow:var(--e-3), var(--inner-light); padding:12px 16px; display:flex; align-items:center; gap:10px; font-size:.86rem; font-weight:500; pointer-events:auto; animation:toastIn .45s var(--spring)}
+.toast svg{width:16px; height:16px; flex:none; color:var(--green)}
+@keyframes toastIn{from{opacity:0; transform:translateY(14px) scale(.95)}to{opacity:1}}
+
+/* Cross-app navigation: AI assistant reachable everywhere (no bottom-nav here — focused flow) */
+.ai-launch{position:fixed; left:var(--s-5); bottom:var(--s-5); z-index:115; width:52px; height:52px; border-radius:var(--r-full); background:linear-gradient(160deg,var(--green-hi),var(--green) 45%,var(--green-strong)); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 26px var(--green-glow), var(--inner-light); border:1px solid rgba(255,255,255,.3); transition:transform var(--t-med) var(--spring)}
+[data-theme="dark"] .ai-launch{color:#07110C}
+.ai-launch:hover{transform:scale(1.1) rotate(8deg)}
+.ai-launch svg{width:22px; height:22px}
+
+/* Responsive */
+@media (max-width:760px){
+  .grid-2,.qr-duo{grid-template-columns:1fr}
+  .mini-facts{grid-template-columns:repeat(3,1fr)}
+  .tools-row{grid-template-columns:repeat(2,1fr)}
+  .photo-grid{grid-template-columns:repeat(2,1fr)}
+  .rail .rl{display:none}
+  .rail{top:calc(var(--topbar-h) + var(--s-3) + var(--s-2))}
+  .topbar .ttl{display:none}
+}
+
+/* ============================================================
+   PRESENTATION MODE · guided demo bar (glass variant)
+   ============================================================ */
+.present-bar{position:fixed; left:50%; bottom:var(--s-5); transform:translateX(-50%); z-index:250; width:min(540px, calc(100vw - 32px)); background:var(--glass-strong); backdrop-filter:blur(26px) saturate(1.5); -webkit-backdrop-filter:blur(26px) saturate(1.5); border:1px solid var(--glass-line); border-radius:var(--r-xl); box-shadow:var(--e-3), var(--inner-light); padding:var(--s-4) var(--s-5); animation:pbIn .5s var(--spring)}
+.present-bar[hidden]{display:none}
+@keyframes pbIn{from{opacity:0; transform:translateX(-50%) translateY(20px)}to{opacity:1; transform:translateX(-50%) translateY(0)}}
+.pb-top{display:flex; align-items:center; gap:10px}
+.pb-step{font-size:.7rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--green-strong); white-space:nowrap}
+[data-theme="dark"] .pb-step{color:var(--green)}
+.pb-track{flex:1; height:5px; border-radius:3px; background:var(--glass-soft); overflow:hidden}
+.pb-track i{display:block; height:100%; background:linear-gradient(90deg,var(--green-hi),var(--green-strong)); border-radius:3px; width:0; transition:width .4s var(--ease)}
+.present-bar .btn-icon{width:34px; height:34px; flex:none}
+.present-bar .btn-icon svg{width:16px; height:16px}
+.pb-caption{font-size:.85rem; color:var(--ink); margin-top:10px; line-height:1.5}
+.pb-actions{display:flex; gap:8px; margin-top:12px}
+.pb-actions .btn{flex:1}
+.present-bar.final{text-align:center}
+.pb-final-head{display:flex; align-items:center; justify-content:center; gap:9px; font-family:var(--font-display); font-weight:800; font-size:1.05rem}
+.pb-check{width:28px; height:28px; border-radius:50%; background:var(--green-tint); color:var(--green-strong); display:inline-flex; align-items:center; justify-content:center; font-size:.85rem}
+[data-theme="dark"] .pb-check{color:var(--green)}
+.demo-launch{display:inline-flex; align-items:center; gap:7px; height:42px; padding:0 15px; border-radius:var(--r-full); background:var(--glass-soft); border:1px solid var(--glass-line); color:var(--ink); font-weight:700; font-size:.82rem; cursor:pointer; text-decoration:none!important; transition:all var(--t-fast) var(--spring); flex:none}
+.demo-launch:hover{background:var(--green-tint); border-color:var(--green); color:var(--green-strong); transform:translateY(-2px)}
+[data-theme="dark"] .demo-launch:hover{color:var(--green)}
+.demo-launch svg{width:15px; height:15px}
+@media (max-width:560px){
+  .present-bar{bottom:calc(var(--s-3) + 4px); padding:var(--s-3) var(--s-4)}
+  .demo-launch span{display:none}
+}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div class="ambient" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div></div>
+
+<header class="topbar">
+  <button class="btn-icon" aria-label="Back to item details" onclick="nav('sharebox-item-details.html')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  </button>
+  <a class="brand" href="sharebox-dashboard-glass.html">
+    <svg width="27" height="27" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--green)"/>
+      <path d="M10 13.5 16 9l6 4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M22 18.5 16 23l-6-4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".65"/>
+    </svg>
+    <span class="wordmark">ShareBox</span>
+  </a>
+  <span class="ttl">· Borrowing: ESP32 Development Kit</span>
+  <div class="grow"></div>
+  <button class="demo-launch" onclick="presentStart()" aria-label="Start guided demo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg><span>Demo</span></button>
+  <button class="btn-icon" data-theme-toggle aria-label="Switch to dark mode" onclick="toggleTheme()"></button>
+  <button class="avatar" aria-label="Your profile" onclick="nav('sharebox-account.html')">TA</button>
+</header>
+
+<main id="main" class="page">
+
+  <!-- Journey progress rail -->
+  <nav class="rail glass" id="rail" aria-label="Borrowing progress"></nav>
+
+  <!-- ============ STEP 1 · BORROW REQUEST ============ -->
+  <section class="step" data-step="1" aria-labelledby="s1h">
+    <div class="step-head">
+      <p class="eyebrow">Step 1 of 10 · Borrow request</p>
+      <h1 id="s1h">Let&rsquo;s set up your borrow</h1>
+      <p>Confirm the item, pick your dates, and tell Rafi what it&rsquo;s for (optional but appreciated).</p>
+    </div>
+
+    <div class="glass summary">
+      <div class="sthumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 2v3M14 2v3M10 19v3M14 19v3M2 10h3M2 14h3M19 10h3M19 14h3"/></svg></div>
+      <div class="sinfo">
+        <h3>ESP32 Development Kit + Breadboard</h3>
+        <div class="meta">
+          <span class="badge badge-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>Available today</span>
+          <span class="badge badge-neutral">IoT Devices · UITS</span>
+        </div>
+      </div>
+      <div class="owner">
+        <span class="pfp">RH</span>
+        <div><strong>Rafi Hasan</strong><span>Trust 92 · Verified · replies ~10 min</span></div>
+      </div>
+    </div>
+
+    <div class="mini-facts">
+      <div class="glass mfact"><strong>৳200</strong><span>refundable deposit</span></div>
+      <div class="glass mfact"><strong>৳50/day</strong><span>rental price</span></div>
+      <div class="glass mfact"><strong>~৳4,200</strong><span>est. savings vs buying</span></div>
+    </div>
+
+    <div class="glass pad" style="margin-top:var(--s-4)">
+      <div class="grid-2">
+        <div class="field">
+          <label for="d-from">Borrow date</label>
+          <input class="input" type="date" id="d-from" value="2026-07-29" min="2026-07-28" onchange="calc()">
+        </div>
+        <div class="field">
+          <label for="d-to">Return date</label>
+          <input class="input" type="date" id="d-to" value="2026-08-01" min="2026-07-29" onchange="calc()">
+        </div>
+      </div>
+      <div class="field" style="margin-top:var(--s-4)">
+        <label for="purpose">Purpose <span style="font-weight:400; color:var(--ink-faint)">(optional)</span></label>
+        <textarea class="textarea" id="purpose" placeholder="e.g. Microcontrollers course project — LED matrix demo on Friday"></textarea>
+        <span class="hint">Owners approve faster when they know the plan.</span>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <div class="right">
+        <button class="btn btn-primary" onclick="go(2)">Continue to pricing
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 2 · SMART PRICING ============ -->
+  <section class="step" data-step="2" aria-labelledby="s2h">
+    <div class="step-head">
+      <p class="eyebrow">Step 2 of 10 · Smart pricing</p>
+      <h1 id="s2h">Your price, calculated honestly</h1>
+      <p>No hidden fees — the deposit comes back to you after a clean return.</p>
+    </div>
+
+    <div class="glass pad">
+      <div class="price-rows" id="priceRows">
+        <div class="row"><span id="prDaysLbl">Rental fee</span><strong id="prRent">—</strong></div>
+        <div class="row"><span>Security deposit <span class="badge badge-green" style="margin-left:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11 3 15l4 4"/><path d="M3 15h13a5 5 0 0 0 0-10h-3"/></svg>refundable</span></span><strong id="prDep">৳200</strong></div>
+        <div class="row"><span>Platform fee</span><strong id="prFee">৳20</strong></div>
+        <div class="row total"><span>Total payable at pickup</span><strong id="prTotal">—</strong></div>
+      </div>
+      <div class="save-band">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6.5C17 4.6 14.8 3.5 12 3.5S7 4.6 7 6.5 9.2 9.5 12 9.5s5 1.1 5 3-2.2 3-5 3-5-1.1-5-3"/></svg>
+        <div>You&rsquo;re saving about <strong id="prSave">৳4,180</strong> vs buying a new kit (৳2,400) plus accessories.</div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="go(1)">Back</button>
+      <div class="right">
+        <button class="btn btn-primary" onclick="go(3)">Looks fair — continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 3 · DIGITAL AGREEMENT ============ -->
+  <section class="step" data-step="3" aria-labelledby="s3h">
+    <div class="step-head">
+      <p class="eyebrow">Step 3 of 10 · Digital agreement</p>
+      <h1 id="s3h">The short, fair print</h1>
+      <p>Four policies protect both you and Rafi. Tap each to read the plain-language version.</p>
+    </div>
+
+    <div class="glass">
+      <div class="acc">
+        <button aria-expanded="false" onclick="toggleAcc(this)">Return policy<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="body"><p>Return by your chosen date and time at the agreed spot, in the condition recorded at pickup. Need longer? Request an extension in chat before the deadline.</p></div>
+      </div>
+      <div class="acc">
+        <button aria-expanded="false" onclick="toggleAcc(this)">Damage policy<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="body"><p>Pickup and return photos are compared. Normal wear is free; real damage follows the IoT category fee schedule, deducted from the deposit. ShareBox mediates disputes.</p></div>
+      </div>
+      <div class="acc">
+        <button aria-expanded="false" onclick="toggleAcc(this)">Late return policy<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="body"><p>One grace hour, then ৳20/day from the deposit plus a small Trust Score penalty. A quick message almost always resolves things better.</p></div>
+      </div>
+      <div class="acc">
+        <button aria-expanded="false" onclick="toggleAcc(this)">Deposit refund policy<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="body"><p>Your ৳200 is held, not spent. After the return scan and a clean inspection, it&rsquo;s released automatically — usually within hours.</p></div>
+      </div>
+    </div>
+
+    <label class="agree-row">
+      <input type="checkbox" id="agreeBox" onchange="document.getElementById('agreeBtn').disabled = !this.checked">
+      <span>I agree to the terms.</span>
+    </label>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="go(2)">Back</button>
+      <div class="right">
+        <button class="btn btn-primary" id="agreeBtn" disabled onclick="chime(); go(4)">Send borrow request</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 4 · REQUEST CONFIRMATION ============ -->
+  <section class="step" data-step="4" aria-labelledby="s4h">
+    <div class="glass success-hero">
+      <div class="check-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg></div>
+      <p class="eyebrow">Step 4 of 10 · Request sent</p>
+      <h1 id="s4h">Your request is with Rafi 🎉</h1>
+      <p style="color:var(--ink-soft); margin-top:8px">Status: <span class="badge badge-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Waiting for Owner Approval</span> · expected response ~10 minutes</p>
+      <div class="req-id"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>Request ID · SBX-2607-4TR8</div>
+
+      <div class="notif-prefs">
+        <div class="glass pref"><span>Notify me when Rafi responds</span><button class="switch" role="switch" aria-checked="true" aria-label="Notify on response" onclick="flip(this)"></button></div>
+        <div class="glass pref"><span>Return-deadline reminders</span><button class="switch" role="switch" aria-checked="true" aria-label="Return reminders" onclick="flip(this)"></button></div>
+        <div class="glass pref"><span>Soft notification sounds</span><button class="switch" role="switch" aria-checked="false" aria-label="Notification sounds" onclick="flip(this)"></button></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="nav('sharebox-dashboard-glass.html')">Back to dashboard</button>
+      <div class="right">
+        <button class="btn btn-primary" onclick="go(5)">Preview owner&rsquo;s view
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 5 · OWNER APPROVAL ============ -->
+  <section class="step" data-step="5" aria-labelledby="s5h">
+    <div class="step-head">
+      <p class="eyebrow">Step 5 of 10 · Owner approval <span class="badge badge-blue" style="margin-left:8px; vertical-align:1px">Demo: Rafi&rsquo;s screen</span></p>
+      <h1 id="s5h">What Rafi sees</h1>
+      <p>Owners get the full picture — who&rsquo;s asking, their Trust Score, dates, and purpose — before a single handoff.</p>
+    </div>
+
+    <div class="glass pad owner-view">
+      <div class="summary" style="padding:0">
+        <div class="owner">
+          <span class="pfp" style="background:linear-gradient(135deg,var(--green-hi),var(--green-strong))">TA</span>
+          <div><strong>Tahmid A. wants to borrow your ESP32 kit</strong><span>Trust 87 · Verified · 14 on-time returns · <span id="ownerDates">Jul 29 → Aug 1</span></span></div>
+        </div>
+      </div>
+      <div class="chatline"><span class="pfp" style="background:linear-gradient(135deg,var(--green-hi),var(--green-strong)); color:#fff">TA</span><em id="ownerPurpose">&ldquo;Microcontrollers course project — LED matrix demo on Friday.&rdquo;</em></div>
+      <div class="tools-row" style="grid-template-columns:repeat(4,1fr)">
+        <button class="tool" style="border-color:rgba(14,138,92,.3)" onclick="chime(); toast('Approved — Tahmid&rsquo;s QR pickup code is now unlocked'); setTimeout(()=>go(6), 900)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>Approve</button>
+        <button class="tool warn" onclick="toast('Declined — the requester is notified kindly (demo)')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Decline</button>
+        <button class="tool" onclick="toast('Suggesting Aug 2 → Aug 5 instead (demo)')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Suggest dates</button>
+        <button class="tool" onclick="toast('Opening chat with Tahmid (demo)')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>Message</button>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="go(4)">Back</button>
+      <div class="right">
+        <button class="btn btn-primary" onclick="chime(); go(6)">Rafi approved — continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 6 · QR PICKUP ============ -->
+  <section class="step" data-step="6" aria-labelledby="s6h">
+    <div class="step-head">
+      <p class="eyebrow">Step 6 of 10 · QR pickup</p>
+      <h1 id="s6h">Meet, scan, done</h1>
+      <p>Scan this QR when meeting the owner — both codes confirm the same handoff from each side, photos attach, and the borrow clock starts.</p>
+    </div>
+
+    <div class="qr-duo">
+      <div class="glass qr-cell">
+        <span class="badge badge-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg>Your borrower QR</span>
+        <div class="qr-frame"><span class="scanline"></span><svg viewBox="0 0 29 29" shape-rendering="crispEdges" id="qr1"></svg></div>
+        <h3>Show this at pickup</h3>
+        <p>Rafi scans it to open the handoff.</p>
+      </div>
+      <div class="glass qr-cell">
+        <span class="badge badge-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Owner verification QR</span>
+        <div class="qr-frame"><span class="scanline"></span><svg viewBox="0 0 29 29" shape-rendering="crispEdges" id="qr2"></svg></div>
+        <h3>You scan Rafi&rsquo;s</h3>
+        <p>Two-way scan — nobody can fake a handoff.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center">
+      <div class="countdown" role="timer" aria-label="Pickup code expires in">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span id="cd">15:00</span>
+      </div>
+      <p style="font-size:.78rem; color:var(--ink-faint); margin-top:8px">Codes refresh automatically for security.</p>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="go(5)">Back</button>
+      <div class="right">
+        <button class="btn btn-primary" onclick="chime(); toast('Handoff confirmed — borrow clock started'); go(7)">Both scans done — item picked up</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 7 · ACTIVE BORROW ============ -->
+  <section class="step" data-step="7" aria-labelledby="s7h">
+    <div class="step-head">
+      <p class="eyebrow">Step 7 of 10 · Active borrow</p>
+      <h1 id="s7h">Your borrow, live</h1>
+      <p>The timeline fills in as your journey progresses — right now the kit is in your hands.</p>
+    </div>
+
+    <div class="glass">
+      <ul class="live-tl" id="liveTl">
+        <li class="lt"><span class="li"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg></span><div><strong>Requested</strong><span>Today, 10:02 AM · SBX-2607-4TR8</span></div></li>
+        <li class="lt"><span class="li"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg></span><div><strong>Approved</strong><span>Today, 10:11 AM · by Rafi</span></div></li>
+        <li class="lt"><span class="li"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 14h3v3h-3zM17 17h3v3h-3z"/></svg></span><div><strong>Picked Up</strong><span>Jul 29, 4:20 PM · QR verified both ways</span></div></li>
+        <li class="lt"><span class="li"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 2v3M14 2v3M10 19v3M14 19v3M2 10h3M2 14h3M19 10h3M19 14h3"/></svg></span><div><strong>In Use</strong><span>Enjoy — return due Aug 1, 6:00 PM</span></div></li>
+        <li class="lt"><span class="li"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><strong>Due Soon</strong><span>We&rsquo;ll remind you 24h and 2h before</span></div></li>
+        <li class="lt"><span class="li"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11 3 15l4 4"/><path d="M3 15h13a5 5 0 0 0 0-10h-3"/></svg></span><div><strong>Returned</strong><span>Scan again to close the loop</span></div></li>
+        <li class="lt"><span class="li"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="m8.5 13 2.5 2.5L16 11"/></svg></span><div><strong>Deposit Refunded</strong><span>Automatic after clean inspection</span></div></li>
+      </ul>
+    </div>
+
+    <div class="tools-row">
+      <button class="tool" onclick="chime(); toast('Reminder set — 24h and 2h before Aug 1, 6:00 PM')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>Remind me</button>
+      <button class="tool" onclick="toast('Added to your calendar — return: Aug 1, 6:00 PM (demo)')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M12 14v4M10 16h4"/></svg>Add to calendar</button>
+      <button class="tool" onclick="toast('Opening chat with Rafi (demo)')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>Chat with Rafi</button>
+      <button class="tool warn" onclick="toast('Emergency line — campus security &amp; ShareBox support (demo)')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.6a16 16 0 0 0 6.4 6.4l1.2-1.2a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>Emergency</button>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="go(6)">Back</button>
+      <div class="right">
+        <button class="btn btn-primary" onclick="go(8)">It&rsquo;s Aug 1 — start the return</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 8 · RETURN PROCESS ============ -->
+  <section class="step" data-step="8" aria-labelledby="s8h">
+    <div class="step-head">
+      <p class="eyebrow">Step 8 of 10 · Return process</p>
+      <h1 id="s8h">Close the loop</h1>
+      <p>Snap four quick condition photos — they&rsquo;re compared with the pickup set so your deposit releases fast.</p>
+    </div>
+
+    <div class="glass pad">
+      <h3 style="font-size:.95rem; margin-bottom:var(--s-3)">Condition photos <span style="font-weight:400; color:var(--ink-faint)">(<span id="shotCount">0</span>/4)</span></h3>
+      <div class="photo-grid" id="photoGrid">
+        <button class="photo" onclick="snap(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>Top view</button>
+        <button class="photo" onclick="snap(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>Pins &amp; ports</button>
+        <button class="photo" onclick="snap(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>Breadboard</button>
+        <button class="photo" onclick="snap(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>Cable &amp; box</button>
+      </div>
+
+      <div class="glass inspect" id="inspect" style="display:none">
+        <span class="spinner" id="inspSpin"></span>
+        <div style="flex:1">
+          <strong id="inspTitle" style="font-size:.9rem">Rafi is inspecting the return…</strong>
+          <p id="inspSub" style="font-size:.78rem; color:var(--ink-soft)">Comparing with pickup photos — this usually takes under a minute.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="go(7)">Back</button>
+      <div class="right">
+        <button class="btn btn-primary" id="returnBtn" disabled onclick="startInspect()">Confirm return &amp; send for inspection</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 9 · DEPOSIT REFUND ============ -->
+  <section class="step" data-step="9" aria-labelledby="s9h">
+    <div class="glass success-hero">
+      <div class="check-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="m8.5 13 2.5 2.5L16 11"/></svg></div>
+      <p class="eyebrow">Step 9 of 10 · Deposit refund</p>
+      <h1 id="s9h">Clean return — everything&rsquo;s back where it belongs</h1>
+      <p style="color:var(--ink-soft); margin-top:8px">Rafi confirmed the condition matches. Your deposit is home.</p>
+
+      <div class="wow-stats">
+        <div class="glass wow"><strong>৳<span id="wSave">0</span></strong><span>deposit refunded</span></div>
+        <div class="glass wow"><strong>৳<span id="wWallet">0</span></strong><span>wallet balance</span></div>
+        <div class="glass wow"><strong>+<span id="wTrust">0</span> → 89</strong><span>Trust Score increased</span></div>
+      </div>
+
+      <div class="ach">
+        <span class="ai">🏅</span>
+        <div style="text-align:left">
+          <strong>Achievement unlocked — Reliable Returner</strong>
+          <span>15 on-time returns in a row. Your next deposit shrinks by 25%.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="nav('sharebox-account.html#wallet')">View wallet</button>
+      <div class="right">
+        <button class="btn btn-primary" onclick="go(10)">One last thing — leave a review</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEP 10 · REVIEW & RATING ============ -->
+  <section class="step" data-step="10" aria-labelledby="s10h">
+    <div class="step-head">
+      <p class="eyebrow">Step 10 of 10 · Review &amp; rating</p>
+      <h1 id="s10h">How was borrowing from Rafi?</h1>
+      <p>Reviews are two-way — Rafi rates you too. That&rsquo;s how the whole shelf stays honest.</p>
+    </div>
+
+    <div class="glass pad" style="text-align:center">
+      <div class="star-row" role="radiogroup" aria-label="Rate this borrow from 1 to 5 stars" id="starRow">
+        <button class="star" role="radio" aria-checked="false" aria-label="1 star" onclick="rate(1)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg></button>
+        <button class="star" role="radio" aria-checked="false" aria-label="2 stars" onclick="rate(2)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg></button>
+        <button class="star" role="radio" aria-checked="false" aria-label="3 stars" onclick="rate(3)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg></button>
+        <button class="star" role="radio" aria-checked="false" aria-label="4 stars" onclick="rate(4)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg></button>
+        <button class="star" role="radio" aria-checked="false" aria-label="5 stars" onclick="rate(5)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg></button>
+      </div>
+      <div class="field" style="text-align:left">
+        <label for="review">Your review</label>
+        <textarea class="textarea" id="review" placeholder="Board worked perfectly, pickup was easy, pin-out cheat sheet was a lovely touch…"></textarea>
+      </div>
+      <label class="rep-row" style="justify-content:flex-start">
+        <input type="checkbox" onchange="toast(this.checked ? 'Damage report form would open here (demo)' : 'Damage report removed')">
+        <span>Report damage (optional)</span>
+      </label>
+      <div style="display:flex; gap:var(--s-3); flex-wrap:wrap; justify-content:center; margin-top:var(--s-3)">
+        <button class="btn btn-secondary" onclick="chime(); toast('A little thank-you note is on its way to Rafi 💚')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9-8.5C1.5 8 3.5 5 6.7 5c2 0 3.6 1.2 4.3 2.4h2C13.7 6.2 15.3 5 17.3 5c3.2 0 5.2 3 3.7 6.5-2 4.2-9 8.5-9 8.5z"/></svg>
+          Thank the lender
+        </button>
+        <button class="btn btn-secondary" onclick="toast('Borrowing receipt copied — share it anywhere (demo)')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="m8.7 10.6 6.6-3.2M8.7 13.4l6.6 3.2"/></svg>
+          Share receipt
+        </button>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="go(9)">Back</button>
+      <div class="right">
+        <button class="btn btn-primary" id="finishBtn" disabled onclick="finishJourney()">Submit review &amp; finish</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="present-bar" id="presentBar" role="region" aria-label="Presentation mode controls" hidden></div>
+
+<div class="toast-region" id="toastRegion" role="status" aria-live="polite"></div>
+
+<a class="ai-launch" href="sharebox-ai-discovery.html" aria-label="Ask ShareBox AI">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L20 9l-5 3.4L16.5 19 12 15.6 7.5 19 9 12.4 4 9l6.2-1.4z"/></svg>
+</a>
+
+<script>
+/* ============================================================
+   Theme
+   ============================================================ */
+let theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const moon = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A8.5 8.5 0 0 1 11 3a8.5 8.5 0 1 0 10 10z"/></svg>';
+const sun  = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('[data-theme-toggle]').forEach(b=>{
+    b.innerHTML = theme==='light' ? moon : sun;
+    b.setAttribute('aria-label', theme==='light' ? 'Switch to dark mode' : 'Switch to light mode');
+  });
+}
+function toggleTheme(){ theme = theme==='light' ? 'dark' : 'light'; applyTheme(); }
+applyTheme();
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============================================================
+   Toast / chime / confetti
+   ============================================================ */
+function toast(msg){
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg><span>'+msg+'</span>';
+  document.getElementById('toastRegion').appendChild(el);
+  setTimeout(()=>el.remove(), 3400);
+}
+function note(what){ toast(what + ' — connects in the next build phase'); }
+function nav(url){ window.location.href = url; }
+function chime(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [523.25, 659.25, 783.99].forEach((f,i)=>{
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0, ctx.currentTime + i*.09);
+      g.gain.linearRampToValueAtTime(.07, ctx.currentTime + i*.09 + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + i*.09 + .7);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime + i*.09); o.stop(ctx.currentTime + i*.09 + .75);
+    });
+  }catch(e){}
+}
+function confetti(n){
+  if(reduced) return;
+  const colors = ['#0E8A5C','#1FA774','#B57312','#2E6FA8','#BFE6D2','#43CE97'];
+  for(let i=0;i<n;i++){
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (1.9 + Math.random()*1.6) + 's';
+    c.style.animationDelay = (Math.random()*.4) + 's';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 4200);
+  }
+}
+
+/* Ripple */
+document.addEventListener('pointerdown', e=>{
+  const b = e.target.closest('.btn, .tool, .photo'); if(!b || reduced) return;
+  const r = b.getBoundingClientRect();
+  const span = document.createElement('span');
+  span.className = 'ripple';
+  const size = Math.max(r.width, r.height);
+  span.style.width = span.style.height = size+'px';
+  span.style.left = (e.clientX - r.left - size/2)+'px';
+  span.style.top  = (e.clientY - r.top - size/2)+'px';
+  b.style.position = 'relative'; b.style.overflow = 'hidden';
+  b.appendChild(span);
+  setTimeout(()=>span.remove(), 600);
+});
+
+/* ============================================================
+   Journey state · rail · navigation
+   ============================================================ */
+const LABELS = ['Request','Pricing','Agreement','Sent','Approval','QR Pickup','Active','Return','Refund','Review'];
+let current = 1, maxReached = 1;
+
+function buildRail(){
+  const rail = document.getElementById('rail');
+  rail.innerHTML = LABELS.map((l,i)=>{
+    const n = i+1;
+    const cls = n < current ? 'done' : n === current ? 'now' : '';
+    const dis = n > maxReached ? 'disabled' : '';
+    return '<button class="rstep '+cls+'" '+dis+' aria-label="Step '+n+': '+l+(n===current?' (current)':'')+'" '+(n===current?'aria-current="step"':'')+' onclick="go('+n+')"><span class="bar"></span><span class="rl">'+n+' · '+l+'</span></button>';
+  }).join('');
+}
+function go(n){
+  if(n > maxReached + 1) return;
+  current = n; maxReached = Math.max(maxReached, n);
+  document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active', parseInt(s.dataset.step,10)===n));
+  buildRail();
+  window.scrollTo({top:0, behavior:reduced?'auto':'smooth'});
+  if(n===2) revealPricing();
+  if(n===5) syncOwnerView();
+  if(n===7) animateTimeline();
+  if(n===9) refundCelebrate();
+}
+/* Presentation Mode jumps directly to any internal step for the guided demo */
+function presentGo(n){ maxReached = Math.max(maxReached, n); go(n); }
+buildRail();
+document.querySelector('[data-step="1"]').classList.add('active');
+
+/* ============================================================
+   Step 1→2 · Smart pricing
+   ============================================================ */
+const RATE = 50, DEP = 200, FEE = 20, BUY_COST = 4400;
+let days = 3;
+function calc(){
+  const f = new Date(document.getElementById('d-from').value);
+  const t = new Date(document.getElementById('d-to').value);
+  days = Math.max(1, Math.round((t - f) / 86400000) || 1);
+  const rent = days * RATE;
+  document.getElementById('prDaysLbl').textContent = 'Rental fee · ' + days + (days===1?' day':' days') + ' × ৳' + RATE;
+  document.getElementById('prRent').textContent = '৳' + rent.toLocaleString('en-US');
+  document.getElementById('prTotal').textContent = '৳' + (rent + DEP + FEE).toLocaleString('en-US');
+  document.getElementById('prSave').textContent = '৳' + (BUY_COST - rent - FEE).toLocaleString('en-US');
+}
+calc();
+function revealPricing(){
+  const rows = document.querySelectorAll('#priceRows .row');
+  rows.forEach(r=>r.classList.remove('show'));
+  rows.forEach((r,i)=>setTimeout(()=>r.classList.add('show'), 120 + i*160));
+}
+
+/* Step 3 accordion */
+function toggleAcc(btn){
+  const body = btn.parentElement.querySelector('.body');
+  const open = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!open));
+  body.style.maxHeight = open ? '0' : body.scrollHeight + 'px';
+}
+
+/* Step 4 switches */
+function flip(sw){
+  const on = sw.getAttribute('aria-checked') !== 'true';
+  sw.setAttribute('aria-checked', String(on));
+  toast(on ? 'Preference on' : 'Preference off');
+}
+
+/* Step 5 sync (dates + purpose from step 1) */
+function syncOwnerView(){
+  const f = new Date(document.getElementById('d-from').value);
+  const t = new Date(document.getElementById('d-to').value);
+  const fmt = d => d.toLocaleDateString('en-US',{month:'short', day:'numeric'});
+  document.getElementById('ownerDates').textContent = fmt(f) + ' → ' + fmt(t);
+  const p = document.getElementById('purpose').value.trim();
+  if(p) document.getElementById('ownerPurpose').textContent = '\u201C' + p + '\u201D';
+}
+
+/* ============================================================
+   Step 6 · QR duo + countdown
+   ============================================================ */
+function drawQR(id, seedIn){
+  const svg = document.getElementById(id);
+  const N = 29; let seed = seedIn;
+  const rnd = ()=>{ seed = (seed*1103515245 + 12345) & 0x7fffffff; return seed/0x7fffffff; };
+  let cells = '';
+  const finder = (x,y)=>
+    '<rect x="'+x+'" y="'+y+'" width="7" height="7" fill="currentColor"/>' +
+    '<rect x="'+(x+1)+'" y="'+(y+1)+'" width="5" height="5" fill="var(--glass-strong)"/>' +
+    '<rect x="'+(x+2)+'" y="'+(y+2)+'" width="3" height="3" fill="currentColor"/>';
+  const inFinder = (c,r)=> (c<8&&r<8)||(c>=N-8&&r<8)||(c<8&&r>=N-8);
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    if(inFinder(c,r)) continue;
+    if(rnd() > .55) cells += '<rect x="'+c+'" y="'+r+'" width="1" height="1" fill="currentColor"/>';
+  }
+  svg.innerHTML = cells + finder(0,0) + finder(N-7,0) + finder(0,N-7);
+}
+drawQR('qr1', 20260729);
+drawQR('qr2', 4408123);
+
+let cdSecs = 15*60;
+setInterval(()=>{
+  cdSecs = cdSecs > 0 ? cdSecs - 1 : 15*60; /* refreshes for security */
+  const m = String(Math.floor(cdSecs/60)).padStart(2,'0');
+  const s = String(cdSecs%60).padStart(2,'0');
+  const el = document.getElementById('cd');
+  if(el) el.textContent = m + ':' + s;
+}, 1000);
+
+/* ============================================================
+   Step 7 · Live timeline animates in
+   ============================================================ */
+function animateTimeline(){
+  const items = document.querySelectorAll('#liveTl .lt');
+  items.forEach(i=>i.classList.remove('done','now'));
+  [0,1,2,3].forEach((idx,k)=>{
+    setTimeout(()=>{ items[idx].classList.add('done'); }, 300 + k*380);
+  });
+  setTimeout(()=>{ items[3].classList.remove('done'); items[3].classList.add('done'); items[4].classList.add('now'); }, 300 + 4*380);
+}
+
+/* ============================================================
+   Step 8 · Photos + inspection
+   ============================================================ */
+let shots = 0;
+function snap(btn){
+  if(btn.classList.contains('shot')) return;
+  btn.classList.add('shot');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>Captured';
+  shots++;
+  document.getElementById('shotCount').textContent = shots;
+  if(shots >= 4){
+    document.getElementById('returnBtn').disabled = false;
+    toast('All four angles captured — ready to send');
+  }
+}
+function startInspect(){
+  const box = document.getElementById('inspect');
+  box.style.display = 'flex';
+  document.getElementById('returnBtn').disabled = true;
+  setTimeout(()=>{
+    document.getElementById('inspSpin').style.display = 'none';
+    document.getElementById('inspTitle').textContent = 'Inspection passed — condition matches pickup ✓';
+    document.getElementById('inspSub').textContent = 'Rafi: \u201CPerfect as always. Pleasure lending to you!\u201D';
+    chime();
+    setTimeout(()=>go(9), 1100);
+  }, 2200);
+}
+
+/* ============================================================
+   Step 9 · Refund celebration
+   ============================================================ */
+let celebrated = false;
+function countUp(id, target){
+  const el = document.getElementById(id);
+  if(reduced){ el.textContent = target.toLocaleString('en-US'); return; }
+  const dur = 1200, t0 = performance.now();
+  (function tick(now){
+    const p = Math.min((now-t0)/dur, 1);
+    const eased = 1 - Math.pow(1-p, 3);
+    el.textContent = Math.round(target*eased).toLocaleString('en-US');
+    if(p<1) requestAnimationFrame(tick);
+  })(t0);
+}
+function refundCelebrate(){
+  countUp('wSave', 200);
+  countUp('wWallet', 1450);
+  countUp('wTrust', 2);
+  if(!celebrated){ celebrated = true; chime(); confetti(90); }
+}
+
+/* ============================================================
+   Step 10 · Rating + finish
+   ============================================================ */
+function rate(n){
+  document.querySelectorAll('#starRow .star').forEach((s,i)=>{
+    s.classList.toggle('on', i < n);
+    s.setAttribute('aria-checked', String(i === n-1));
+  });
+  document.getElementById('finishBtn').disabled = false;
+}
+function finishJourney(){
+  chime(); confetti(110);
+  toast('Review submitted — thanks for keeping the shelf honest 💚');
+  setTimeout(()=>toast('Journey complete: requested → borrowed → returned → refunded. That&rsquo;s ShareBox.'), 1400);
+}
+
+/* ============================================================
+   PRESENTATION MODE · guided demo for judges (2\u20133 min walkthrough)
+   ============================================================ */
+const CURRENT_FILE = 'sharebox-borrow-flow.html';
+const PB_PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+const PB_PLAY_ICON  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>';
+const PB_CLOSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+const PB_PLAY_BADGE  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>';
+const PRESENT_STEPS = [
+  {file:'index.html', caption:'Welcome to ShareBox \u2014 a campus-only marketplace where verified students borrow, rent, sell, and donate what they already own.'},
+  {file:'sharebox-dashboard-glass.html', caption:'After signing in, students land on a personal dashboard \u2014 Trust Score, active borrows, and money saved, all at a glance.'},
+  {file:'sharebox-ai-discovery.html', caption:'Smart search and AI recommendations help students discover exactly what they need across campus.'},
+  {file:'sharebox-item-details.html', caption:'Every listing shows the owner\u2019s Trust Score, live availability, and transparent pricing before you commit.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:1, caption:'Requesting to borrow takes seconds \u2014 pick your dates, add a purpose, and pricing calculates instantly.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:6, caption:'Meeting in person is verified with a two-way QR scan, so every handoff is accountable.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:7, caption:'A live timeline keeps both sides in sync from pickup all the way to the due date.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:8, caption:'Condition photos and a quick inspection close the loop safely for both sides.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:9, caption:'The deposit refunds automatically the moment the return checks out clean.'},
+  {file:'sharebox-account.html', hash:'trust', caption:'Every clean return raises the borrower\u2019s Trust Score \u2014 unlocking lower deposits over time.'},
+  {file:'sharebox-dashboard-glass.html', hash:'sustainability', caption:'Zoomed in, every shared item keeps money in students\u2019 pockets and waste out of landfills.'},
+  {file:'sharebox-ai-discovery.html', hash:'community', caption:'Zoomed out, the whole campus is saving money and cutting waste together.'},
+  {file:'index.html', final:true, caption:'That\u2019s the complete ShareBox journey \u2014 from first visit to a trusted, sustainable campus community.'}
+];
+const PRESENT_DURATION = 12000;
+let presentTimer = null, presentPaused = false, presentElapsed = 0;
+
+function presentCurrentN(){
+  const n = parseInt(new URLSearchParams(location.search).get('present'), 10);
+  return (n >= 1 && n <= PRESENT_STEPS.length) ? n : null;
+}
+function presentStart(){ location.href = 'index.html?present=1'; }
+function presentResetTimer(){
+  clearInterval(presentTimer);
+  presentPaused = false; presentElapsed = 0;
+  presentTimer = setInterval(()=>{
+    if(presentPaused) return;
+    presentElapsed += 250;
+    if(presentElapsed >= PRESENT_DURATION) presentNext();
+  }, 250);
+}
+function presentToggle(){
+  presentPaused = !presentPaused;
+  const btn = document.getElementById('pbToggle');
+  if(btn){
+    btn.innerHTML = presentPaused ? PB_PLAY_ICON : PB_PAUSE_ICON;
+    btn.setAttribute('aria-label', presentPaused ? 'Resume demo' : 'Pause demo');
+  }
+}
+function presentRenderBar(n){
+  const bar = document.getElementById('presentBar');
+  if(!bar) return;
+  bar.hidden = false;
+  const step = PRESENT_STEPS[n-1];
+  bar.classList.toggle('final', !!step.final);
+  if(step.final){
+    bar.innerHTML = '<div class="pb-final-head"><span class="pb-check">'+PB_PLAY_BADGE.replace('<svg','<svg width="14" height="14"')+'</span><strong>Demo complete!</strong></div>' +
+      '<p class="pb-caption">'+step.caption+'</p>' +
+      '<div class="pb-actions"><button class="btn btn-secondary btn-sm" onclick="presentStart()">Restart demo</button><button class="btn btn-primary btn-sm" onclick="presentExit()">Exit demo</button></div>';
+    if(typeof confetti === 'function'){ try{ confetti(90); }catch(e){} }
+    if(typeof chime === 'function'){ try{ chime(); }catch(e){} }
+    clearInterval(presentTimer);
+  } else {
+    const pct = (n/PRESENT_STEPS.length*100).toFixed(1);
+    bar.innerHTML = '<div class="pb-top"><span class="pb-step">Step '+n+' of '+PRESENT_STEPS.length+'</span><div class="pb-track"><i style="width:'+pct+'%"></i></div>' +
+      '<button class="btn-icon" id="pbToggle" aria-label="Pause demo" onclick="presentToggle()">'+PB_PAUSE_ICON+'</button>' +
+      '<button class="btn-icon" aria-label="Exit demo" onclick="presentExit()">'+PB_CLOSE_ICON+'</button></div>' +
+      '<p class="pb-caption" aria-live="polite">'+step.caption+'</p>' +
+      '<div class="pb-actions"><button class="btn btn-secondary btn-sm" onclick="presentPrev()" '+(n===1?'disabled':'')+'>\u25C0 Previous</button><button class="btn btn-primary btn-sm" onclick="presentNext()">Next \u25B6</button></div>';
+    presentResetTimer();
+  }
+}
+function presentGoStep(n){
+  if(n < 1) n = 1;
+  if(n > PRESENT_STEPS.length){ n = PRESENT_STEPS.length; }
+  const step = PRESENT_STEPS[n-1];
+  if(step.file === CURRENT_FILE){
+    history.replaceState(null, '', location.pathname + '?present=' + n + (step.hash ? ('#'+step.hash) : ''));
+    presentRenderBar(n);
+    if(typeof step.borrowStep === 'number' && typeof presentGo === 'function') presentGo(step.borrowStep);
+    if(step.hash){
+      setTimeout(()=>{ const el = document.getElementById(step.hash); if(el) el.scrollIntoView({behavior: reduced?'auto':'smooth', block:'start'}); }, 250);
+    } else if(!step.final){
+      window.scrollTo({top:0, behavior: reduced?'auto':'smooth'});
+    }
+  } else {
+    location.href = step.file + '?present=' + n + (step.hash ? ('#'+step.hash) : '');
+  }
+}
+function presentNext(){ presentGoStep((presentCurrentN()||1) + 1); }
+function presentPrev(){ const n=(presentCurrentN()||1); if(n>1) presentGoStep(n-1); }
+function presentExit(){
+  clearInterval(presentTimer);
+  location.href = CURRENT_FILE;
+}
+(function presentInit(){
+  const n = presentCurrentN();
+  if(!n) return;
+  const step = PRESENT_STEPS[n-1];
+  presentRenderBar(n);
+  if(typeof step.borrowStep === 'number'){
+    setTimeout(()=>{ if(typeof presentGo === 'function') presentGo(step.borrowStep); }, 60);
+  }
+  if(step.hash){
+    setTimeout(()=>{ const el = document.getElementById(step.hash); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 500);
+  }
+})();
+
+</script>
+<script src="app-core.js"></script>
+</body>
+</html>

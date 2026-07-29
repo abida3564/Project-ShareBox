@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E8A5C">
+<meta name="description" content="ESP32 Development Kit + Breadboard — borrow or rent from a verified student on ShareBox.">
+<title>ESP32 Development Kit — ShareBox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SHAREBOX ITEM DETAILS · same Trust-Green token system
+   ============================================================ */
+:root{
+  --bg:#F5F7F3; --surface:#FFFFFF; --surface-2:#ECF1EA;
+  --ink:#16241C; --ink-soft:#55685D; --ink-faint:#8A9A90;
+  --line:#DFE7DF; --line-strong:#C9D5CA;
+  --green:#0E8A5C; --green-strong:#0A6B47; --green-tint:#E2F3EA; --green-glow:rgba(14,138,92,.28);
+  --amber:#B57312; --amber-tint:#FAEEDB;
+  --red:#C24C3B; --red-tint:#F9E6E2;
+  --blue:#2E6FA8; --blue-tint:#E4EEF7;
+  --grad-band:linear-gradient(120deg,#0A6B47,#0E8A5C 55%,#1FA774);
+  --overlay:rgba(16,28,22,.55);
+
+  --font-display:"Bricolage Grotesque","Inter",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,sans-serif;
+
+  --s-1:.25rem; --s-2:.5rem; --s-3:.75rem; --s-4:1rem;
+  --s-5:1.5rem; --s-6:2rem; --s-7:3rem; --s-8:4rem;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:22px; --r-full:999px;
+  --e-1:0 1px 2px rgba(22,36,28,.04), 0 3px 10px rgba(22,36,28,.04);
+  --e-2:0 2px 6px rgba(22,36,28,.05), 0 16px 38px rgba(22,36,28,.09);
+  --e-3:0 4px 14px rgba(22,36,28,.07), 0 32px 76px rgba(22,36,28,.15);
+  --ease:cubic-bezier(.22,.8,.36,1);
+  --t-fast:.15s; --t-med:.3s; --t-slow:.55s;
+  --topbar-h:68px; --max:1180px;
+}
+[data-theme="dark"]{
+  --bg:#0C1310; --surface:#131C16; --surface-2:#1B2620;
+  --ink:#E9F0EA; --ink-soft:#9CAEA2; --ink-faint:#67796D;
+  --line:#243128; --line-strong:#324437;
+  --green:#43CE97; --green-strong:#6ADFB1; --green-tint:rgba(67,206,151,.13); --green-glow:rgba(67,206,151,.3);
+  --amber:#E0A34A; --amber-tint:rgba(224,163,74,.14);
+  --red:#E27A6A; --red-tint:rgba(226,122,106,.14);
+  --blue:#6FA8DC; --blue-tint:rgba(111,168,220,.14);
+  --grad-band:linear-gradient(120deg,#0F5C40,#159A69 55%,#2FBE88);
+  --overlay:rgba(0,0,0,.65);
+  --e-1:0 1px 2px rgba(0,0,0,.22), 0 3px 12px rgba(0,0,0,.28);
+  --e-2:0 2px 7px rgba(0,0,0,.28), 0 18px 42px rgba(0,0,0,.4);
+  --e-3:0 4px 16px rgba(0,0,0,.35), 0 34px 84px rgba(0,0,0,.55);
+}
+
+/* ============================================================ BASE */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:.95rem; line-height:1.6; -webkit-font-smoothing:antialiased; transition:background var(--t-med) var(--ease), color var(--t-med) var(--ease)}
+h1,h2,h3,h4{font-family:var(--font-display); line-height:1.14; margin:0; letter-spacing:-.015em}
+p{margin:0}
+a{color:var(--green); text-decoration:none}
+img,svg{display:block; max-width:100%}
+button{font-family:inherit}
+::selection{background:var(--green-glow)}
+:focus{outline:none}
+:focus-visible{outline:2.5px solid var(--green); outline-offset:2px; border-radius:4px; box-shadow:0 0 0 5px var(--green-glow)}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+.skip-link{position:fixed; top:-100px; left:var(--s-4); z-index:400; background:var(--green); color:#fff; padding:var(--s-2) var(--s-4); border-radius:var(--r-sm); font-weight:600; transition:top var(--t-fast) var(--ease)}
+.skip-link:focus{top:var(--s-4)}
+
+.rv{opacity:0; transform:translateY(18px); transition:opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease)}
+.rv.in{opacity:1; transform:none}
+.rv-d1{transition-delay:.07s}.rv-d2{transition-delay:.14s}.rv-d3{transition-delay:.21s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important}
+  .rv{opacity:1; transform:none}
+}
+
+/* ============================================================ COMPONENTS */
+.btn{
+  position:relative; overflow:hidden;
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  font-weight:600; font-size:.92rem; line-height:1; border-radius:var(--r-md);
+  border:1.5px solid transparent; padding:0 1.3rem; height:46px; cursor:pointer;
+  white-space:nowrap; text-decoration:none!important;
+  transition:transform var(--t-fast) var(--ease), background var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.btn:hover{transform:translateY(-2px) scale(1.015)}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-primary{background:var(--green); color:#fff; box-shadow:0 4px 14px var(--green-glow)}
+[data-theme="dark"] .btn-primary{color:#08110C}
+.btn-primary:hover{background:var(--green-strong); box-shadow:0 8px 24px var(--green-glow)}
+.btn-secondary{background:var(--surface); color:var(--ink); border-color:var(--line-strong)}
+.btn-secondary:hover{border-color:var(--green); color:var(--green)}
+.btn-sm{height:36px; padding:0 .95rem; font-size:.84rem; border-radius:var(--r-sm)}
+.btn-lg{height:52px; font-size:1rem; border-radius:var(--r-lg)}
+.btn-block{width:100%}
+.btn-tertiary{background:none; border:none; color:var(--green); font-weight:600; padding:0; height:auto; cursor:pointer; font-size:.86rem}
+.btn-tertiary:hover{text-decoration:underline}
+.btn-icon{width:42px; height:42px; padding:0; border-radius:var(--r-md); background:transparent; border:none; color:var(--ink-soft); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease); flex:none}
+.btn-icon:hover{background:var(--surface-2); color:var(--ink); transform:scale(1.06)}
+.btn-icon svg{width:20px; height:20px}
+.ripple{position:absolute; border-radius:50%; background:currentColor; opacity:.22; transform:scale(0); animation:ripple .55s var(--ease) forwards; pointer-events:none}
+@keyframes ripple{to{transform:scale(3.2); opacity:0}}
+
+.badge{display:inline-flex; align-items:center; gap:6px; font-size:.73rem; font-weight:600; padding:4px 10px; border-radius:var(--r-full); line-height:1.4}
+.badge svg{width:12px; height:12px; flex:none}
+.badge-green{background:var(--green-tint); color:var(--green-strong)}
+[data-theme="dark"] .badge-green{color:var(--green)}
+.badge-amber{background:var(--amber-tint); color:var(--amber)}
+.badge-blue{background:var(--blue-tint); color:var(--blue)}
+.badge-neutral{background:var(--surface-2); color:var(--ink-soft)}
+
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); box-shadow:var(--e-1); transition:transform var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease), border-color var(--t-med) var(--ease)}
+.card-hover:hover{transform:translateY(-4px); box-shadow:var(--e-2); border-color:var(--line-strong)}
+.avatar{width:38px; height:38px; border-radius:var(--r-full); background:linear-gradient(135deg,var(--green),var(--green-strong)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.86rem; border:none; cursor:pointer; flex:none}
+
+/* ============================================================ TOPBAR */
+.topbar{
+  position:sticky; top:0; z-index:90; height:var(--topbar-h);
+  background:color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:var(--s-3); padding:0 var(--s-5);
+}
+.brand{display:flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none!important}
+.brand .wordmark{font-family:var(--font-display); font-weight:800; font-size:1.15rem; letter-spacing:-.02em}
+.topbar .grow{flex:1}
+.icon-badge{position:relative}
+.icon-badge .dot{position:absolute; top:6px; right:6px; min-width:16px; height:16px; padding:0 4px; background:var(--red); color:#fff; font-size:10px; font-weight:700; border-radius:var(--r-full); display:flex; align-items:center; justify-content:center; border:2px solid var(--bg)}
+
+.crumbs{max-width:var(--max); margin:0 auto; padding:var(--s-4) var(--s-5) 0; font-size:.83rem; color:var(--ink-faint); display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.crumbs a{color:var(--ink-soft)}
+.crumbs a:hover{color:var(--green)}
+.crumbs svg{width:12px; height:12px}
+
+/* ============================================================ LAYOUT */
+.page{max-width:var(--max); margin:0 auto; padding:var(--s-5) var(--s-5) 120px}
+.layout{display:grid; grid-template-columns:1fr 400px; gap:var(--s-6); align-items:start}
+.main-col{min-width:0; display:flex; flex-direction:column; gap:var(--s-6)}
+.side-col{position:sticky; top:calc(var(--topbar-h) + var(--s-4)); display:flex; flex-direction:column; gap:var(--s-4)}
+.sec-title{font-size:1.12rem; font-weight:700; display:flex; align-items:center; gap:10px}
+.sec-title svg{width:19px; height:19px; color:var(--green)}
+
+/* ============================================================ 1 · GALLERY */
+.gallery{overflow:hidden}
+.stage{position:relative; aspect-ratio:16/10; overflow:hidden; background:var(--surface-2); cursor:zoom-in}
+.stage .shimmer{position:absolute; inset:0; background:var(--surface-2); overflow:hidden; z-index:3; transition:opacity .5s var(--ease)}
+.stage .shimmer::after{content:""; position:absolute; inset:0; transform:translateX(-100%); background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent); animation:shimmer 1.2s infinite}
+[data-theme="dark"] .stage .shimmer::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent)}
+@keyframes shimmer{to{transform:translateX(100%)}}
+.stage .shimmer.hide{opacity:0; pointer-events:none}
+.slides{display:flex; height:100%; transition:transform .45s var(--ease); touch-action:pan-y}
+.slide{flex:0 0 100%; height:100%; display:flex; align-items:center; justify-content:center; transition:transform .35s var(--ease); transform-origin:center}
+.slide svg{width:72%; height:72%}
+.gal-btn{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:4;
+  width:42px; height:42px; border-radius:var(--r-full); border:1px solid var(--line);
+  background:color-mix(in srgb, var(--surface) 88%, transparent); color:var(--ink);
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+  box-shadow:var(--e-2); transition:transform var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.gal-btn:hover{transform:translateY(-50%) scale(1.1); background:var(--surface)}
+.gal-btn svg{width:18px; height:18px}
+.gal-prev{left:14px}.gal-next{right:14px}
+.gal-count{position:absolute; bottom:12px; right:14px; z-index:4; background:rgba(16,28,22,.65); color:#fff; font-size:.75rem; font-weight:600; padding:4px 11px; border-radius:var(--r-full); font-variant-numeric:tabular-nums}
+.thumbs{display:flex; gap:var(--s-2); padding:var(--s-3)}
+.thumb{
+  flex:1; aspect-ratio:16/10; border-radius:var(--r-sm); overflow:hidden; cursor:pointer;
+  border:2px solid transparent; background:var(--surface-2); padding:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:border-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), opacity var(--t-fast) var(--ease);
+  opacity:.6;
+}
+.thumb svg{width:62%; height:62%}
+.thumb:hover{transform:translateY(-2px); opacity:1}
+.thumb[aria-current="true"]{border-color:var(--green); opacity:1}
+
+/* ============================================================ 2 · ITEM INFO */
+.item-head h1{font-size:clamp(1.5rem,2.8vw,2.1rem); font-weight:800}
+.item-head .sub{display:flex; align-items:center; gap:var(--s-3); margin-top:var(--s-3); flex-wrap:wrap}
+.spec-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-3); margin-top:var(--s-5)}
+.spec{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s-3) var(--s-4)}
+.spec .k{font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint)}
+.spec .v{font-weight:700; font-size:.95rem; margin-top:3px; display:flex; align-items:center; gap:7px}
+.spec .v svg{width:14px; height:14px; color:var(--green)}
+
+/* ============================================================ 3 · OWNER CARD */
+.owner-card{padding:var(--s-5)}
+.owner-top{display:flex; gap:var(--s-4); align-items:center; flex-wrap:wrap}
+.owner-top .pfp{width:72px; height:72px; border-radius:var(--r-full); background:linear-gradient(135deg,#2E6FA8,#1F4E78); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.5rem; font-family:var(--font-display); flex:none; box-shadow:0 0 0 4px var(--green-tint)}
+.owner-top .who{flex:1; min-width:180px}
+.owner-top h3{font-size:1.2rem; display:flex; align-items:center; gap:9px; flex-wrap:wrap}
+.owner-top .who p{font-size:.86rem; color:var(--ink-soft); margin-top:3px}
+.owner-trust{text-align:center; flex:none}
+.owner-trust .tr-num{font-family:var(--font-display); font-weight:800; font-size:1.7rem; color:var(--green-strong); line-height:1}
+[data-theme="dark"] .owner-trust .tr-num{color:var(--green)}
+.owner-trust .tr-lbl{font-size:.7rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint)}
+.owner-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s-2); margin-top:var(--s-5); border-top:1px dashed var(--line); padding-top:var(--s-4)}
+.ostat{text-align:center}
+.ostat strong{display:block; font-family:var(--font-display); font-size:1.05rem; font-weight:800; font-variant-numeric:tabular-nums}
+.ostat span{font-size:.72rem; color:var(--ink-soft)}
+.owner-badges{display:flex; gap:var(--s-2); flex-wrap:wrap; margin-top:var(--s-4)}
+
+/* ============================================================ 4 · CALENDAR */
+.cal{padding:var(--s-5)}
+.cal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--s-4)}
+.cal-head strong{font-family:var(--font-display); font-size:1rem}
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:5px}
+.cal-grid .dow{font-size:.68rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); text-align:center; padding:4px 0}
+.day{
+  aspect-ratio:1; border-radius:var(--r-sm); border:1.5px solid transparent; background:var(--surface-2);
+  font-size:.82rem; font-weight:600; color:var(--ink); cursor:pointer; position:relative;
+  display:flex; align-items:center; justify-content:center; font-variant-numeric:tabular-nums;
+  transition:transform var(--t-fast) var(--ease), background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.day.avail{background:var(--green-tint); color:var(--green-strong)}
+[data-theme="dark"] .day.avail{color:var(--green)}
+.day.avail:hover{transform:scale(1.08); border-color:var(--green)}
+.day.reserved{background:var(--amber-tint); color:var(--amber); cursor:not-allowed}
+.day.off{background:var(--surface-2); color:var(--ink-faint); cursor:not-allowed; opacity:.55}
+.day.sel{background:var(--green); color:#fff; border-color:var(--green-strong)}
+[data-theme="dark"] .day.sel{color:#08110C}
+.day.inrange{background:var(--green); color:#fff; opacity:.55}
+[data-theme="dark"] .day.inrange{color:#08110C}
+.cal-legend{display:flex; gap:var(--s-4); margin-top:var(--s-4); font-size:.76rem; color:var(--ink-soft); flex-wrap:wrap}
+.cal-legend i{display:inline-block; width:11px; height:11px; border-radius:3px; margin-right:6px; vertical-align:-1px}
+.cal-sum{margin-top:var(--s-4); border-top:1px dashed var(--line); padding-top:var(--s-4); display:none; flex-direction:column; gap:8px; font-size:.88rem}
+.cal-sum.show{display:flex}
+.cal-sum .row{display:flex; justify-content:space-between}
+.cal-sum .row strong{font-variant-numeric:tabular-nums}
+.cal-sum .total{border-top:1px solid var(--line); padding-top:8px; font-weight:700}
+.cal-hint{margin-top:var(--s-3); font-size:.8rem; color:var(--ink-faint)}
+
+/* ============================================================ 5 · PRICING (side) */
+.price-card{padding:var(--s-5)}
+.price-opts{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3)}
+.popt{
+  border:1.5px solid var(--line-strong); border-radius:var(--r-md); padding:var(--s-4);
+  cursor:pointer; background:var(--surface); text-align:left; position:relative; overflow:hidden;
+  transition:border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+.popt:hover{transform:translateY(-2px)}
+.popt .pk{font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint)}
+.popt .pv{font-family:var(--font-display); font-weight:800; font-size:1.25rem; margin-top:4px; font-variant-numeric:tabular-nums}
+.popt .ps{font-size:.75rem; color:var(--ink-soft)}
+.popt[aria-pressed="true"]{border-color:var(--green); background:var(--green-tint)}
+.popt.dis{opacity:.5; cursor:not-allowed}
+.price-note{display:flex; gap:9px; align-items:flex-start; background:var(--blue-tint); border-radius:var(--r-md); padding:var(--s-3) var(--s-4); font-size:.8rem; color:var(--ink-soft); margin-top:var(--s-4)}
+.price-note svg{width:15px; height:15px; color:var(--blue); flex:none; margin-top:2px}
+.side-actions{display:flex; flex-direction:column; gap:var(--s-3); margin-top:var(--s-4)}
+.side-actions .mini-row{display:flex; gap:var(--s-2)}
+.side-actions .mini-row .btn{flex:1}
+.wish.on{color:var(--red); border-color:var(--red)}
+
+/* ============================================================ 6 · AI INSIGHTS */
+.ai-card{border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; background:linear-gradient(135deg, var(--surface), var(--green-tint))}
+.ai-card .inner{padding:var(--s-5)}
+.ai-head{display:flex; align-items:center; gap:10px; margin-bottom:var(--s-4)}
+.ai-head .spark{width:36px; height:36px; border-radius:var(--r-md); background:var(--grad-band); color:#fff; display:flex; align-items:center; justify-content:center; animation:sparkle 3.4s ease-in-out infinite}
+.ai-head .spark svg{width:18px; height:18px}
+@keyframes sparkle{0%,100%{box-shadow:0 0 0 0 var(--green-glow)}50%{box-shadow:0 0 0 9px transparent}}
+.ai-list{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3); list-style:none; margin:0; padding:0}
+.ai-list li{background:color-mix(in srgb, var(--surface) 78%, transparent); border:1px solid var(--line); border-radius:var(--r-md); padding:var(--s-3) var(--s-4); font-size:.87rem; display:flex; gap:10px; align-items:flex-start}
+.ai-list li svg{width:15px; height:15px; color:var(--green); flex:none; margin-top:3px}
+.ai-list li strong{font-variant-numeric:tabular-nums}
+
+/* ============================================================ 7 · AGREEMENT */
+.acc{border-bottom:1px solid var(--line)}
+.acc:last-child{border-bottom:none}
+.acc > button{width:100%; background:none; border:none; cursor:pointer; text-align:left; padding:var(--s-4) var(--s-5); display:flex; justify-content:space-between; align-items:center; gap:var(--s-3); font-size:.94rem; font-weight:600; color:var(--ink)}
+.acc > button svg{width:17px; height:17px; color:var(--green); flex:none; transition:transform var(--t-med) var(--ease)}
+.acc > button[aria-expanded="true"] svg{transform:rotate(45deg)}
+.acc .body{max-height:0; overflow:hidden; transition:max-height var(--t-med) var(--ease)}
+.acc .body p{padding:0 var(--s-5) var(--s-4); font-size:.87rem; color:var(--ink-soft)}
+
+/* ============================================================ 8 · PROTECTION TIMELINE */
+.prot{padding:var(--s-5)}
+.prot-line{display:grid; grid-template-columns:repeat(6,1fr); gap:var(--s-2); position:relative; margin-top:var(--s-4)}
+.prot-line::before{content:""; position:absolute; top:23px; left:8%; right:8%; border-top:2px dashed var(--line-strong)}
+.pstep{display:flex; flex-direction:column; align-items:center; gap:9px; text-align:center; position:relative}
+.pstep .pi{width:46px; height:46px; border-radius:var(--r-full); background:var(--surface); border:2px solid var(--line-strong); color:var(--ink-soft); display:flex; align-items:center; justify-content:center; z-index:1; transition:transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease)}
+.pstep:hover .pi{transform:scale(1.12); border-color:var(--green); color:var(--green)}
+.pstep .pi svg{width:19px; height:19px}
+.pstep span{font-size:.72rem; font-weight:600; color:var(--ink-soft); line-height:1.3}
+
+/* ============================================================ 9 · QR */
+.qr-card{padding:var(--s-5); display:flex; gap:var(--s-5); align-items:center; flex-wrap:wrap}
+.qr-frame{width:150px; height:150px; border-radius:var(--r-md); background:var(--surface); border:1px solid var(--line); padding:12px; position:relative; overflow:hidden; flex:none; margin:0 auto}
+.qr-frame svg{width:100%; height:100%; color:var(--ink)}
+.qr-frame .scanline{position:absolute; left:8px; right:8px; height:3px; border-radius:2px; background:var(--green); box-shadow:0 0 14px var(--green); animation:scan 2.6s ease-in-out infinite}
+@keyframes scan{0%,100%{top:10%}50%{top:88%}}
+.qr-frame::before,.qr-frame::after,
+.qr-frame .c3,.qr-frame .c4{content:""; position:absolute; width:20px; height:20px; border:3px solid var(--green); border-radius:4px}
+.qr-frame::before{top:-2px; left:-2px; border-right:none; border-bottom:none}
+.qr-frame::after{top:-2px; right:-2px; border-left:none; border-bottom:none}
+.qr-frame .c3{bottom:-2px; left:-2px; border-right:none; border-top:none}
+.qr-frame .c4{bottom:-2px; right:-2px; border-left:none; border-top:none}
+.qr-info{flex:1; min-width:220px}
+.qr-info ol{margin:var(--s-3) 0 0; padding-left:1.2rem; font-size:.88rem; color:var(--ink-soft); display:flex; flex-direction:column; gap:6px}
+
+/* ============================================================ 10 · CHAT */
+.chat{display:flex; flex-direction:column}
+.chat .log{padding:var(--s-5); display:flex; flex-direction:column; gap:var(--s-3); max-height:280px; overflow-y:auto}
+.msg{max-width:78%; padding:10px 14px; border-radius:var(--r-md); font-size:.88rem; line-height:1.5; animation:msgIn .3s var(--ease)}
+@keyframes msgIn{from{opacity:0; transform:translateY(8px)}to{opacity:1}}
+.msg.them{background:var(--surface-2); border-bottom-left-radius:4px; align-self:flex-start}
+.msg.me{background:var(--green); color:#fff; border-bottom-right-radius:4px; align-self:flex-end}
+[data-theme="dark"] .msg.me{color:#08110C}
+.msg time{display:block; font-size:.68rem; opacity:.65; margin-top:3px}
+.quick{display:flex; gap:var(--s-2); padding:0 var(--s-5) var(--s-5); flex-wrap:wrap}
+.quick .chipq{border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink-soft); border-radius:var(--r-full); padding:8px 14px; font-size:.82rem; font-weight:500; cursor:pointer; transition:all var(--t-fast) var(--ease)}
+.quick .chipq:hover{border-color:var(--green); color:var(--green); transform:translateY(-2px)}
+.typing{display:inline-flex; gap:4px; padding:12px 14px}
+.typing i{width:6px; height:6px; border-radius:50%; background:var(--ink-faint); animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+
+/* ============================================================ 11 · REVIEWS */
+.rev-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-4)}
+.rev{padding:var(--s-4) var(--s-5); display:flex; flex-direction:column; gap:10px}
+.rev .rtop{display:flex; align-items:center; gap:11px}
+.rev .pfp{width:38px; height:38px; border-radius:var(--r-full); display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:700; color:#fff; flex:none}
+.rev .rtop strong{display:block; font-size:.9rem}
+.rev .rtop time{font-size:.74rem; color:var(--ink-faint)}
+.stars{display:inline-flex; gap:2px; color:var(--amber)}
+.stars svg{width:13px; height:13px}
+.rev blockquote{margin:0; font-size:.88rem; color:var(--ink); line-height:1.55}
+.rev .rfoot{display:flex; align-items:center; justify-content:space-between; margin-top:auto}
+.helpful{display:inline-flex; align-items:center; gap:6px; border:1.5px solid var(--line-strong); background:none; color:var(--ink-soft); border-radius:var(--r-full); padding:5px 12px; font-size:.78rem; font-weight:600; cursor:pointer; transition:all var(--t-fast) var(--ease)}
+.helpful:hover{border-color:var(--green); color:var(--green)}
+.helpful.on{background:var(--green-tint); border-color:var(--green); color:var(--green-strong)}
+[data-theme="dark"] .helpful.on{color:var(--green)}
+.helpful svg{width:13px; height:13px}
+
+/* ============================================================ 12 · RELATED */
+.rel-scroll{display:grid; grid-auto-flow:column; grid-auto-columns:190px; gap:var(--s-3); overflow-x:auto; padding:var(--s-1) var(--s-1) var(--s-3); scrollbar-width:thin}
+.rel{overflow:hidden; cursor:pointer; text-decoration:none!important; color:var(--ink)}
+.rel .rthumb{aspect-ratio:4/3; display:flex; align-items:center; justify-content:center; color:var(--ink-faint)}
+.rel .rthumb svg{width:38px; height:38px; opacity:.55}
+.rel .rbody{padding:var(--s-3)}
+.rel .rbody strong{display:block; font-size:.86rem; line-height:1.3}
+.rel .rbody span{font-size:.76rem; color:var(--ink-soft)}
+
+/* ============================================================ 13 · SUSTAIN */
+.sustain{background:var(--grad-band); border-radius:var(--r-xl); color:#fff; padding:var(--s-6)}
+[data-theme="dark"] .sustain{color:#F2FBF6}
+.sustain h2{font-size:1.25rem; font-weight:800}
+.sustain .sub{opacity:.9; font-size:.88rem; margin-top:4px}
+.eco-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s-4); margin-top:var(--s-5)}
+.eco{background:rgba(255,255,255,.12); border-radius:var(--r-md); padding:var(--s-4); text-align:center}
+.eco svg{width:22px; height:22px; margin:0 auto 8px; opacity:.95}
+.eco strong{display:block; font-family:var(--font-display); font-size:1.3rem; font-weight:800; font-variant-numeric:tabular-nums}
+.eco span{font-size:.76rem; opacity:.88}
+
+/* ============================================================ 14 · FLOATING ACTION BAR (mobile) */
+.fab-bar{
+  display:none; position:fixed; bottom:0; left:0; right:0; z-index:95;
+  background:color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter:blur(14px); border-top:1px solid var(--line);
+  padding:10px var(--s-4) calc(10px + env(safe-area-inset-bottom));
+  gap:var(--s-2); align-items:center;
+}
+.fab-bar .btn-primary{flex:1.4}
+.fab-bar .btn-secondary{flex:1}
+
+/* ============================================================ 16 · WOW MODAL + CONFETTI */
+.modal-overlay{position:fixed; inset:0; background:var(--overlay); z-index:300; display:flex; align-items:center; justify-content:center; padding:var(--s-4); opacity:0; pointer-events:none; transition:opacity var(--t-med) var(--ease); backdrop-filter:blur(4px)}
+.modal-overlay.open{opacity:1; pointer-events:auto}
+.modal{background:var(--surface); border-radius:var(--r-xl); box-shadow:var(--e-3); width:100%; max-width:430px; padding:var(--s-6); border:1px solid var(--line); text-align:center; transform:translateY(16px) scale(.96); transition:transform var(--t-med) var(--ease); position:relative; overflow:hidden}
+.modal-overlay.open .modal{transform:none}
+.modal .check-ring{width:76px; height:76px; margin:0 auto var(--s-4); border-radius:50%; background:var(--green-tint); display:flex; align-items:center; justify-content:center; animation:pop .5s var(--ease)}
+.modal .check-ring svg{width:36px; height:36px; color:var(--green-strong)}
+[data-theme="dark"] .modal .check-ring svg{color:var(--green)}
+@keyframes pop{0%{transform:scale(.4); opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+.modal h3{font-size:1.3rem}
+.modal .msub{color:var(--ink-soft); font-size:.9rem; margin-top:8px}
+.wow-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-3); margin:var(--s-5) 0}
+.wow{background:var(--surface-2); border-radius:var(--r-md); padding:var(--s-3)}
+.wow strong{display:block; font-family:var(--font-display); font-size:1.15rem; font-weight:800; font-variant-numeric:tabular-nums; color:var(--green-strong)}
+[data-theme="dark"] .wow strong{color:var(--green)}
+.wow span{font-size:.7rem; color:var(--ink-soft)}
+.confetti{position:fixed; top:-14px; z-index:310; width:9px; height:15px; border-radius:2px; pointer-events:none; animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(660deg); opacity:.9}}
+
+/* Toast */
+.toast-region{position:fixed; bottom:calc(84px + env(safe-area-inset-bottom)); right:var(--s-4); z-index:320; display:flex; flex-direction:column; gap:var(--s-2); width:min(380px, calc(100vw - 32px)); pointer-events:none}
+@media(min-width:961px){.toast-region{bottom:var(--s-5); right:var(--s-5)}}
+.toast{background:var(--ink); color:var(--bg); border-radius:var(--r-md); box-shadow:var(--e-3); padding:11px 16px; display:flex; align-items:center; gap:10px; font-size:.86rem; font-weight:500; pointer-events:auto; animation:toastIn var(--t-med) var(--ease)}
+.toast svg{width:16px; height:16px; flex:none; color:#5EDDA8}
+@keyframes toastIn{from{opacity:0; transform:translateY(10px)}to{opacity:1}}
+
+/* ============================================================ RESPONSIVE */
+@media (max-width:1080px){
+  .layout{grid-template-columns:1fr 350px}
+  .ai-list{grid-template-columns:1fr}
+  .rev-grid{grid-template-columns:1fr}
+}
+@media (max-width:960px){
+  .layout{grid-template-columns:1fr}
+  .side-col{position:static}
+  .fab-bar{display:flex}
+  .spec-grid{grid-template-columns:repeat(2,1fr)}
+  .prot-line{grid-template-columns:repeat(3,1fr); row-gap:var(--s-5)}
+  .prot-line::before{display:none}
+  .eco-grid{grid-template-columns:repeat(2,1fr)}
+  .page{padding-bottom:150px}
+  .gal-btn{display:none} /* swipe on mobile */
+}
+@media (max-width:560px){
+  .page,.crumbs{padding-inline:var(--s-4)}
+  .owner-stats{grid-template-columns:repeat(2,1fr); row-gap:var(--s-4)}
+  .price-opts{grid-template-columns:1fr 1fr}
+  .qr-card{flex-direction:column; text-align:center}
+  .qr-info ol{text-align:left}
+}
+
+/* ============================================================
+   SHARED CROSS-APP NAVIGATION · mobile bottom nav + AI launcher
+   (styled with this page's own surface/shadow tokens, not glass)
+   ============================================================ */
+.ai-launch{position:fixed; left:var(--s-5); bottom:var(--s-5); z-index:115; width:52px; height:52px; border-radius:var(--r-full); background:linear-gradient(160deg,var(--green-strong),var(--green)); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 26px var(--green-glow); border:1px solid rgba(255,255,255,.25); transition:transform var(--t-med) var(--ease)}
+.ai-launch:hover{transform:scale(1.1) rotate(8deg)}
+.ai-launch svg{width:22px; height:22px}
+.bottom-nav{display:none}
+@media (max-width:900px){
+  .ai-launch{bottom:calc(var(--s-3) + 84px)}
+  body{padding-bottom:82px}
+  .bottom-nav{
+    display:flex; align-items:center; justify-content:space-around;
+    position:fixed; left:var(--s-3); right:var(--s-3); bottom:var(--s-3); z-index:110;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--r-xl); box-shadow:var(--e-3); padding:8px;
+  }
+  .bn-item{display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--ink-faint); text-decoration:none!important; font-size:.62rem; font-weight:700; padding:6px 12px; border-radius:14px; transition:all var(--t-fast) var(--ease)}
+  .bn-item svg{width:20px; height:20px}
+  .bn-item:hover{transform:translateY(-2px); color:var(--ink)}
+  .bn-item.active{color:var(--green-strong)}
+  .bn-item.raised{background:linear-gradient(160deg,var(--green-strong),var(--green)); color:#fff; margin-top:-30px; width:54px; height:54px; border-radius:50%; justify-content:center; box-shadow:0 10px 24px var(--green-glow); border:1px solid rgba(255,255,255,.25)}
+  .bn-item.raised span{display:none}
+  .bn-item.raised svg{width:23px; height:23px}
+}
+
+/* ============================================================
+   PRESENTATION MODE · guided demo bar (v1 surface variant)
+   ============================================================ */
+.present-bar{position:fixed; left:50%; bottom:var(--s-5); transform:translateX(-50%); z-index:250; width:min(540px, calc(100vw - 32px)); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-xl); box-shadow:var(--e-3); padding:var(--s-4) var(--s-5); animation:pbIn .5s var(--ease)}
+.present-bar[hidden]{display:none}
+@keyframes pbIn{from{opacity:0; transform:translateX(-50%) translateY(20px)}to{opacity:1; transform:translateX(-50%) translateY(0)}}
+.pb-top{display:flex; align-items:center; gap:10px}
+.pb-step{font-size:.7rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--green-strong); white-space:nowrap}
+.pb-track{flex:1; height:5px; border-radius:3px; background:var(--surface-2); overflow:hidden}
+.pb-track i{display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--green-strong)); border-radius:3px; width:0; transition:width .4s var(--ease)}
+.present-bar .btn-icon{width:34px; height:34px; flex:none}
+.present-bar .btn-icon svg{width:16px; height:16px}
+.pb-caption{font-size:.85rem; color:var(--ink); margin-top:10px; line-height:1.5}
+.pb-actions{display:flex; gap:8px; margin-top:12px}
+.pb-actions .btn{flex:1}
+.present-bar.final{text-align:center}
+.pb-final-head{display:flex; align-items:center; justify-content:center; gap:9px; font-family:var(--font-display); font-weight:800; font-size:1.05rem}
+.pb-check{width:28px; height:28px; border-radius:50%; background:var(--green-tint); color:var(--green-strong); display:inline-flex; align-items:center; justify-content:center; font-size:.85rem}
+.demo-launch{display:inline-flex; align-items:center; gap:7px; height:42px; padding:0 15px; border-radius:var(--r-full); background:var(--surface-2); border:1px solid var(--line); color:var(--ink); font-weight:700; font-size:.82rem; cursor:pointer; text-decoration:none!important; transition:all var(--t-fast) var(--ease); flex:none}
+.demo-launch:hover{background:var(--green-tint); border-color:var(--green); color:var(--green-strong)}
+.demo-launch svg{width:15px; height:15px}
+@media (max-width:560px){
+  .present-bar{bottom:calc(var(--s-3) + 4px); padding:var(--s-3) var(--s-4)}
+  .demo-launch span{display:none}
+}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- Topbar -->
+<header class="topbar">
+  <button class="btn-icon" aria-label="Back to dashboard" onclick="nav('sharebox-dashboard-glass.html')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  </button>
+  <a class="brand" href="sharebox-dashboard-glass.html">
+    <svg width="27" height="27" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--green)"/>
+      <path d="M10 13.5 16 9l6 4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M22 18.5 16 23l-6-4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".65"/>
+    </svg>
+    <span class="wordmark">ShareBox</span>
+  </a>
+  <div class="grow"></div>
+  <button class="demo-launch" onclick="presentStart()" aria-label="Start guided demo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg><span>Demo</span></button>
+  <button class="btn-icon" data-theme-toggle aria-label="Switch to dark mode" onclick="toggleTheme()"></button>
+  <button class="btn-icon icon-badge" aria-label="Notifications, 3 unread" onclick="note('Notifications')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+    <span class="dot" aria-hidden="true">3</span>
+  </button>
+  <button class="avatar" aria-label="Your profile" onclick="nav('sharebox-account.html')">TA</button>
+</header>
+
+<nav class="crumbs" aria-label="Breadcrumb">
+  <a href="sharebox-dashboard-glass.html">Home</a>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+  <a href="#" onclick="note('Browse'); return false;">Browse</a>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+  <a href="#" onclick="note('IoT Devices'); return false;">IoT Devices</a>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+  <span aria-current="page" style="color:var(--ink)">ESP32 Development Kit</span>
+</nav>
+
+<main id="main" class="page">
+  <div class="layout">
+
+    <!-- ==================== MAIN COLUMN ==================== -->
+    <div class="main-col">
+
+      <!-- 1 · HERO GALLERY -->
+      <section class="card gallery rv in" aria-label="Item photos">
+        <div class="stage" id="stage" aria-roledescription="carousel" aria-label="ESP32 kit photos, 4 images">
+          <div class="shimmer" id="galShimmer"></div>
+          <div class="slides" id="slides">
+            <div class="slide" role="group" aria-label="Photo 1 of 4: full kit" style="background:linear-gradient(135deg,var(--surface-2),var(--green-tint))">
+              <svg viewBox="0 0 320 200" fill="none" aria-hidden="true">
+                <rect x="60" y="40" width="120" height="120" rx="12" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="3"/>
+                <rect x="88" y="68" width="64" height="64" rx="6" fill="var(--green)"/>
+                <path d="M96 40v-14M112 40v-14M128 40v-14M144 40v-14M96 160v14M112 160v14M128 160v14M144 160v14M60 76H46M60 100H46M60 124H46M180 76h14M180 100h14M180 124h14" stroke="var(--ink-faint)" stroke-width="4" stroke-linecap="round"/>
+                <rect x="216" y="56" width="70" height="96" rx="8" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="3"/>
+                <g fill="var(--ink-faint)"><circle cx="234" cy="76" r="3"/><circle cx="251" cy="76" r="3"/><circle cx="268" cy="76" r="3"/><circle cx="234" cy="94" r="3"/><circle cx="251" cy="94" r="3"/><circle cx="268" cy="94" r="3"/><circle cx="234" cy="112" r="3"/><circle cx="251" cy="112" r="3"/><circle cx="268" cy="112" r="3"/><circle cx="234" cy="130" r="3"/><circle cx="251" cy="130" r="3"/><circle cx="268" cy="130" r="3"/></g>
+              </svg>
+            </div>
+            <div class="slide" role="group" aria-label="Photo 2 of 4: board close-up" style="background:linear-gradient(135deg,var(--surface-2),var(--blue-tint))">
+              <svg viewBox="0 0 320 200" fill="none" aria-hidden="true">
+                <rect x="90" y="30" width="140" height="140" rx="14" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="3"/>
+                <rect x="122" y="62" width="76" height="76" rx="8" fill="var(--green)"/>
+                <path d="M122 100h76M160 62v76" stroke="rgba(255,255,255,.5)" stroke-width="3"/>
+                <circle cx="105" cy="45" r="4" fill="var(--amber)"/>
+                <path d="M110 30v-16M130 30v-16M150 30v-16M170 30v-16M190 30v-16M210 30v-16" stroke="var(--ink-faint)" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="slide" role="group" aria-label="Photo 3 of 4: jumper wires included" style="background:linear-gradient(135deg,var(--surface-2),var(--amber-tint))">
+              <svg viewBox="0 0 320 200" fill="none" aria-hidden="true">
+                <path d="M40 150c60-90 90 40 140-60 30-55 80-20 100 10" stroke="var(--green)" stroke-width="7" stroke-linecap="round" fill="none"/>
+                <path d="M40 170c70-70 110 30 160-50 25-40 60-25 80-5" stroke="var(--amber)" stroke-width="7" stroke-linecap="round" fill="none"/>
+                <path d="M50 120c50-70 110 60 150-30 20-45 55-35 80-15" stroke="var(--blue)" stroke-width="7" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
+            <div class="slide" role="group" aria-label="Photo 4 of 4: powered on, in use" style="background:linear-gradient(135deg,var(--green-tint),var(--surface-2))">
+              <svg viewBox="0 0 320 200" fill="none" aria-hidden="true">
+                <rect x="100" y="50" width="120" height="120" rx="12" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="3"/>
+                <rect x="128" y="78" width="64" height="64" rx="6" fill="var(--green)"/>
+                <circle cx="115" cy="65" r="5" fill="var(--green)"><animate attributeName="opacity" values="1;.25;1" dur="1.4s" repeatCount="indefinite"/></circle>
+                <path d="M226 78c14 8 14 36 0 44M240 66c22 14 22 54 0 68" stroke="var(--green)" stroke-width="5" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
+          </div>
+          <button class="gal-btn gal-prev" aria-label="Previous photo" onclick="galGo(-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
+          <button class="gal-btn gal-next" aria-label="Next photo" onclick="galGo(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+          <span class="gal-count" id="galCount" aria-hidden="true">1 / 4</span>
+        </div>
+        <div class="thumbs" role="tablist" aria-label="Photo thumbnails">
+          <button class="thumb" role="tab" aria-current="true" aria-label="View photo 1" onclick="galTo(0)" style="background:linear-gradient(135deg,var(--surface-2),var(--green-tint))"><svg viewBox="0 0 80 50" fill="none"><rect x="22" y="8" width="34" height="34" rx="5" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2"/><rect x="31" y="17" width="16" height="16" rx="2" fill="var(--green)"/></svg></button>
+          <button class="thumb" role="tab" aria-current="false" aria-label="View photo 2" onclick="galTo(1)" style="background:linear-gradient(135deg,var(--surface-2),var(--blue-tint))"><svg viewBox="0 0 80 50" fill="none"><rect x="24" y="6" width="34" height="38" rx="5" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2"/><rect x="32" y="15" width="18" height="18" rx="2" fill="var(--green)"/></svg></button>
+          <button class="thumb" role="tab" aria-current="false" aria-label="View photo 3" onclick="galTo(2)" style="background:linear-gradient(135deg,var(--surface-2),var(--amber-tint))"><svg viewBox="0 0 80 50" fill="none"><path d="M10 38c16-24 24 10 36-16 8-15 20-5 26 2" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M10 44c18-18 28 8 40-12" stroke="var(--amber)" stroke-width="3.5" stroke-linecap="round" fill="none"/></svg></button>
+          <button class="thumb" role="tab" aria-current="false" aria-label="View photo 4" onclick="galTo(3)" style="background:linear-gradient(135deg,var(--green-tint),var(--surface-2))"><svg viewBox="0 0 80 50" fill="none"><rect x="24" y="8" width="32" height="34" rx="5" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2"/><circle cx="29" cy="13" r="2.5" fill="var(--green)"/><rect x="32" y="17" width="16" height="16" rx="2" fill="var(--green)"/></svg></button>
+        </div>
+      </section>
+
+      <!-- 2 · ITEM INFORMATION -->
+      <section class="item-head rv" aria-labelledby="item-title">
+        <h1 id="item-title">ESP32 Development Kit + Breadboard</h1>
+        <div class="sub">
+          <span class="badge badge-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>Available Today</span>
+          <span class="badge badge-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 2v3M14 2v3M10 19v3M14 19v3M2 10h3M2 14h3M19 10h3M19 14h3"/></svg>IoT Devices</span>
+          <span class="badge badge-neutral"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>UITS</span>
+          <span class="stars" role="img" aria-label="Average rating 4.9 out of 5 from 18 borrows">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg>
+            <span style="font-size:.84rem; font-weight:700; color:var(--ink)">4.9</span>
+            <span style="font-size:.8rem; color:var(--ink-faint)">(18 borrows)</span>
+          </span>
+        </div>
+        <div class="spec-grid">
+          <div class="spec"><p class="k">Condition</p><p class="v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>Excellent</p></div>
+          <div class="spec"><p class="k">Age</p><p class="v">4 months</p></div>
+          <div class="spec"><p class="k">Estimated Value</p><p class="v">৳2,400</p></div>
+          <div class="spec"><p class="k">Includes</p><p class="v">Board · breadboard · USB-C cable</p></div>
+          <div class="spec"><p class="k">Pickup</p><p class="v">CSE building lobby</p></div>
+          <div class="spec"><p class="k">Typical loan</p><p class="v">3 days</p></div>
+        </div>
+      </section>
+
+      <!-- 6 · AI SMART INSIGHTS -->
+      <section class="ai-card rv" aria-labelledby="h-ai">
+        <div class="inner">
+          <div class="ai-head">
+            <span class="spark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L20 9l-5 3.4L16.5 19 12 15.6 7.5 19 9 12.4 4 9l6.2-1.4z"/></svg></span>
+            <div><h2 id="h-ai" style="font-size:1.05rem">Smart insights</h2><p style="font-size:.78rem; color:var(--ink-soft)">Generated from campus borrowing patterns · demo data</p></div>
+          </div>
+          <ul class="ai-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg><span>Students from CSE borrowed this item <strong>18 times</strong> this semester.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6.5C17 4.6 14.8 3.5 12 3.5S7 4.6 7 6.5 9.2 9.5 12 9.5s5 1.1 5 3-2.2 3-5 3-5-1.1-5-3"/></svg><span>Borrowing instead of buying saves approximately <strong>৳4,200</strong>.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Students usually keep this item for <strong>3 days</strong>.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span>You may also need <strong>jumper wires</strong> and a <strong>multimeter</strong> — both available below.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 8 · DAMAGE PROTECTION TIMELINE -->
+      <section class="card prot rv" aria-labelledby="h-prot">
+        <h2 class="sec-title" id="h-prot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>How your deposit stays safe</h2>
+        <div class="prot-line">
+          <div class="pstep"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span>Pickup<br>Photos</span></div>
+          <div class="pstep"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11 3 15l4 4"/><path d="M3 15h13a5 5 0 0 0 0-10h-3"/></svg></span><span>Borrow</span></div>
+          <div class="pstep"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 2v3M14 2v3M10 19v3M14 19v3M2 10h3M2 14h3M19 10h3M19 14h3"/></svg></span><span>Use</span></div>
+          <div class="pstep"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><path d="m9.5 13 2 2 3.5-3.5"/></svg></span><span>Return<br>Photos</span></div>
+          <div class="pstep"><span class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><span>Inspection</span></div>
+          <div class="pstep"><span class="pi" style="border-color:var(--green); color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="m8.5 13 2.5 2.5L16 11"/></svg></span><span>Deposit<br>Released</span></div>
+        </div>
+        <p style="font-size:.82rem; color:var(--ink-soft); margin-top:var(--s-4)">Photos at both handoffs create a shared condition record. If the return photos match, the deposit releases automatically — usually within hours.</p>
+      </section>
+
+      <!-- 7 · DIGITAL AGREEMENT -->
+      <section class="card rv" aria-labelledby="h-agree">
+        <div style="padding:var(--s-4) var(--s-5); border-bottom:1px solid var(--line)">
+          <h2 class="sec-title" id="h-agree"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 14h6M9 17h4"/></svg>Digital agreement — the short version</h2>
+        </div>
+        <div class="acc">
+          <button aria-expanded="false" onclick="toggleAcc(this)">Return policy<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="body"><p>Return by the agreed date and time at the agreed spot, in the condition recorded at pickup. Extensions are fine when the owner approves them in chat before the deadline.</p></div>
+        </div>
+        <div class="acc">
+          <button aria-expanded="false" onclick="toggleAcc(this)">Damage policy<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="body"><p>Pickup and return photos are compared. Minor wear is expected and free; real damage follows the IoT category fee schedule (shown before you confirm), deducted from the deposit. The owner makes the final call, with ShareBox mediation available.</p></div>
+        </div>
+        <div class="acc">
+          <button aria-expanded="false" onclick="toggleAcc(this)">Deposit policy<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="body"><p>৳200 is held (not charged) when the borrow starts and released automatically after a clean return inspection. Higher Trust Scores reduce future deposits.</p></div>
+        </div>
+        <div class="acc">
+          <button aria-expanded="false" onclick="toggleAcc(this)">Late return policy<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <div class="body"><p>A grace hour applies, then ৳20/day is deducted from the deposit and your Trust Score takes a small hit. Communicating early in chat almost always resolves it better.</p></div>
+        </div>
+      </section>
+
+      <!-- 9 · QR HANDOVER -->
+      <section class="card qr-card rv" aria-labelledby="h-qr">
+        <div class="qr-frame" role="img" aria-label="Demo handover QR code with animated scanner">
+          <span class="c3"></span><span class="c4"></span>
+          <span class="scanline"></span>
+          <svg viewBox="0 0 29 29" shape-rendering="crispEdges" aria-hidden="true" id="qrSvg"></svg>
+        </div>
+        <div class="qr-info">
+          <h2 class="sec-title" id="h-qr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 14h3v3h-3zM17 17h3v3h-3z"/></svg>Two scans. Zero paperwork.</h2>
+          <ol>
+            <li><strong>Scan at pickup</strong> — both phones confirm the handoff, photos attach, and the borrow clock starts.</li>
+            <li><strong>Scan at return</strong> — the loop closes, inspection begins, and your deposit heads home.</li>
+          </ol>
+          <p style="font-size:.8rem; color:var(--ink-faint); margin-top:var(--s-3)">Each transaction generates its own one-time QR. This one is a demo.</p>
+        </div>
+      </section>
+
+      <!-- 10 · CHAT PREVIEW -->
+      <section class="card chat rv" aria-labelledby="h-chat">
+        <div style="padding:var(--s-4) var(--s-5); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; gap:var(--s-3); flex-wrap:wrap">
+          <h2 class="sec-title" id="h-chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>Message Rafi</h2>
+          <span class="badge badge-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Replies in ~10 min</span>
+        </div>
+        <div class="log" id="chatLog" aria-live="polite">
+          <div class="msg them">Hey! The kit is charged and ready — pickup at the CSE lobby works best for me. <time>Rafi · 2:14 PM</time></div>
+        </div>
+        <div class="quick" role="group" aria-label="Quick messages">
+          <button class="chipq" onclick="quickMsg(this,'Sure — it is free tomorrow. Want me to hold it for you?')">Is it available tomorrow?</button>
+          <button class="chipq" onclick="quickMsg(this,'Of course, just request the extension in the app before your return time.')">Can I extend my rental?</button>
+          <button class="chipq" onclick="quickMsg(this,'CSE building lobby, ground floor — I am usually there after 4 PM.')">Where should we meet?</button>
+        </div>
+      </section>
+
+      <!-- 11 · REVIEWS -->
+      <section class="rv" aria-labelledby="h-rev">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--s-4)">
+          <h2 class="sec-title" id="h-rev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg>Reviews · 4.9</h2>
+          <button class="btn-tertiary" onclick="note('All reviews')">See all 18</button>
+        </div>
+        <div class="rev-grid">
+          <article class="card card-hover rev">
+            <div class="rtop">
+              <span class="pfp" style="background:linear-gradient(135deg,#0E8A5C,#0A6B47)">SA</span>
+              <div><strong>Sadia A.</strong><time>2 weeks ago</time></div>
+              <span class="badge badge-green" style="margin-left:auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Verified Borrower</span>
+            </div>
+            <span class="stars" role="img" aria-label="5 out of 5 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg></span>
+            <blockquote>Board flashed on the first try and every jumper wire was neatly bundled. Rafi even included a pin-out cheat sheet. Smoothest borrow I&rsquo;ve done.</blockquote>
+            <div class="rfoot">
+              <button class="helpful" aria-pressed="false" onclick="helpful(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 22V11L12 2a2.4 2.4 0 0 1 2 2.6L13.2 9H19a2 2 0 0 1 2 2.4l-1.4 8A2 2 0 0 1 17.6 21H7z"/><path d="M7 11H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3"/></svg>Helpful · <span>7</span></button>
+            </div>
+          </article>
+          <article class="card card-hover rev">
+            <div class="rtop">
+              <span class="pfp" style="background:linear-gradient(135deg,#B57312,#8C5A0E)">MH</span>
+              <div><strong>Mahin H.</strong><time>1 month ago</time></div>
+              <span class="badge badge-green" style="margin-left:auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Verified Borrower</span>
+            </div>
+            <span class="stars" role="img" aria-label="5 out of 5 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg></span>
+            <blockquote>Saved my microcontrollers project the night before the demo. QR handoff took literally seconds and the deposit was back the same evening.</blockquote>
+            <div class="rfoot">
+              <button class="helpful" aria-pressed="false" onclick="helpful(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 22V11L12 2a2.4 2.4 0 0 1 2 2.6L13.2 9H19a2 2 0 0 1 2 2.4l-1.4 8A2 2 0 0 1 17.6 21H7z"/><path d="M7 11H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3"/></svg>Helpful · <span>4</span></button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 12 · RELATED ITEMS -->
+      <section class="rv" aria-labelledby="h-rel">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--s-4)">
+          <h2 class="sec-title" id="h-rel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="8" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>Pairs well with</h2>
+        </div>
+        <div class="rel-scroll" tabindex="0" aria-label="Related items, scroll horizontally">
+          <a class="card card-hover rel" href="#" onclick="note('Arduino Uno'); return false;"><span class="rthumb" style="background:linear-gradient(135deg,var(--surface-2),var(--blue-tint))"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 2v3M14 2v3M10 19v3M14 19v3M2 10h3M2 14h3M19 10h3M19 14h3"/></svg></span><span class="rbody"><strong>Arduino Uno R3</strong><span>Borrow · ৳250 dep.</span></span></a>
+          <a class="card card-hover rel" href="#" onclick="note('Sensor pack'); return false;"><span class="rthumb" style="background:linear-gradient(135deg,var(--surface-2),var(--green-tint))"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></span><span class="rbody"><strong>Sensor pack (12 pcs)</strong><span>Borrow · ৳150 dep.</span></span></a>
+          <a class="card card-hover rel" href="#" onclick="note('Breadboard'); return false;"><span class="rthumb" style="background:linear-gradient(135deg,var(--surface-2),var(--amber-tint))"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/></svg></span><span class="rbody"><strong>Full-size breadboard</strong><span>Borrow · ৳80 dep.</span></span></a>
+          <a class="card card-hover rel" href="#" onclick="note('Power supply'); return false;"><span class="rthumb" style="background:linear-gradient(135deg,var(--surface-2),var(--blue-tint))"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></span><span class="rbody"><strong>Bench power supply</strong><span>Rent · ৳60/day</span></span></a>
+          <a class="card card-hover rel" href="#" onclick="note('Multimeter'); return false;"><span class="rthumb" style="background:linear-gradient(135deg,var(--surface-2),var(--green-tint))"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 12 8 8"/><path d="M5.5 15.5h13"/></svg></span><span class="rbody"><strong>Digital multimeter</strong><span>Borrow · ৳120 dep.</span></span></a>
+          <a class="card card-hover rel" href="#" onclick="note('Laptop stand'); return false;"><span class="rthumb" style="background:linear-gradient(135deg,var(--surface-2),var(--amber-tint))"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v9H4z"/><path d="M2 19h20M9 15l-2 4M15 15l2 4"/></svg></span><span class="rbody"><strong>Laptop stand</strong><span>Borrow · ৳50 dep.</span></span></a>
+        </div>
+      </section>
+
+      <!-- 13 · SUSTAINABILITY -->
+      <section class="sustain rv" aria-labelledby="h-eco">
+        <h2 id="h-eco">Borrowing this instead of buying has already saved</h2>
+        <p class="sub">Across 18 borrows of this one kit — the quiet math of a sharing campus.</p>
+        <div class="eco-grid">
+          <div class="eco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6.5C17 4.6 14.8 3.5 12 3.5S7 4.6 7 6.5 9.2 9.5 12 9.5s5 1.1 5 3-2.2 3-5 3-5-1.1-5-3"/></svg><strong>৳43k</strong><span>money saved</span></div>
+          <div class="eco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/></svg><strong>17</strong><span>kits not manufactured</span></div>
+          <div class="eco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20c0-9 5-15 16-16-1 11-7 16-16 16z"/></svg><strong>11 kg</strong><span>e-waste avoided</span></div>
+          <div class="eco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14c1.5 1.5 6.5 1.5 8 0M9 9.5h.01M15 9.5h.01"/></svg><strong>26 kg</strong><span>CO₂ emissions avoided</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ==================== SIDE COLUMN (sticky action panel · desktop) ==================== -->
+    <aside class="side-col">
+
+      <!-- 5 · PRICE SECTION + 14 · ACTIONS -->
+      <section class="card price-card rv in" aria-labelledby="h-price">
+        <h2 class="sr-only" id="h-price">Pricing and actions</h2>
+        <div class="price-opts" role="group" aria-label="Choose how to get this item">
+          <button class="popt" aria-pressed="true" onclick="pickOpt(this,'borrow')"><span class="pk">Borrow</span><span class="pv">৳200</span><span class="ps">refundable deposit</span></button>
+          <button class="popt" aria-pressed="false" onclick="pickOpt(this,'rent')"><span class="pk">Rent</span><span class="pv">৳50<span style="font-size:.6em">/day</span></span><span class="ps">+ ৳200 deposit</span></button>
+          <button class="popt dis" aria-pressed="false" aria-disabled="true" onclick="toast('This item is not for sale — try borrowing it instead')"><span class="pk">Buy</span><span class="pv">—</span><span class="ps">not offered</span></button>
+          <button class="popt dis" aria-pressed="false" aria-disabled="true" onclick="toast('Not listed for donation — check the Need Board')"><span class="pk">Donate</span><span class="pv">—</span><span class="ps">not offered</span></button>
+        </div>
+        <div class="price-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.5M12 11v5"/></svg>
+          <span>Your Trust Score of 87 qualifies for a <strong>20% smaller deposit</strong> than standard.</span>
+        </div>
+        <div class="side-actions">
+          <button class="btn btn-primary btn-lg btn-block" id="borrowBtn" onclick="celebrate()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11 3 15l4 4"/><path d="M3 15h13a5 5 0 0 0 0-10h-3"/></svg>
+            Borrow Now
+          </button>
+          <button class="btn btn-secondary btn-block" onclick="pickRentCta()">Rent instead</button>
+          <div class="mini-row">
+            <button class="btn btn-secondary" onclick="scrollToEl('h-chat')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>Chat</button>
+            <button class="btn btn-secondary wish" id="wishBtn" aria-pressed="false" onclick="wish(this)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9-8.5C1.5 8 3.5 5 6.7 5c2 0 3.6 1.2 4.3 2.4h2C13.7 6.2 15.3 5 17.3 5c3.2 0 5.2 3 3.7 6.5-2 4.2-9 8.5-9 8.5z"/></svg>Wishlist</button>
+            <button class="btn btn-secondary" onclick="toast('Link copied — share it with your project group')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="m8.7 10.6 6.6-3.2M8.7 13.4l6.6 3.2"/></svg>Share</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 · AVAILABILITY CALENDAR -->
+      <section class="card cal rv in" aria-labelledby="h-cal">
+        <div class="cal-head">
+          <h2 class="sec-title" id="h-cal" style="font-size:1rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Availability</h2>
+          <strong>July 2026</strong>
+        </div>
+        <div class="cal-grid" id="calGrid" role="grid" aria-label="July 2026 availability. Choose a borrow date, then a return date."></div>
+        <div class="cal-legend">
+          <span><i style="background:var(--green-tint); outline:1px solid var(--green)"></i>Available</span>
+          <span><i style="background:var(--amber-tint); outline:1px solid var(--amber)"></i>Reserved</span>
+          <span><i style="background:var(--surface-2); outline:1px solid var(--line-strong)"></i>Unavailable</span>
+        </div>
+        <p class="cal-hint" id="calHint">Pick a <strong>borrow date</strong>, then a <strong>return date</strong>.</p>
+        <div class="cal-sum" id="calSum" aria-live="polite">
+          <div class="row"><span>Duration</span><strong id="sumDays">—</strong></div>
+          <div class="row"><span>Rental fee (৳50/day)</span><strong id="sumRent">—</strong></div>
+          <div class="row"><span>Refundable deposit</span><strong>৳200</strong></div>
+          <div class="row total"><span>Due at pickup</span><strong id="sumTotal">—</strong></div>
+        </div>
+      </section>
+
+      <!-- 3 · OWNER PROFILE CARD -->
+      <section class="card owner-card rv in" aria-labelledby="h-owner">
+        <h2 class="sr-only" id="h-owner">Owner profile</h2>
+        <div class="owner-top">
+          <span class="pfp" aria-hidden="true">RH</span>
+          <div class="who">
+            <h3>Rafi Hasan
+              <span class="badge badge-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Verified</span>
+            </h3>
+            <p>Computer Science &amp; Engineering · 4th year · joined Jan 2025</p>
+          </div>
+          <div class="owner-trust"><p class="tr-num">92</p><p class="tr-lbl">Trust Score</p></div>
+        </div>
+        <div class="owner-stats">
+          <div class="ostat"><strong>~10 min</strong><span>response time</span></div>
+          <div class="ostat"><strong>98%</strong><span>completion rate</span></div>
+          <div class="ostat"><strong>14</strong><span>items shared</span></div>
+          <div class="ostat"><strong>5</strong><span>items donated</span></div>
+        </div>
+        <div class="owner-badges">
+          <span class="badge badge-green">🏆 Trusted Lender</span>
+          <span class="badge badge-green">🌱 Eco Hero</span>
+          <span class="badge badge-amber">⭐ Top Contributor</span>
+          <span class="badge badge-blue"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg>4.9 avg rating</span>
+        </div>
+        <button class="btn btn-secondary btn-block" style="margin-top:var(--s-4)" onclick="note('Rafi&rsquo;s full profile')">View full profile</button>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<!-- 14 · FLOATING ACTION BAR (mobile) -->
+<div class="fab-bar" role="toolbar" aria-label="Item actions">
+  <button class="btn-icon" aria-label="Add to wishlist" onclick="wish(document.getElementById('wishBtn')); this.style.color='var(--red)'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9-8.5C1.5 8 3.5 5 6.7 5c2 0 3.6 1.2 4.3 2.4h2C13.7 6.2 15.3 5 17.3 5c3.2 0 5.2 3 3.7 6.5-2 4.2-9 8.5-9 8.5z"/></svg></button>
+  <button class="btn-icon" aria-label="Share item" onclick="toast('Link copied — share it with your project group')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="m8.7 10.6 6.6-3.2M8.7 13.4l6.6 3.2"/></svg></button>
+  <button class="btn btn-secondary" onclick="scrollToEl('h-chat')">Chat</button>
+  <button class="btn btn-secondary" onclick="pickRentCta()">Rent</button>
+  <button class="btn btn-primary" onclick="celebrate()">Borrow Now</button>
+</div>
+
+<!-- 16 · WOW CONFIRMATION MODAL -->
+<div class="modal-overlay" id="wowOverlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="wowTitle">
+    <div class="check-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg></div>
+    <h3 id="wowTitle">Request sent to Rafi 🎉</h3>
+    <p class="msub">He usually replies in about 10 minutes. Once he accepts, your QR pickup code unlocks.</p>
+    <div class="wow-stats">
+      <div class="wow"><strong>৳<span id="wowSave">0</span></strong><span>you&rsquo;re saving</span></div>
+      <div class="wow"><strong>+<span id="wowTrust">0</span></strong><span>trust points on return</span></div>
+      <div class="wow"><strong><span id="wowCo2">0</span> kg</strong><span>CO₂ avoided 🌱</span></div>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="nav('sharebox-borrow-flow.html')">Beautiful — take me to my requests</button>
+    <button class="btn-tertiary" style="margin-top:var(--s-3)" onclick="closeWow()">Keep browsing</button>
+  </div>
+</div>
+
+<div class="present-bar" id="presentBar" role="region" aria-label="Presentation mode controls" hidden></div>
+
+<div class="toast-region" id="toastRegion" role="status" aria-live="polite"></div>
+
+<!-- Cross-app navigation: reachable from every main app page -->
+<a class="ai-launch" href="sharebox-ai-discovery.html" aria-label="Ask ShareBox AI">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L20 9l-5 3.4L16.5 19 12 15.6 7.5 19 9 12.4 4 9l6.2-1.4z"/></svg>
+</a>
+<nav class="bottom-nav" aria-label="Mobile navigation">
+  <a class="bn-item" href="sharebox-dashboard-glass.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg><span>Home</span></a>
+  <a class="bn-item" href="sharebox-ai-discovery.html#needboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/><circle cx="12" cy="12" r="4"/></svg><span>Needs</span></a>
+  <a class="bn-item raised active" href="sharebox-item-details.html" aria-label="Item details" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></a>
+  <a class="bn-item" href="sharebox-account.html#wallet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18"/></svg><span>Wallet</span></a>
+  <a class="bn-item" href="sharebox-account.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg><span>Profile</span></a>
+</nav>
+
+<script>
+/* ============================================================
+   Theme (in-memory; follows system preference)
+   ============================================================ */
+let theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const moon = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A8.5 8.5 0 0 1 11 3a8.5 8.5 0 1 0 10 10z"/></svg>';
+const sun  = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('[data-theme-toggle]').forEach(b=>{
+    b.innerHTML = theme==='light' ? moon : sun;
+    b.setAttribute('aria-label', theme==='light' ? 'Switch to dark mode' : 'Switch to light mode');
+  });
+}
+function toggleTheme(){ theme = theme==='light' ? 'dark' : 'light'; applyTheme(); }
+applyTheme();
+
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============================================================
+   Toast + placeholder note
+   ============================================================ */
+function toast(msg){
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg><span>'+msg+'</span>';
+  document.getElementById('toastRegion').appendChild(el);
+  setTimeout(()=>el.remove(), 3200);
+}
+function note(what){ toast(what + ' — connects in the next build phase'); }
+function nav(url){ window.location.href = url; }
+function scrollToEl(id){ document.getElementById(id).scrollIntoView({behavior:reduced?'auto':'smooth', block:'center'}); }
+
+/* ============================================================
+   15 · Ripple micro-interaction on every .btn
+   ============================================================ */
+document.addEventListener('pointerdown', e=>{
+  const b = e.target.closest('.btn'); if(!b || reduced) return;
+  const r = b.getBoundingClientRect();
+  const span = document.createElement('span');
+  span.className = 'ripple';
+  const size = Math.max(r.width, r.height);
+  span.style.width = span.style.height = size+'px';
+  span.style.left = (e.clientX - r.left - size/2)+'px';
+  span.style.top  = (e.clientY - r.top - size/2)+'px';
+  b.appendChild(span);
+  setTimeout(()=>span.remove(), 600);
+});
+
+/* ============================================================
+   Reveal on scroll
+   ============================================================ */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+},{threshold:.12, rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ============================================================
+   1 · Gallery: carousel, thumbs, zoom on hover, swipe, loader
+   ============================================================ */
+let gi = 0; const GN = 4;
+const slides = document.getElementById('slides');
+const stage = document.getElementById('stage');
+setTimeout(()=>document.getElementById('galShimmer').classList.add('hide'), 850); /* loading animation */
+
+function galRender(){
+  slides.style.transform = 'translateX(-' + (gi*100) + '%)';
+  document.getElementById('galCount').textContent = (gi+1) + ' / ' + GN;
+  document.querySelectorAll('.thumb').forEach((t,i)=>t.setAttribute('aria-current', String(i===gi)));
+}
+function galGo(d){ gi = (gi + d + GN) % GN; galRender(); }
+function galTo(i){ gi = i; galRender(); }
+stage.addEventListener('keydown', e=>{ if(e.key==='ArrowLeft') galGo(-1); if(e.key==='ArrowRight') galGo(1); });
+stage.tabIndex = 0;
+
+/* Zoom on hover (desktop, pointer:fine) */
+if(window.matchMedia('(pointer:fine)').matches && !reduced){
+  stage.addEventListener('mousemove', e=>{
+    const r = stage.getBoundingClientRect();
+    const s = slides.children[gi];
+    s.style.transformOrigin = ((e.clientX-r.left)/r.width*100)+'% '+((e.clientY-r.top)/r.height*100)+'%';
+    s.style.transform = 'scale(1.6)';
+  });
+  stage.addEventListener('mouseleave', ()=>{ [...slides.children].forEach(s=>{ s.style.transform=''; }); });
+}
+/* Swipe (mobile) */
+let tx = null;
+stage.addEventListener('touchstart', e=>{ tx = e.touches[0].clientX; }, {passive:true});
+stage.addEventListener('touchend', e=>{
+  if(tx === null) return;
+  const dx = e.changedTouches[0].clientX - tx;
+  if(Math.abs(dx) > 42) galGo(dx < 0 ? 1 : -1);
+  tx = null;
+}, {passive:true});
+
+/* ============================================================
+   9 · Demo QR (deterministic pattern, finder squares)
+   ============================================================ */
+(function drawQR(){
+  const svg = document.getElementById('qrSvg');
+  const N = 29; let seed = 20260728; const rnd = ()=>{ seed = (seed*1103515245 + 12345) & 0x7fffffff; return seed/0x7fffffff; };
+  let cells = '';
+  const finder = (x,y)=>
+    '<rect x="'+x+'" y="'+y+'" width="7" height="7" fill="currentColor"/>' +
+    '<rect x="'+(x+1)+'" y="'+(y+1)+'" width="5" height="5" fill="var(--surface)"/>' +
+    '<rect x="'+(x+2)+'" y="'+(y+2)+'" width="3" height="3" fill="currentColor"/>';
+  const inFinder = (c,r)=> (c<8&&r<8)||(c>=N-8&&r<8)||(c<8&&r>=N-8);
+  for(let r=0;r<N;r++) for(let c=0;c<N;c++){
+    if(inFinder(c,r)) continue;
+    if(rnd() > .55) cells += '<rect x="'+c+'" y="'+r+'" width="1" height="1" fill="currentColor"/>';
+  }
+  svg.innerHTML = cells + finder(0,0) + finder(N-7,0) + finder(0,N-7);
+})();
+
+/* ============================================================
+   4 · Availability calendar — July 2026, range select + costs
+   ============================================================ */
+const RENT = 50, DEPOSIT = 200, TODAY = 28;
+const RESERVED = [3,4,10,11,18]; /* demo bookings */
+let selStart = null, selEnd = null;
+const grid = document.getElementById('calGrid');
+
+function buildCal(){
+  const dows = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  let html = dows.map(d=>'<span class="dow" role="columnheader">'+d+'</span>').join('');
+  /* 1 July 2026 is a Wednesday → offset 2 blanks (Mo,Tu) */
+  for(let i=0;i<2;i++) html += '<span aria-hidden="true"></span>';
+  for(let d=1; d<=31; d++){
+    let cls='day', dis='', lbl='July '+d+', available';
+    if(d < TODAY){ cls+=' off'; dis='disabled'; lbl='July '+d+', past'; }
+    else if(RESERVED.includes(d)){ cls+=' reserved'; dis='disabled'; lbl='July '+d+', reserved'; }
+    else{
+      cls+=' avail';
+      if(selStart!==null && d===selStart) cls+=' sel';
+      if(selEnd!==null && d===selEnd) cls+=' sel';
+      if(selStart!==null && selEnd!==null && d>selStart && d<selEnd) cls+=' inrange';
+    }
+    html += '<button class="'+cls+'" '+dis+' role="gridcell" aria-label="'+lbl+'" onclick="pickDay('+d+')">'+d+'</button>';
+  }
+  grid.innerHTML = html;
+}
+function pickDay(d){
+  if(selStart===null || (selStart!==null && selEnd!==null)){ selStart=d; selEnd=null; }
+  else if(d < selStart){ selStart=d; }
+  else if(d === selStart){ selStart=null; }
+  else{
+    /* reject ranges crossing a reserved day */
+    for(let x=selStart; x<=d; x++) if(RESERVED.includes(x)){ toast('That range crosses a reserved day — try dates after July 18'); return; }
+    selEnd=d;
+  }
+  buildCal(); updateSum();
+}
+function updateSum(){
+  const sum = document.getElementById('calSum');
+  const hint = document.getElementById('calHint');
+  if(selStart!==null && selEnd!==null){
+    const days = selEnd - selStart;
+    const rent = days * RENT;
+    document.getElementById('sumDays').textContent = days + (days===1?' day':' days') + ' (Jul '+selStart+' → '+selEnd+')';
+    document.getElementById('sumRent').textContent = '৳' + rent.toLocaleString('en-US');
+    document.getElementById('sumTotal').textContent = '৳' + (rent + DEPOSIT).toLocaleString('en-US');
+    sum.classList.add('show');
+    hint.style.display='none';
+  } else {
+    sum.classList.remove('show');
+    hint.style.display='';
+    hint.innerHTML = selStart!==null ? 'Borrowing from <strong>July '+selStart+'</strong> — now pick a <strong>return date</strong>.' : 'Pick a <strong>borrow date</strong>, then a <strong>return date</strong>.';
+  }
+}
+buildCal();
+
+/* ============================================================
+   5 · Price option toggle
+   ============================================================ */
+function pickOpt(btn, kind){
+  document.querySelectorAll('.popt').forEach(p=>{ if(!p.classList.contains('dis')) p.setAttribute('aria-pressed','false'); });
+  btn.setAttribute('aria-pressed','true');
+  document.getElementById('borrowBtn').innerHTML = kind==='rent'
+    ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Rent Now'
+    : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11 3 15l4 4"/><path d="M3 15h13a5 5 0 0 0 0-10h-3"/></svg>Borrow Now';
+}
+function pickRentCta(){
+  const rentOpt = document.querySelectorAll('.popt')[1];
+  pickOpt(rentOpt,'rent');
+  toast('Rent selected — pick your dates on the calendar');
+  scrollToEl('h-cal');
+}
+
+/* ============================================================
+   Wishlist toggle
+   ============================================================ */
+function wish(btn){
+  const on = btn.getAttribute('aria-pressed') !== 'true';
+  btn.setAttribute('aria-pressed', String(on));
+  btn.classList.toggle('on', on);
+  toast(on ? 'Added to your wishlist ❤' : 'Removed from your wishlist');
+}
+
+/* ============================================================
+   7 · Agreement accordion
+   ============================================================ */
+function toggleAcc(btn){
+  const body = btn.parentElement.querySelector('.body');
+  const open = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!open));
+  body.style.maxHeight = open ? '0' : body.scrollHeight + 'px';
+}
+
+/* ============================================================
+   10 · Chat quick messages + auto reply
+   ============================================================ */
+function quickMsg(chip, reply){
+  const log = document.getElementById('chatLog');
+  const me = document.createElement('div');
+  me.className = 'msg me';
+  me.innerHTML = chip.textContent + '<time>You · just now</time>';
+  log.appendChild(me);
+  const typing = document.createElement('div');
+  typing.className = 'msg them typing';
+  typing.innerHTML = '<i></i><i></i><i></i>';
+  log.appendChild(typing);
+  log.scrollTop = log.scrollHeight;
+  setTimeout(()=>{
+    typing.remove();
+    const them = document.createElement('div');
+    them.className = 'msg them';
+    them.innerHTML = reply + '<time>Rafi · just now</time>';
+    log.appendChild(them);
+    log.scrollTop = log.scrollHeight;
+  }, 1100);
+}
+
+/* ============================================================
+   11 · Helpful votes
+   ============================================================ */
+function helpful(btn){
+  const n = btn.querySelector('span');
+  const on = btn.getAttribute('aria-pressed') !== 'true';
+  btn.setAttribute('aria-pressed', String(on));
+  btn.classList.toggle('on', on);
+  n.textContent = parseInt(n.textContent,10) + (on ? 1 : -1);
+}
+
+/* ============================================================
+   16 · WOW: confetti + soft sound + counters
+   ============================================================ */
+function confetti(){
+  if(reduced) return;
+  const colors = ['#0E8A5C','#1FA774','#B57312','#2E6FA8','#E2F3EA','#43CE97'];
+  for(let i=0;i<90;i++){
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (1.9 + Math.random()*1.6) + 's';
+    c.style.animationDelay = (Math.random()*.5) + 's';
+    c.style.transform = 'rotate(' + Math.random()*360 + 'deg)';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 4200);
+  }
+}
+function softChime(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [523.25, 659.25, 783.99].forEach((f,i)=>{
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0, ctx.currentTime + i*.09);
+      g.gain.linearRampToValueAtTime(.08, ctx.currentTime + i*.09 + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + i*.09 + .7);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime + i*.09); o.stop(ctx.currentTime + i*.09 + .75);
+    });
+  }catch(e){/* audio unavailable — stay silent */}
+}
+function countUp(id, target, prefix){
+  const el = document.getElementById(id);
+  if(reduced){ el.textContent = target.toLocaleString('en-US'); return; }
+  const dur = 1100, t0 = performance.now();
+  (function tick(now){
+    const p = Math.min((now-t0)/dur, 1);
+    const eased = 1 - Math.pow(1-p, 3);
+    el.textContent = (Math.round(target*eased*10)/10).toLocaleString('en-US');
+    if(p<1) requestAnimationFrame(tick);
+  })(t0);
+}
+function celebrate(){
+  const o = document.getElementById('wowOverlay');
+  o.classList.add('open'); o.setAttribute('aria-hidden','false');
+  confetti(); softChime();
+  countUp('wowSave', 4200);
+  countUp('wowTrust', 2);
+  countUp('wowCo2', 1.5);
+  o.querySelector('.btn')?.focus();
+}
+function closeWow(){
+  const o = document.getElementById('wowOverlay');
+  o.classList.remove('open'); o.setAttribute('aria-hidden','true');
+  document.getElementById('borrowBtn').focus();
+}
+document.getElementById('wowOverlay').addEventListener('click', e=>{ if(e.target.id==='wowOverlay') closeWow(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeWow(); });
+
+/* ============================================================
+   PRESENTATION MODE · guided demo for judges (2\u20133 min walkthrough)
+   ============================================================ */
+const CURRENT_FILE = 'sharebox-item-details.html';
+const PB_PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+const PB_PLAY_ICON  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>';
+const PB_CLOSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+const PB_PLAY_BADGE  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>';
+const PRESENT_STEPS = [
+  {file:'index.html', caption:'Welcome to ShareBox \u2014 a campus-only marketplace where verified students borrow, rent, sell, and donate what they already own.'},
+  {file:'sharebox-dashboard-glass.html', caption:'After signing in, students land on a personal dashboard \u2014 Trust Score, active borrows, and money saved, all at a glance.'},
+  {file:'sharebox-ai-discovery.html', caption:'Smart search and AI recommendations help students discover exactly what they need across campus.'},
+  {file:'sharebox-item-details.html', caption:'Every listing shows the owner\u2019s Trust Score, live availability, and transparent pricing before you commit.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:1, caption:'Requesting to borrow takes seconds \u2014 pick your dates, add a purpose, and pricing calculates instantly.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:6, caption:'Meeting in person is verified with a two-way QR scan, so every handoff is accountable.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:7, caption:'A live timeline keeps both sides in sync from pickup all the way to the due date.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:8, caption:'Condition photos and a quick inspection close the loop safely for both sides.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:9, caption:'The deposit refunds automatically the moment the return checks out clean.'},
+  {file:'sharebox-account.html', hash:'trust', caption:'Every clean return raises the borrower\u2019s Trust Score \u2014 unlocking lower deposits over time.'},
+  {file:'sharebox-dashboard-glass.html', hash:'sustainability', caption:'Zoomed in, every shared item keeps money in students\u2019 pockets and waste out of landfills.'},
+  {file:'sharebox-ai-discovery.html', hash:'community', caption:'Zoomed out, the whole campus is saving money and cutting waste together.'},
+  {file:'index.html', final:true, caption:'That\u2019s the complete ShareBox journey \u2014 from first visit to a trusted, sustainable campus community.'}
+];
+const PRESENT_DURATION = 12000;
+let presentTimer = null, presentPaused = false, presentElapsed = 0;
+
+function presentCurrentN(){
+  const n = parseInt(new URLSearchParams(location.search).get('present'), 10);
+  return (n >= 1 && n <= PRESENT_STEPS.length) ? n : null;
+}
+function presentStart(){ location.href = 'index.html?present=1'; }
+function presentResetTimer(){
+  clearInterval(presentTimer);
+  presentPaused = false; presentElapsed = 0;
+  presentTimer = setInterval(()=>{
+    if(presentPaused) return;
+    presentElapsed += 250;
+    if(presentElapsed >= PRESENT_DURATION) presentNext();
+  }, 250);
+}
+function presentToggle(){
+  presentPaused = !presentPaused;
+  const btn = document.getElementById('pbToggle');
+  if(btn){
+    btn.innerHTML = presentPaused ? PB_PLAY_ICON : PB_PAUSE_ICON;
+    btn.setAttribute('aria-label', presentPaused ? 'Resume demo' : 'Pause demo');
+  }
+}
+function presentRenderBar(n){
+  const bar = document.getElementById('presentBar');
+  if(!bar) return;
+  bar.hidden = false;
+  const step = PRESENT_STEPS[n-1];
+  bar.classList.toggle('final', !!step.final);
+  if(step.final){
+    bar.innerHTML = '<div class="pb-final-head"><span class="pb-check">'+PB_PLAY_BADGE.replace('<svg','<svg width="14" height="14"')+'</span><strong>Demo complete!</strong></div>' +
+      '<p class="pb-caption">'+step.caption+'</p>' +
+      '<div class="pb-actions"><button class="btn btn-secondary btn-sm" onclick="presentStart()">Restart demo</button><button class="btn btn-primary btn-sm" onclick="presentExit()">Exit demo</button></div>';
+    if(typeof confetti === 'function'){ try{ confetti(90); }catch(e){} }
+    if(typeof chime === 'function'){ try{ chime(); }catch(e){} }
+    clearInterval(presentTimer);
+  } else {
+    const pct = (n/PRESENT_STEPS.length*100).toFixed(1);
+    bar.innerHTML = '<div class="pb-top"><span class="pb-step">Step '+n+' of '+PRESENT_STEPS.length+'</span><div class="pb-track"><i style="width:'+pct+'%"></i></div>' +
+      '<button class="btn-icon" id="pbToggle" aria-label="Pause demo" onclick="presentToggle()">'+PB_PAUSE_ICON+'</button>' +
+      '<button class="btn-icon" aria-label="Exit demo" onclick="presentExit()">'+PB_CLOSE_ICON+'</button></div>' +
+      '<p class="pb-caption" aria-live="polite">'+step.caption+'</p>' +
+      '<div class="pb-actions"><button class="btn btn-secondary btn-sm" onclick="presentPrev()" '+(n===1?'disabled':'')+'>\u25C0 Previous</button><button class="btn btn-primary btn-sm" onclick="presentNext()">Next \u25B6</button></div>';
+    presentResetTimer();
+  }
+}
+function presentGoStep(n){
+  if(n < 1) n = 1;
+  if(n > PRESENT_STEPS.length){ n = PRESENT_STEPS.length; }
+  const step = PRESENT_STEPS[n-1];
+  if(step.file === CURRENT_FILE){
+    history.replaceState(null, '', location.pathname + '?present=' + n + (step.hash ? ('#'+step.hash) : ''));
+    presentRenderBar(n);
+    if(typeof step.borrowStep === 'number' && typeof presentGo === 'function') presentGo(step.borrowStep);
+    if(step.hash){
+      setTimeout(()=>{ const el = document.getElementById(step.hash); if(el) el.scrollIntoView({behavior: reduced?'auto':'smooth', block:'start'}); }, 250);
+    } else if(!step.final){
+      window.scrollTo({top:0, behavior: reduced?'auto':'smooth'});
+    }
+  } else {
+    location.href = step.file + '?present=' + n + (step.hash ? ('#'+step.hash) : '');
+  }
+}
+function presentNext(){ presentGoStep((presentCurrentN()||1) + 1); }
+function presentPrev(){ const n=(presentCurrentN()||1); if(n>1) presentGoStep(n-1); }
+function presentExit(){
+  clearInterval(presentTimer);
+  location.href = CURRENT_FILE;
+}
+(function presentInit(){
+  const n = presentCurrentN();
+  if(!n) return;
+  const step = PRESENT_STEPS[n-1];
+  presentRenderBar(n);
+  if(typeof step.borrowStep === 'number'){
+    setTimeout(()=>{ if(typeof presentGo === 'function') presentGo(step.borrowStep); }, 60);
+  }
+  if(step.hash){
+    setTimeout(()=>{ const el = document.getElementById(step.hash); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 500);
+  }
+})();
+
+</script>
+<script src="app-core.js"></script>
+</body>
+</html>

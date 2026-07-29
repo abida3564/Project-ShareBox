@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E8A5C">
+<meta name="description" content="ShareBox AI — smart search, personalized recommendations, the Need Board, and your campus community insights.">
+<title>Discover — ShareBox AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SHAREBOX AI DISCOVERY · Neo Glass + Soft 3D language
+   ============================================================ */
+:root{
+  --green:#0E8A5C; --green-strong:#0A6B47; --green-hi:#1FA774;
+  --green-tint:rgba(14,138,92,.1); --green-glow:rgba(14,138,92,.32);
+  --amber:#B57312; --amber-tint:rgba(181,115,18,.12);
+  --red:#C24C3B; --red-tint:rgba(194,76,59,.12);
+  --blue:#2E6FA8; --blue-tint:rgba(46,111,168,.12);
+  --bg:#EEF3EC;
+  --ink:#141F19; --ink-soft:#51645A; --ink-faint:#87978D;
+  --glass:rgba(255,255,255,.62);
+  --glass-strong:rgba(255,255,255,.8);
+  --glass-soft:rgba(255,255,255,.4);
+  --glass-line:rgba(255,255,255,.75);
+  --glass-edge:rgba(20,31,25,.07);
+  --overlay:rgba(20,31,25,.4);
+  --grad-band:linear-gradient(125deg,#0A6B47,#0E8A5C 52%,#1FA774);
+  --sheen:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.5) 50%, transparent 60%);
+  --e-1:0 1px 2px rgba(20,31,25,.03), 0 4px 14px rgba(20,31,25,.05);
+  --e-2:0 2px 8px rgba(20,31,25,.04), 0 18px 44px rgba(20,31,25,.10);
+  --e-3:0 4px 16px rgba(20,31,25,.06), 0 36px 90px rgba(20,31,25,.18);
+  --inner-light:inset 0 1px 0 rgba(255,255,255,.85);
+  --font-display:"Bricolage Grotesque","Inter",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,sans-serif;
+  --s-1:.25rem; --s-2:.5rem; --s-3:.75rem; --s-4:1rem;
+  --s-5:1.5rem; --s-6:2rem; --s-7:3rem; --s-8:4rem;
+  --r-md:16px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+  --ease:cubic-bezier(.22,.8,.36,1);
+  --spring:cubic-bezier(.34,1.45,.5,1);
+  --t-fast:.16s; --t-med:.32s; --t-slow:.6s;
+  --topbar-h:72px; --max:1080px;
+}
+[data-theme="dark"]{
+  --bg:#0A100D;
+  --ink:#EAF1EB; --ink-soft:#9DAFA3; --ink-faint:#66786C;
+  --green:#43CE97; --green-strong:#6ADFB1; --green-hi:#2FBE88;
+  --green-tint:rgba(67,206,151,.1); --green-glow:rgba(67,206,151,.3);
+  --amber:#E0A34A; --amber-tint:rgba(224,163,74,.13);
+  --red:#E27A6A; --red-tint:rgba(226,122,106,.13);
+  --blue:#6FA8DC; --blue-tint:rgba(111,168,220,.13);
+  --glass:rgba(21,32,26,.58);
+  --glass-strong:rgba(24,37,30,.8);
+  --glass-soft:rgba(24,37,30,.36);
+  --glass-line:rgba(255,255,255,.09);
+  --glass-edge:rgba(0,0,0,.4);
+  --overlay:rgba(0,0,0,.6);
+  --grad-band:linear-gradient(125deg,#0F5C40,#159A69 52%,#2FBE88);
+  --sheen:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.14) 50%, transparent 60%);
+  --e-1:0 1px 3px rgba(0,0,0,.25), 0 4px 16px rgba(0,0,0,.3);
+  --e-2:0 2px 8px rgba(0,0,0,.3), 0 20px 48px rgba(0,0,0,.45);
+  --e-3:0 4px 18px rgba(0,0,0,.4), 0 40px 100px rgba(0,0,0,.6);
+  --inner-light:inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:.95rem; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; transition:background var(--t-med) var(--ease), color var(--t-med) var(--ease)}
+h1,h2,h3,h4{font-family:var(--font-display); line-height:1.12; margin:0; letter-spacing:-.02em}
+p{margin:0}
+a{color:var(--green); text-decoration:none}
+img,svg{display:block; max-width:100%}
+button{font-family:inherit}
+::selection{background:var(--green-glow)}
+:focus{outline:none}
+:focus-visible{outline:2.5px solid var(--green); outline-offset:2px; border-radius:6px; box-shadow:0 0 0 5px var(--green-glow)}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+.skip-link{position:fixed; top:-100px; left:var(--s-4); z-index:400; background:var(--green); color:#fff; padding:var(--s-2) var(--s-4); border-radius:12px; font-weight:600; transition:top var(--t-fast) var(--ease)}
+.skip-link:focus{top:var(--s-4)}
+
+/* Ambient */
+.ambient{position:fixed; inset:0; z-index:-2; overflow:hidden; pointer-events:none}
+.blob{position:absolute; border-radius:50%; filter:blur(90px); opacity:.55; will-change:transform}
+.blob.b1{width:560px; height:560px; background:radial-gradient(circle,#BFE6D2,transparent 65%); top:-160px; left:-120px; animation:drift1 26s ease-in-out infinite}
+.blob.b2{width:640px; height:640px; background:radial-gradient(circle,#D5E8DC,transparent 65%); bottom:-220px; right:-160px; animation:drift2 32s ease-in-out infinite}
+.blob.b3{width:420px; height:420px; background:radial-gradient(circle,#CFE3F2,transparent 65%); top:40%; left:55%; opacity:.4; animation:drift3 38s ease-in-out infinite}
+[data-theme="dark"] .blob.b1{background:radial-gradient(circle,rgba(28,84,62,.9),transparent 65%)}
+[data-theme="dark"] .blob.b2{background:radial-gradient(circle,rgba(20,58,44,.9),transparent 65%)}
+[data-theme="dark"] .blob.b3{background:radial-gradient(circle,rgba(30,54,74,.8),transparent 65%)}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(70px,50px) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-80px,-60px) scale(1.08)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,70px)}}
+.particle{position:fixed; z-index:-1; border-radius:50%; background:var(--green); opacity:.14; pointer-events:none; animation:rise linear infinite}
+[data-theme="dark"] .particle{opacity:.2}
+@keyframes rise{from{transform:translateY(0)}to{transform:translateY(-115vh)}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important}
+  .rv{opacity:1; transform:none}
+  .particle,.blob{display:none}
+}
+.rv{opacity:0; transform:translateY(20px) scale(.985); transition:opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--spring)}
+.rv.in{opacity:1; transform:none}
+
+/* Glass + buttons */
+.glass{background:var(--glass); backdrop-filter:blur(15px) saturate(1.3); -webkit-backdrop-filter:blur(15px) saturate(1.3); border:1px solid var(--glass-line); box-shadow:var(--e-1), var(--inner-light), 0 0 0 1px var(--glass-edge); border-radius:var(--r-lg); transition:transform var(--t-med) var(--spring), box-shadow var(--t-med) var(--ease), background var(--t-med) var(--ease)}
+.glass-hover:hover{transform:translateY(-4px); box-shadow:var(--e-2), var(--inner-light); background:var(--glass-strong)}
+.tilt{transform-style:preserve-3d; will-change:transform}
+
+.btn{position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; gap:9px; font-weight:600; font-size:.92rem; line-height:1; border-radius:var(--r-md); border:1px solid transparent; padding:0 1.35rem; height:47px; cursor:pointer; white-space:nowrap; text-decoration:none!important; transition:transform var(--t-fast) var(--spring), box-shadow var(--t-med) var(--ease), background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
+.btn:hover{transform:translateY(-2px) scale(1.02)}
+.btn:active{transform:translateY(1px) scale(.98)}
+.btn-primary{background:linear-gradient(160deg,var(--green-hi),var(--green) 45%,var(--green-strong)); color:#fff; border-color:rgba(255,255,255,.25); box-shadow:0 6px 20px var(--green-glow), var(--inner-light); animation:glowPulse 3.2s ease-in-out infinite}
+[data-theme="dark"] .btn-primary{color:#07110C}
+@keyframes glowPulse{0%,100%{box-shadow:0 6px 20px var(--green-glow)}50%{box-shadow:0 6px 30px var(--green-glow), 0 0 0 5px rgba(14,138,92,.07)}}
+.btn-primary::after{content:""; position:absolute; inset:0; background:var(--sheen); transform:translateX(-120%); transition:transform .7s var(--ease)}
+.btn-primary:hover::after{transform:translateX(120%)}
+.btn-secondary{background:var(--glass); backdrop-filter:blur(10px); color:var(--ink); border-color:var(--glass-line); box-shadow:var(--e-1), var(--inner-light)}
+.btn-secondary:hover{border-color:var(--green); color:var(--green)}
+.btn-sm{height:37px; padding:0 1rem; font-size:.84rem; border-radius:12px}
+.btn-tertiary{background:none; border:none; color:var(--green); font-weight:600; padding:0; height:auto; cursor:pointer; font-size:.86rem}
+.btn-tertiary:hover{text-decoration:underline}
+.btn-icon{width:42px; height:42px; padding:0; border-radius:14px; background:transparent; border:1px solid transparent; color:var(--ink-soft); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:all var(--t-fast) var(--spring); flex:none}
+.btn-icon:hover{background:var(--glass-strong); color:var(--ink); transform:scale(1.08); border-color:var(--glass-line); box-shadow:var(--e-1)}
+.btn-icon svg{width:20px; height:20px}
+.ripple{position:absolute; border-radius:50%; background:currentColor; opacity:.2; transform:scale(0); animation:ripple .55s var(--ease) forwards; pointer-events:none}
+@keyframes ripple{to{transform:scale(3.4); opacity:0}}
+
+.badge{display:inline-flex; align-items:center; gap:6px; font-size:.73rem; font-weight:600; padding:4px 11px; border-radius:var(--r-full); line-height:1.4; backdrop-filter:blur(6px)}
+.badge svg{width:12px; height:12px; flex:none}
+.badge-green{background:var(--green-tint); color:var(--green-strong); border:1px solid rgba(14,138,92,.18)}
+[data-theme="dark"] .badge-green{color:var(--green); border-color:rgba(67,206,151,.2)}
+.badge-amber{background:var(--amber-tint); color:var(--amber); border:1px solid rgba(181,115,18,.18)}
+.badge-red{background:var(--red-tint); color:var(--red); border:1px solid rgba(194,76,59,.18)}
+.badge-blue{background:var(--blue-tint); color:var(--blue); border:1px solid rgba(46,111,168,.18)}
+.badge-neutral{background:var(--glass-soft); color:var(--ink-soft); border:1px solid var(--glass-line)}
+.avatar{width:38px; height:38px; border-radius:var(--r-full); background:linear-gradient(135deg,var(--green-hi),var(--green-strong)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.86rem; border:2px solid rgba(255,255,255,.5); cursor:pointer; flex:none; box-shadow:var(--e-1)}
+
+/* Topbar */
+.topbar{position:sticky; top:var(--s-3); z-index:90; height:var(--topbar-h); background:var(--glass); backdrop-filter:blur(18px) saturate(1.4); border:1px solid var(--glass-line); border-radius:var(--r-lg); box-shadow:var(--e-2), var(--inner-light); display:flex; align-items:center; gap:var(--s-3); padding:0 var(--s-4); max-width:calc(var(--max) + 2rem); margin:var(--s-3) auto 0; width:calc(100% - 2rem)}
+.brand{display:flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none!important}
+.brand .wordmark{font-family:var(--font-display); font-weight:800; font-size:1.15rem; letter-spacing:-.02em}
+.topbar .grow{flex:1}
+.topbar .ttl{font-size:.86rem; font-weight:600; color:var(--ink-soft); white-space:nowrap}
+
+.page{max-width:var(--max); margin:0 auto; padding:var(--s-6) var(--s-4) 160px}
+.section-row{display:flex; align-items:center; justify-content:space-between; gap:var(--s-4); margin:var(--s-7) 0 var(--s-4); flex-wrap:wrap}
+.section-row h2{font-size:1.18rem; font-weight:700}
+.section-row .sub{font-size:.82rem; color:var(--ink-soft); width:100%}
+
+/* ============================================================ 7 · AI DAILY INSIGHT */
+.insight{background:var(--grad-band); color:#fff; border-radius:var(--r-xl); padding:var(--s-5) var(--s-6); display:flex; align-items:center; gap:var(--s-4); box-shadow:var(--e-2), var(--inner-light); position:relative; overflow:hidden}
+[data-theme="dark"] .insight{color:#F2FBF6}
+.insight::before{content:""; position:absolute; top:-60px; right:-40px; width:240px; height:240px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,.22), transparent 70%)}
+.insight .ii{width:52px; height:52px; border-radius:16px; background:rgba(255,255,255,.16); display:flex; align-items:center; justify-content:center; flex:none; font-size:1.5rem; backdrop-filter:blur(8px)}
+.insight .it{flex:1; min-width:0}
+.insight .it .lbl{font-size:.68rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.85}
+.insight .it p{font-family:var(--font-display); font-weight:700; font-size:clamp(.98rem, 2vw, 1.15rem); line-height:1.35; margin-top:4px; min-height:1.4em}
+.insight .btn-icon{color:#fff; border-color:rgba(255,255,255,.3)}
+.insight .btn-icon:hover{background:rgba(255,255,255,.16); color:#fff}
+.type-caret{display:inline-block; width:2px; height:1em; background:currentColor; margin-left:2px; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ============================================================ 2 · SMART SEARCH */
+.search-hero{padding:var(--s-5); position:relative}
+.sbar{position:relative}
+.sbar > svg{position:absolute; left:18px; top:50%; transform:translateY(-50%); width:19px; height:19px; color:var(--ink-faint); pointer-events:none; z-index:2}
+.sbar input{width:100%; height:58px; background:var(--glass-soft); color:var(--ink); border:1px solid var(--glass-line); border-radius:var(--r-full); padding:0 118px 0 50px; font-size:1rem; font-family:inherit; transition:all var(--t-med) var(--ease)}
+.sbar input::placeholder{color:var(--ink-faint)}
+.sbar input:focus{background:var(--glass-strong); border-color:var(--green); box-shadow:0 0 0 5px var(--green-glow), var(--e-2); outline:none}
+.sbar .s-actions{position:absolute; right:9px; top:50%; transform:translateY(-50%); display:flex; gap:5px}
+.sbar .s-actions .btn-icon{width:40px; height:40px; border-radius:var(--r-full)}
+.s-drop{position:absolute; top:calc(100% + 10px); left:0; right:0; z-index:80; background:var(--glass-strong); backdrop-filter:blur(22px) saturate(1.5); border:1px solid var(--glass-line); border-radius:var(--r-md); box-shadow:var(--e-3), var(--inner-light); overflow:hidden; padding:6px; opacity:0; transform:translateY(-8px) scale(.98); pointer-events:none; transition:opacity var(--t-fast) var(--ease), transform var(--t-med) var(--spring)}
+.s-drop.open{opacity:1; transform:none; pointer-events:auto}
+.sd-item{display:flex; align-items:center; gap:11px; width:100%; text-align:left; background:none; border:none; border-radius:11px; padding:10px 12px; cursor:pointer; font-size:.9rem; color:var(--ink); transition:background var(--t-fast) var(--ease)}
+.sd-item:hover,.sd-item:focus-visible{background:var(--green-tint)}
+.sd-item svg{width:15px; height:15px; color:var(--ink-faint); flex:none}
+.sd-item .k{margin-left:auto; font-size:.72rem; color:var(--ink-faint)}
+.sd-item mark{background:none; color:var(--green); font-weight:700}
+.chip-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:var(--s-4); align-items:center}
+.chip-row .lbl{font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin-right:2px}
+.chip{display:inline-flex; align-items:center; gap:7px; background:var(--glass-soft); border:1px solid var(--glass-line); color:var(--ink-soft); font-size:.8rem; font-weight:600; border-radius:var(--r-full); padding:7px 14px; cursor:pointer; transition:all var(--t-fast) var(--spring)}
+.chip:hover{transform:translateY(-2px); border-color:var(--green); color:var(--green)}
+.chip svg{width:13px; height:13px}
+.chip.hot{border-color:rgba(181,115,18,.3); color:var(--amber); background:var(--amber-tint)}
+/* filters */
+.filters{display:flex; gap:8px; flex-wrap:wrap; margin-top:var(--s-4); padding-top:var(--s-4); border-top:1px dashed var(--glass-edge)}
+.f-chip{display:inline-flex; align-items:center; gap:7px; background:var(--glass-soft); border:1.5px solid var(--glass-line); color:var(--ink); font-size:.8rem; font-weight:600; border-radius:var(--r-full); padding:8px 15px; cursor:pointer; transition:all var(--t-fast) var(--spring)}
+.f-chip svg{width:13px; height:13px; color:var(--ink-faint); transition:color var(--t-fast) var(--ease)}
+.f-chip:hover{transform:translateY(-2px); box-shadow:var(--e-1)}
+.f-chip[aria-pressed="true"]{background:var(--green-tint); border-color:var(--green); color:var(--green-strong); box-shadow:0 4px 14px var(--green-glow)}
+[data-theme="dark"] .f-chip[aria-pressed="true"]{color:var(--green)}
+.f-chip[aria-pressed="true"] svg{color:currentColor}
+.result-meta{margin-top:var(--s-4); font-size:.84rem; color:var(--ink-soft)}
+.result-meta strong{color:var(--ink)}
+/* result cards */
+.res-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-4); margin-top:var(--s-3)}
+.res{padding:var(--s-4); display:flex; flex-direction:column; gap:8px; border-radius:var(--r-md); animation:pop .45s var(--spring)}
+@keyframes pop{0%{transform:scale(.55); opacity:0}70%{transform:scale(1.06)}100%{transform:scale(1)}}
+.res .rc{font-size:.66rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--green)}
+.res .rt{font-weight:700; font-size:.92rem; line-height:1.3}
+.res .rm{font-size:.76rem; color:var(--ink-soft); display:flex; gap:6px; flex-wrap:wrap; align-items:center}
+.res .rp{display:flex; justify-content:space-between; align-items:center; border-top:1px dashed var(--glass-edge); padding-top:9px; margin-top:auto; font-size:.84rem}
+.res .rp strong{font-variant-numeric:tabular-nums}
+.empty{padding:var(--s-7) var(--s-5); text-align:center}
+.empty .ei{width:56px; height:56px; margin:0 auto var(--s-4); border-radius:var(--r-lg); background:var(--glass-soft); border:1px solid var(--glass-line); display:flex; align-items:center; justify-content:center; color:var(--ink-faint)}
+.empty .ei svg{width:26px; height:26px}
+.empty h3{font-size:1rem; font-weight:700; color:var(--ink)}
+.empty p{font-size:.86rem; color:var(--ink-soft); margin:6px auto 0; max-width:360px}
+.empty .btn{margin-top:var(--s-4)}
+
+/* ============================================================ 3 · RECOMMENDATION ROWS */
+.rec-row{display:flex; gap:var(--s-4); overflow-x:auto; scroll-snap-type:x mandatory; padding:var(--s-2) var(--s-1) var(--s-4); -webkit-overflow-scrolling:touch}
+.rec-row::-webkit-scrollbar{height:8px}
+.rec-row::-webkit-scrollbar-thumb{background:var(--glass-edge); border-radius:4px}
+.rec-card{flex:0 0 236px; scroll-snap-align:start; overflow:hidden; display:flex; flex-direction:column; border-radius:var(--r-lg)}
+.rec-card .thumb{height:110px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.9); position:relative}
+.rec-card .thumb svg{width:34px; height:34px}
+.rec-card .thumb .why{position:absolute; bottom:8px; left:8px; right:8px; font-size:.62rem; font-weight:700; letter-spacing:.03em; background:rgba(0,0,0,.45); color:#fff; border-radius:var(--r-full); padding:3px 10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; backdrop-filter:blur(4px)}
+.rec-card .body{padding:var(--s-3) var(--s-4) var(--s-4); display:flex; flex-direction:column; gap:7px; flex:1}
+.rec-card .rt{font-weight:700; font-size:.9rem; line-height:1.3}
+.rec-card .rm{font-size:.75rem; color:var(--ink-soft)}
+.rec-card .rp{display:flex; justify-content:space-between; align-items:center; margin-top:auto; font-size:.8rem; color:var(--ink-soft)}
+.rec-card .rp strong{color:var(--ink); font-variant-numeric:tabular-nums}
+/* skeletons */
+.skeleton{position:relative; overflow:hidden; background:var(--glass-soft); border-radius:10px}
+.skeleton::after{content:""; position:absolute; inset:0; transform:translateX(-100%); background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent); animation:shimmer 1.5s ease-in-out infinite}
+[data-theme="dark"] .skeleton::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent)}
+@keyframes shimmer{to{transform:translateX(100%)}}
+.sk-rec{flex:0 0 236px; overflow:hidden}
+.sk-rec .sk-t{height:110px; border-radius:0}
+.sk-rec .sk-l{margin:12px 14px; height:12px}
+
+/* ============================================================ 4 · NEED BOARD */
+.need-card{padding:var(--s-4) var(--s-5); display:flex; gap:var(--s-4); align-items:flex-start; border-radius:var(--r-lg)}
+.need-card .pfp{width:46px; height:46px; border-radius:var(--r-full); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.86rem; flex:none; box-shadow:0 0 0 3px var(--green-tint)}
+.need-card .nb{flex:1; min-width:0}
+.need-card .nb h3{font-size:.98rem}
+.need-card .who{font-size:.78rem; color:var(--ink-soft); margin-top:2px; display:flex; gap:7px; flex-wrap:wrap; align-items:center}
+.need-card .meta{display:flex; gap:8px; flex-wrap:wrap; margin-top:9px}
+.need-card .help{flex:none; align-self:center}
+.need-grid{display:flex; flex-direction:column; gap:var(--s-3)}
+.urgent-ring{animation:urgePulse 2.4s ease-in-out infinite}
+@keyframes urgePulse{0%,100%{box-shadow:0 0 0 0 rgba(194,76,59,.25)}50%{box-shadow:0 0 0 8px transparent}}
+
+/* ============================================================ 5 · MATCH MODAL */
+.modal-overlay{position:fixed; inset:0; background:var(--overlay); z-index:300; display:flex; align-items:center; justify-content:center; padding:var(--s-4); opacity:0; pointer-events:none; transition:opacity var(--t-med) var(--ease); backdrop-filter:blur(8px)}
+.modal-overlay.open{opacity:1; pointer-events:auto}
+.match-modal{background:var(--glass-strong); backdrop-filter:blur(28px) saturate(1.5); border:1px solid var(--glass-line); border-radius:var(--r-xl); box-shadow:var(--e-3), var(--inner-light); width:100%; max-width:430px; padding:var(--s-6); text-align:center; transform:translateY(24px) scale(.92); transition:transform var(--t-med) var(--spring)}
+.modal-overlay.open .match-modal{transform:none}
+.match-ring{width:84px; height:84px; margin:0 auto var(--s-4); border-radius:50%; background:var(--green-tint); display:flex; align-items:center; justify-content:center; font-size:2.1rem; animation:matchPop .7s var(--spring); box-shadow:0 0 0 12px rgba(14,138,92,.05)}
+@keyframes matchPop{0%{transform:scale(.3) rotate(-20deg); opacity:0}70%{transform:scale(1.15) rotate(4deg)}100%{transform:scale(1)}}
+.match-modal h3{font-size:1.35rem}
+.match-modal .sub{color:var(--ink-soft); font-size:.9rem; margin-top:6px}
+.match-facts{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3); margin-top:var(--s-5); text-align:left}
+.mf{padding:var(--s-3) var(--s-4)}
+.mf span{display:block; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint)}
+.mf strong{font-size:.92rem}
+.match-actions{display:flex; gap:var(--s-3); margin-top:var(--s-5)}
+.match-actions .btn{flex:1}
+
+/* ============================================================ 6 · COMMUNITY INSIGHTS */
+.ins-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-4); perspective:1200px}
+.ins{padding:var(--s-5); display:flex; flex-direction:column; gap:var(--s-3); border-radius:var(--r-lg)}
+.ins .ih{display:flex; align-items:center; gap:10px}
+.ins .ih .ico{width:36px; height:36px; border-radius:11px; display:flex; align-items:center; justify-content:center; box-shadow:var(--e-1), var(--inner-light); flex:none}
+.ins .ih .ico svg{width:16px; height:16px}
+.ins .ih h3{font-size:.86rem; font-weight:700}
+.ins .big{font-family:var(--font-display); font-weight:800; font-size:1.55rem; letter-spacing:-.02em; font-variant-numeric:tabular-nums; line-height:1.1}
+.ins .note{font-size:.76rem; color:var(--ink-soft)}
+.hbar{display:flex; flex-direction:column; gap:9px}
+.hbar .hb{display:grid; grid-template-columns:86px 1fr 32px; gap:9px; align-items:center; font-size:.76rem}
+.hbar .hb .tr{height:8px; border-radius:4px; background:var(--glass-soft); overflow:hidden}
+.hbar .hb .tr i{display:block; height:100%; border-radius:4px; background:linear-gradient(90deg,var(--green-hi),var(--green-strong)); width:0; transition:width 1s var(--spring); box-shadow:0 0 8px var(--green-glow)}
+.hbar .hb .vv{text-align:right; font-weight:700; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+
+/* ============================================================ 1 · AI SHARE ASSISTANT */
+.ai-fab{position:fixed; right:var(--s-5); bottom:var(--s-5); z-index:220; width:62px; height:62px; border-radius:var(--r-full); border:1px solid rgba(255,255,255,.3); background:linear-gradient(160deg,var(--green-hi),var(--green) 45%,var(--green-strong)); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 14px 34px var(--green-glow), var(--inner-light); transition:transform var(--t-med) var(--spring); animation:glowPulse 3.2s ease-in-out infinite}
+[data-theme="dark"] .ai-fab{color:#07110C}
+.ai-fab:hover{transform:scale(1.1)}
+.ai-fab svg{width:26px; height:26px}
+.ai-fab .halo{position:absolute; inset:-5px; border-radius:inherit; border:2px solid var(--green); opacity:.5; animation:halo 2.6s ease-out infinite}
+@keyframes halo{from{transform:scale(.9); opacity:.5}to{transform:scale(1.35); opacity:0}}
+.ai-panel{position:fixed; right:var(--s-4); bottom:calc(var(--s-5) + 74px); z-index:230; width:min(374px, calc(100vw - 24px)); height:min(540px, calc(100vh - 140px)); background:var(--glass-strong); backdrop-filter:blur(28px) saturate(1.5); border:1px solid var(--glass-line); border-radius:var(--r-xl); box-shadow:var(--e-3), var(--inner-light); display:flex; flex-direction:column; overflow:hidden; opacity:0; transform:translateY(18px) scale(.95); pointer-events:none; transform-origin:bottom right; transition:opacity var(--t-fast) var(--ease), transform var(--t-med) var(--spring)}
+.ai-panel.open{opacity:1; transform:none; pointer-events:auto}
+.ai-head{display:flex; align-items:center; gap:11px; padding:var(--s-4); border-bottom:1px solid var(--glass-edge); background:var(--grad-band); color:#fff}
+[data-theme="dark"] .ai-head{color:#F2FBF6}
+.ai-head .aico{width:38px; height:38px; border-radius:12px; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; flex:none}
+.ai-head .aico svg{width:19px; height:19px}
+.ai-head strong{display:block; font-size:.95rem; font-family:var(--font-display)}
+.ai-head span{font-size:.72rem; opacity:.85; display:flex; align-items:center; gap:5px}
+.ai-head span i{width:7px; height:7px; border-radius:50%; background:#7CFFC8; display:inline-block; animation:blink 2s steps(1) infinite}
+.ai-head .btn-icon{margin-left:auto; color:#fff}
+.ai-head .btn-icon:hover{background:rgba(255,255,255,.16); color:#fff}
+.ai-log{flex:1; overflow-y:auto; padding:var(--s-4); display:flex; flex-direction:column; gap:var(--s-3)}
+.msg{max-width:86%; padding:10px 14px; border-radius:16px; font-size:.87rem; line-height:1.5; animation:msgIn .4s var(--spring)}
+@keyframes msgIn{from{opacity:0; transform:translateY(10px) scale(.96)}to{opacity:1}}
+.msg.ai{align-self:flex-start; background:var(--glass); border:1px solid var(--glass-line); border-bottom-left-radius:6px; box-shadow:var(--e-1)}
+.msg.me{align-self:flex-end; background:linear-gradient(160deg,var(--green-hi),var(--green-strong)); color:#fff; border-bottom-right-radius:6px; box-shadow:0 6px 16px var(--green-glow)}
+[data-theme="dark"] .msg.me{color:#07110C}
+.msg .mini{margin-top:9px; background:var(--glass-soft); border:1px solid var(--glass-line); border-radius:12px; padding:9px 11px; display:flex; gap:10px; align-items:center}
+.msg .mini .mi{width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; flex:none}
+.msg .mini .mi svg{width:16px; height:16px}
+.msg .mini strong{display:block; font-size:.8rem; line-height:1.25}
+.msg .mini span{font-size:.7rem; color:var(--ink-soft)}
+.msg .mini .btn-sm{margin-left:auto; height:30px; padding:0 11px; font-size:.74rem; flex:none}
+.typing{display:inline-flex; gap:4px; padding:12px 15px}
+.typing i{width:7px; height:7px; border-radius:50%; background:var(--ink-faint); animation:tdot 1.2s ease-in-out infinite}
+.typing i:nth-child(2){animation-delay:.15s}
+.typing i:nth-child(3){animation-delay:.3s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0); opacity:.5}30%{transform:translateY(-5px); opacity:1}}
+.ai-quick{display:flex; gap:7px; padding:0 var(--s-4) var(--s-3); flex-wrap:wrap}
+.ai-quick .chip{font-size:.74rem; padding:6px 12px}
+.ai-input{display:flex; gap:8px; padding:var(--s-3) var(--s-4) var(--s-4); border-top:1px solid var(--glass-edge)}
+.ai-input input{flex:1; height:44px; background:var(--glass-soft); color:var(--ink); border:1px solid var(--glass-line); border-radius:var(--r-full); padding:0 var(--s-4); font-size:.88rem; font-family:inherit; transition:all var(--t-med) var(--ease)}
+.ai-input input:focus{background:var(--glass-strong); border-color:var(--green); box-shadow:0 0 0 4px var(--green-glow); outline:none}
+.ai-input .send{width:44px; height:44px; border-radius:var(--r-full); border:none; background:linear-gradient(160deg,var(--green-hi),var(--green-strong)); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px var(--green-glow); transition:transform var(--t-fast) var(--spring); flex:none}
+[data-theme="dark"] .ai-input .send{color:#07110C}
+.ai-input .send:hover{transform:scale(1.1)}
+.ai-input .send svg{width:18px; height:18px}
+
+/* Confetti + toast */
+.confetti{position:fixed; top:-14px; z-index:340; width:9px; height:15px; border-radius:3px; pointer-events:none; animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(108vh) rotate(680deg); opacity:.9}}
+.toast-region{position:fixed; bottom:var(--s-5); left:var(--s-5); z-index:320; display:flex; flex-direction:column; gap:var(--s-2); width:min(360px, calc(100vw - 120px)); pointer-events:none}
+.toast{background:var(--glass-strong); backdrop-filter:blur(18px) saturate(1.5); color:var(--ink); border:1px solid var(--glass-line); border-radius:var(--r-md); box-shadow:var(--e-3), var(--inner-light); padding:12px 16px; display:flex; align-items:center; gap:10px; font-size:.86rem; font-weight:500; pointer-events:auto; animation:toastIn .45s var(--spring)}
+.toast svg{width:16px; height:16px; flex:none; color:var(--green)}
+@keyframes toastIn{from{opacity:0; transform:translateY(14px) scale(.95)}to{opacity:1}}
+
+/* Responsive */
+@media (max-width:900px){
+  .res-grid,.ins-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:620px){
+  .res-grid,.ins-grid{grid-template-columns:1fr}
+  .need-card{flex-wrap:wrap}
+  .need-card .help{width:100%; align-self:stretch}
+  .need-card .help .btn{width:100%}
+  .insight{flex-wrap:wrap}
+  .sbar input{padding-right:104px; font-size:.92rem}
+  .match-facts{grid-template-columns:1fr}
+  .toast-region{left:var(--s-4); bottom:calc(var(--s-5) + 84px)}
+}
+
+/* ============================================================
+   SHARED CROSS-APP NAVIGATION · mobile bottom nav
+   ============================================================ */
+.bottom-nav{display:none}
+@media (max-width:900px){
+  body{padding-bottom:82px}
+  .bottom-nav{
+    display:flex; align-items:center; justify-content:space-around;
+    position:fixed; left:var(--s-3); right:var(--s-3); bottom:var(--s-3); z-index:110;
+    background:var(--glass-strong); backdrop-filter:blur(22px) saturate(1.5); -webkit-backdrop-filter:blur(22px) saturate(1.5);
+    border:1px solid var(--glass-line); border-radius:var(--r-xl); box-shadow:var(--e-3), var(--inner-light); padding:8px;
+  }
+  .bn-item{display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--ink-faint); text-decoration:none!important; font-size:.62rem; font-weight:700; padding:6px 12px; border-radius:14px; transition:all var(--t-fast) var(--spring)}
+  .bn-item svg{width:20px; height:20px}
+  .bn-item:hover{transform:translateY(-2px); color:var(--ink)}
+  .bn-item.active{color:var(--green-strong)}
+  [data-theme="dark"] .bn-item.active{color:var(--green)}
+  .bn-item.raised{background:linear-gradient(160deg,var(--green-hi),var(--green) 45%,var(--green-strong)); color:#fff; margin-top:-30px; width:54px; height:54px; border-radius:50%; justify-content:center; box-shadow:0 10px 24px var(--green-glow), var(--inner-light); border:1px solid rgba(255,255,255,.3)}
+  [data-theme="dark"] .bn-item.raised{color:#07110C}
+  .bn-item.raised span{display:none}
+  .bn-item.raised svg{width:23px; height:23px}
+}
+
+/* ============================================================
+   PRESENTATION MODE · guided demo bar (glass variant)
+   ============================================================ */
+.present-bar{position:fixed; left:50%; bottom:var(--s-5); transform:translateX(-50%); z-index:250; width:min(540px, calc(100vw - 32px)); background:var(--glass-strong); backdrop-filter:blur(26px) saturate(1.5); -webkit-backdrop-filter:blur(26px) saturate(1.5); border:1px solid var(--glass-line); border-radius:var(--r-xl); box-shadow:var(--e-3), var(--inner-light); padding:var(--s-4) var(--s-5); animation:pbIn .5s var(--spring)}
+.present-bar[hidden]{display:none}
+@keyframes pbIn{from{opacity:0; transform:translateX(-50%) translateY(20px)}to{opacity:1; transform:translateX(-50%) translateY(0)}}
+.pb-top{display:flex; align-items:center; gap:10px}
+.pb-step{font-size:.7rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--green-strong); white-space:nowrap}
+[data-theme="dark"] .pb-step{color:var(--green)}
+.pb-track{flex:1; height:5px; border-radius:3px; background:var(--glass-soft); overflow:hidden}
+.pb-track i{display:block; height:100%; background:linear-gradient(90deg,var(--green-hi),var(--green-strong)); border-radius:3px; width:0; transition:width .4s var(--ease)}
+.present-bar .btn-icon{width:34px; height:34px; flex:none}
+.present-bar .btn-icon svg{width:16px; height:16px}
+.pb-caption{font-size:.85rem; color:var(--ink); margin-top:10px; line-height:1.5}
+.pb-actions{display:flex; gap:8px; margin-top:12px}
+.pb-actions .btn{flex:1}
+.present-bar.final{text-align:center}
+.pb-final-head{display:flex; align-items:center; justify-content:center; gap:9px; font-family:var(--font-display); font-weight:800; font-size:1.05rem}
+.pb-check{width:28px; height:28px; border-radius:50%; background:var(--green-tint); color:var(--green-strong); display:inline-flex; align-items:center; justify-content:center; font-size:.85rem}
+[data-theme="dark"] .pb-check{color:var(--green)}
+.demo-launch{display:inline-flex; align-items:center; gap:7px; height:42px; padding:0 15px; border-radius:var(--r-full); background:var(--glass-soft); border:1px solid var(--glass-line); color:var(--ink); font-weight:700; font-size:.82rem; cursor:pointer; text-decoration:none!important; transition:all var(--t-fast) var(--spring); flex:none}
+.demo-launch:hover{background:var(--green-tint); border-color:var(--green); color:var(--green-strong); transform:translateY(-2px)}
+[data-theme="dark"] .demo-launch:hover{color:var(--green)}
+.demo-launch svg{width:15px; height:15px}
+@media (max-width:560px){
+  .present-bar{bottom:calc(var(--s-3) + 4px); padding:var(--s-3) var(--s-4)}
+  .demo-launch span{display:none}
+}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<div class="ambient" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<header class="topbar">
+  <button class="btn-icon" aria-label="Back to dashboard" onclick="nav('sharebox-dashboard-glass.html')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  </button>
+  <a class="brand" href="sharebox-dashboard-glass.html">
+    <svg width="27" height="27" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--green)"/>
+      <path d="M10 13.5 16 9l6 4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M22 18.5 16 23l-6-4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".65"/>
+    </svg>
+    <span class="wordmark">ShareBox</span>
+  </a>
+  <span class="ttl">· Discover <span class="badge badge-green" style="margin-left:4px; vertical-align:1px">✨ AI</span></span>
+  <div class="grow"></div>
+  <button class="demo-launch" onclick="presentStart()" aria-label="Start guided demo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg><span>Demo</span></button>
+  <button class="btn-icon" data-theme-toggle aria-label="Switch to dark mode" onclick="toggleTheme()"></button>
+  <button class="avatar" aria-label="Your profile" onclick="nav('sharebox-account.html')">TA</button>
+</header>
+
+<main id="main" class="page">
+
+  <!-- ============ 7 · AI DAILY INSIGHT ============ -->
+  <section class="insight rv" aria-labelledby="insH">
+    <span class="ii" aria-hidden="true">🤖</span>
+    <div class="it">
+      <p class="lbl" id="insH">AI daily insight · Tuesday, 28 July</p>
+      <p aria-live="polite"><span id="insTxt"></span><span class="type-caret" aria-hidden="true"></span></p>
+    </div>
+    <button class="btn-icon" aria-label="Show another insight" onclick="nextInsight()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.3"/><path d="M21 3v6h-6"/></svg>
+    </button>
+  </section>
+
+  <!-- ============ 2 · SMART SEARCH ============ -->
+  <div class="section-row"><h2>Smart search</h2><span class="sub">Type naturally — filters sharpen the results instantly.</span></div>
+  <section class="glass search-hero rv" aria-label="Smart search">
+    <div class="sbar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" id="q" placeholder="Try &ldquo;ESP32 tomorrow&rdquo; or &ldquo;cheap textbooks&rdquo;…" aria-label="Search resources" aria-expanded="false" aria-controls="sDrop" autocomplete="off" oninput="onQuery()" onfocus="onQuery()">
+      <div class="s-actions">
+        <button class="btn-icon" aria-label="Voice search" onclick="toast('🎙 Voice search listens here — say what you need (demo)')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+        </button>
+        <button class="btn-icon" aria-label="Search by image — coming soon" onclick="toast('📷 Snap a photo, find the item — arriving in a future phase')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 15-4.5-4.5L9 18"/></svg>
+        </button>
+      </div>
+      <div class="s-drop" id="sDrop" role="listbox" aria-label="Search suggestions"></div>
+    </div>
+
+    <div class="chip-row" aria-label="Recent searches">
+      <span class="lbl">Recent</span>
+      <button class="chip" onclick="applyQuery('scientific calculator')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>scientific calculator</button>
+      <button class="chip" onclick="applyQuery('lab coat')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>lab coat</button>
+      <button class="chip" onclick="applyQuery('esp32')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>esp32</button>
+    </div>
+    <div class="chip-row" aria-label="Trending searches">
+      <span class="lbl">Trending</span>
+      <button class="chip hot" onclick="applyQuery('dslr')">🔥 DSLR for club week</button>
+      <button class="chip hot" onclick="applyQuery('blazer')">🔥 viva blazers</button>
+      <button class="chip hot" onclick="applyQuery('multimeter')">🔥 multimeters</button>
+      <button class="chip hot" onclick="applyQuery('textbook')">🔥 2nd-hand textbooks</button>
+    </div>
+
+    <div class="filters" role="group" aria-label="Smart filters">
+      <button class="f-chip" aria-pressed="false" data-f="iot" onclick="flipFilter(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 2v3M14 2v3M10 19v3M14 19v3M2 10h3M2 14h3M19 10h3M19 14h3"/></svg>IoT Devices</button>
+      <button class="f-chip" aria-pressed="false" data-f="avail" onclick="flipFilter(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>Available now</button>
+      <button class="f-chip" aria-pressed="false" data-f="cheap" onclick="flipFilter(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6.5C17 4.6 14.8 3.5 12 3.5S7 4.6 7 6.5 9.2 9.5 12 9.5s5 1.1 5 3-2.2 3-5 3-5-1.1-5-3"/></svg>Under ৳50/day</button>
+      <button class="f-chip" aria-pressed="false" data-f="near" onclick="flipFilter(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>&lt; 500 m</button>
+      <button class="f-chip" aria-pressed="false" data-f="cond" onclick="flipFilter(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L20 9l-5 3.4L16.5 19 12 15.6 7.5 19 9 12.4 4 9l6.2-1.4z"/></svg>Excellent+</button>
+      <button class="f-chip" aria-pressed="false" data-f="trust" onclick="flipFilter(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Trust 90+</button>
+      <button class="f-chip" aria-pressed="false" data-f="free" onclick="flipFilter(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9-8.5C1.5 8 3.5 5 6.7 5c2 0 3.6 1.2 4.3 2.4h2C13.7 6.2 15.3 5 17.3 5c3.2 0 5.2 3 3.7 6.5-2 4.2-9 8.5-9 8.5z"/></svg>Donations only</button>
+    </div>
+
+    <p class="result-meta" id="resMeta" aria-live="polite"></p>
+    <div class="res-grid" id="resGrid"></div>
+  </section>
+
+  <!-- ============ 3 · AI RECOMMENDATIONS ============ -->
+  <div class="section-row"><h2>Recommended for you</h2><button class="btn-tertiary" onclick="note('Browse')">View all</button></div>
+
+  <h3 style="font-size:.9rem; color:var(--ink-soft); font-family:var(--font-body); font-weight:600; margin-bottom:var(--s-2)">⚡ Because you borrowed an Arduino before…</h3>
+  <div class="rec-row" id="row1" aria-label="Recommendations based on your Arduino borrow"></div>
+
+  <h3 style="font-size:.9rem; color:var(--ink-soft); font-family:var(--font-body); font-weight:600; margin:var(--s-4) 0 var(--s-2)">🎓 Students in CSE often borrow these</h3>
+  <div class="rec-row" id="row2" aria-label="Popular with CSE students"></div>
+
+  <h3 style="font-size:.9rem; color:var(--ink-soft); font-family:var(--font-body); font-weight:600; margin:var(--s-4) 0 var(--s-2)">📈 Trending this week · 🔗 frequently borrowed together</h3>
+  <div class="rec-row" id="row3" aria-label="Trending and frequently borrowed together"></div>
+
+  <!-- ============ 4 · NEED BOARD ============ -->
+  <div class="section-row" id="needboard" style="scroll-margin-top:calc(var(--topbar-h) + var(--s-6))">
+    <h2>Need Board</h2>
+    <button class="btn btn-primary btn-sm" onclick="toast('Post-a-need composer opens here — it lives in the Upload flow too')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Post a need
+    </button>
+    <span class="sub">Someone on campus needs what&rsquo;s sitting in your room. The AI pings owners of matching items automatically.</span>
+  </div>
+  <section class="need-grid" aria-label="Open needs">
+    <article class="glass glass-hover need-card rv urgent-ring">
+      <span class="pfp" style="background:linear-gradient(135deg,#C24C3B,#8C2F22)">IM</span>
+      <div class="nb">
+        <h3>Need: Scientific calculator for tomorrow&rsquo;s exam</h3>
+        <p class="who">Imran · BBA 2nd yr <span class="badge badge-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Trust 84</span></p>
+        <div class="meta">
+          <span class="badge badge-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Urgent — by 8 AM</span>
+          <span class="badge badge-amber">🎁 Reward: ৳50 + coffee</span>
+          <span class="badge badge-neutral">Returns: tomorrow 2 PM</span>
+        </div>
+      </div>
+      <span class="help"><button class="btn btn-primary btn-sm" onclick="helpNeed(this,'Imran')">Help</button></span>
+    </article>
+
+    <article class="glass glass-hover need-card rv">
+      <span class="pfp" style="background:linear-gradient(135deg,#B57312,#8C5A0E)">FA</span>
+      <div class="nb">
+        <h3>Need: DSLR camera for Photography Society event</h3>
+        <p class="who">Farhan · EEE 3rd yr <span class="badge badge-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Trust 91</span></p>
+        <div class="meta">
+          <span class="badge badge-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>This weekend</span>
+          <span class="badge badge-amber">🎁 Reward: event photos of you, free</span>
+          <span class="badge badge-neutral">Returns: Sun evening</span>
+        </div>
+      </div>
+      <span class="help"><button class="btn btn-secondary btn-sm" onclick="helpNeed(this,'Farhan')">Help</button></span>
+    </article>
+
+    <article class="glass glass-hover need-card rv">
+      <span class="pfp" style="background:linear-gradient(135deg,#2E6FA8,#1F4E78)">TN</span>
+      <div class="nb">
+        <h3>Need: Lab coat, size L — Pharmacy practicals</h3>
+        <p class="who">Tanha · Pharmacy 1st yr <span class="badge badge-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Trust 78</span></p>
+        <div class="meta">
+          <span class="badge badge-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>By Thursday</span>
+          <span class="badge badge-neutral">Returns: end of month</span>
+        </div>
+      </div>
+      <span class="help"><button class="btn btn-secondary btn-sm" onclick="helpNeed(this,'Tanha')">Help</button></span>
+    </article>
+
+    <article class="glass glass-hover need-card rv">
+      <span class="pfp" style="background:linear-gradient(135deg,#0E8A5C,#0A6B47)">NR</span>
+      <div class="nb">
+        <h3>Need: First-aid kit (sealed) for dorm floor</h3>
+        <p class="who">Nabila · Floor rep, Hall 3 <span class="badge badge-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>Trust 96</span></p>
+        <div class="meta">
+          <span class="badge badge-blue">Emergency Essentials</span>
+          <span class="badge badge-neutral">Donation preferred 💚</span>
+        </div>
+      </div>
+      <span class="help"><button class="btn btn-secondary btn-sm" onclick="helpNeed(this,'Nabila')">Help</button></span>
+    </article>
+  </section>
+
+  <div style="margin-top:var(--s-4); text-align:center">
+    <button class="btn btn-secondary" onclick="smartMatch()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L20 9l-5 3.4L16.5 19 12 15.6 7.5 19 9 12.4 4 9l6.2-1.4z"/></svg>
+      Demo: my DSLR need just matched
+    </button>
+  </div>
+
+  <!-- ============ 6 · COMMUNITY INSIGHTS ============ -->
+  <div class="section-row" id="community" style="scroll-margin-top:calc(var(--topbar-h) + var(--s-6))"><h2>Community insights</h2><span class="sub">Live pulse of UITS sharing — updated by the AI every hour.</span></div>
+  <section class="ins-grid" aria-label="Community insights">
+    <div class="glass glass-hover tilt ins rv">
+      <div class="ih"><span class="ico" style="background:var(--green-tint); color:var(--green-strong)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg></span><h3>Most borrowed category</h3></div>
+      <div class="hbar">
+        <div class="hb"><span>IoT Devices</span><span class="tr"><i data-w="92"></i></span><span class="vv">92</span></div>
+        <div class="hb"><span>Books</span><span class="tr"><i data-w="74"></i></span><span class="vv">74</span></div>
+        <div class="hb"><span>Lab Equip.</span><span class="tr"><i data-w="58"></i></span><span class="vv">58</span></div>
+        <div class="hb"><span>Clothing</span><span class="tr"><i data-w="41"></i></span><span class="vv">41</span></div>
+      </div>
+      <p class="note">Exam season keeps dev boards moving fastest.</p>
+    </div>
+    <div class="glass glass-hover tilt ins rv">
+      <div class="ih"><span class="ico" style="background:var(--blue-tint); color:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8 12 3 2 8l10 5z"/><path d="M6 10.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-5.5"/></svg></span><h3>Most active department</h3></div>
+      <p class="big">CSE</p>
+      <p class="note">312 exchanges this semester — EEE close behind at 268.</p>
+    </div>
+    <div class="glass glass-hover tilt ins rv">
+      <div class="ih"><span class="ico" style="background:var(--green-tint); color:var(--green-strong)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5"/></svg></span><h3>Resources saved from idle</h3></div>
+      <p class="big"><span data-count="432">0</span>+</p>
+      <p class="note">Items circulating instead of gathering dust.</p>
+    </div>
+    <div class="glass glass-hover tilt ins rv">
+      <div class="ih"><span class="ico" style="background:var(--amber-tint); color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6.5C17 4.6 14.8 3.5 12 3.5S7 4.6 7 6.5 9.2 9.5 12 9.5s5 1.1 5 3-2.2 3-5 3-5-1.1-5-3"/></svg></span><h3>Money saved together</h3></div>
+      <p class="big">৳<span data-count="184000">0</span></p>
+      <p class="note">What students kept in their pockets this semester.</p>
+    </div>
+    <div class="glass glass-hover tilt ins rv">
+      <div class="ih"><span class="ico" style="background:var(--green-tint); color:var(--green-strong)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.5 5.5-6"/></svg></span><h3>Waste reduced</h3></div>
+      <p class="big"><span data-count="3200">0</span> kg</p>
+      <p class="note">3.2 tons diverted from landfill — and counting.</p>
+    </div>
+    <div class="glass glass-hover tilt ins rv">
+      <div class="ih"><span class="ico" style="background:var(--green-tint); color:var(--green-strong)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9-8.5C1.5 8 3.5 5 6.7 5c2 0 3.6 1.2 4.3 2.4h2C13.7 6.2 15.3 5 17.3 5c3.2 0 5.2 3 3.7 6.5-2 4.2-9 8.5-9 8.5z"/></svg></span><h3>Community impact</h3></div>
+      <p class="big"><span data-count="1248">0</span> students</p>
+      <p class="note">Verified members sharing across 14 departments.</p>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 5 · SMART MATCH MODAL ============ -->
+<div class="modal-overlay" id="matchOverlay" aria-hidden="true">
+  <div class="match-modal" role="dialog" aria-modal="true" aria-labelledby="matchTitle">
+    <div class="match-ring" aria-hidden="true">🎉</div>
+    <h3 id="matchTitle">Great news!</h3>
+    <p class="sub">A DSLR matching your request has been found.</p>
+    <div class="match-facts">
+      <div class="glass mf"><span>Owner</span><strong>Nusrat T. · <span style="color:var(--green)">Trust 95</span></strong></div>
+      <div class="glass mf"><span>Distance</span><strong>400 m · Hall 2</strong></div>
+      <div class="glass mf"><span>Availability</span><strong>Free this weekend</strong></div>
+      <div class="glass mf"><span>Rate</span><strong>৳400/day · ৳800 dep.</strong></div>
+    </div>
+    <div class="match-actions">
+      <button class="btn btn-secondary" onclick="closeMatch()">Later</button>
+      <button class="btn btn-primary" onclick="closeMatch(); nav('sharebox-borrow-flow.html')">Borrow it now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 1 · AI SHARE ASSISTANT ============ -->
+<button class="ai-fab" id="aiFab" aria-expanded="false" aria-controls="aiPanel" aria-label="Open ShareBox AI assistant" onclick="toggleAI()">
+  <span class="halo" aria-hidden="true"></span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L20 9l-5 3.4L16.5 19 12 15.6 7.5 19 9 12.4 4 9l6.2-1.4z"/></svg>
+</button>
+<div class="ai-panel" id="aiPanel" role="dialog" aria-label="ShareBox AI assistant" aria-hidden="true">
+  <div class="ai-head">
+    <span class="aico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.8 5.6L20 9l-5 3.4L16.5 19 12 15.6 7.5 19 9 12.4 4 9l6.2-1.4z"/></svg></span>
+    <div><strong>ShareBox AI</strong><span><i></i>Online · knows your campus shelf</span></div>
+    <button class="btn-icon" aria-label="Close assistant" onclick="toggleAI(false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="ai-log" id="aiLog" aria-live="polite"></div>
+  <div class="ai-quick" id="aiQuick">
+    <button class="chip" onclick="ask('I need an ESP32 tomorrow')">I need an ESP32 tomorrow</button>
+    <button class="chip" onclick="ask('Looking for a DSLR camera')">Looking for a DSLR</button>
+    <button class="chip" onclick="ask('Need a lab coat this week')">Lab coat this week</button>
+    <button class="chip" onclick="ask('Show cheap textbooks')">Cheap textbooks</button>
+    <button class="chip" onclick="ask('Recommend something for IoT lab')">IoT lab picks</button>
+  </div>
+  <div class="ai-input">
+    <input type="text" id="aiText" placeholder="Ask for anything on campus…" aria-label="Message ShareBox AI" onkeydown="if(event.key==='Enter') sendAI()">
+    <button class="send" aria-label="Send message" onclick="sendAI()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-8-8 18-2.5-7.5z"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="present-bar" id="presentBar" role="region" aria-label="Presentation mode controls" hidden></div>
+
+<div class="toast-region" id="toastRegion" role="status" aria-live="polite"></div>
+
+<nav class="bottom-nav" aria-label="Mobile navigation">
+  <a class="bn-item" href="sharebox-dashboard-glass.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg><span>Home</span></a>
+  <a class="bn-item active" href="sharebox-ai-discovery.html#needboard" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/><circle cx="12" cy="12" r="4"/></svg><span>Needs</span></a>
+  <a class="bn-item raised" href="sharebox-upload-wizard.html" aria-label="Upload a resource"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></a>
+  <a class="bn-item" href="sharebox-account.html#wallet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18"/></svg><span>Wallet</span></a>
+  <a class="bn-item" href="sharebox-account.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg><span>Profile</span></a>
+</nav>
+
+<script>
+/* ============================================================ Theme */
+let theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const moon = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A8.5 8.5 0 0 1 11 3a8.5 8.5 0 1 0 10 10z"/></svg>';
+const sun  = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('[data-theme-toggle]').forEach(b=>{
+    b.innerHTML = theme==='light' ? moon : sun;
+    b.setAttribute('aria-label', theme==='light' ? 'Switch to dark mode' : 'Switch to light mode');
+  });
+}
+function toggleTheme(){ theme = theme==='light' ? 'dark' : 'light'; applyTheme(); }
+applyTheme();
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Particles */
+if(!reduced){
+  for(let i=0;i<14;i++){
+    const p = document.createElement('span');
+    p.className = 'particle';
+    const s = 3 + Math.random()*5;
+    p.style.width = p.style.height = s+'px';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.top = (100 + Math.random()*20) + 'vh';
+    p.style.animationDuration = (26 + Math.random()*30) + 's';
+    p.style.animationDelay = (-Math.random()*30) + 's';
+    document.body.appendChild(p);
+  }
+}
+
+/* Toast / chime / confetti / ripple */
+function toast(msg){
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg><span>'+msg+'</span>';
+  document.getElementById('toastRegion').appendChild(el);
+  setTimeout(()=>el.remove(), 3400);
+}
+function note(what){ toast(what + ' — connects in the next build phase'); }
+function nav(url){ window.location.href = url; }
+function chime(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [523.25, 659.25, 783.99].forEach((f,i)=>{
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0, ctx.currentTime + i*.09);
+      g.gain.linearRampToValueAtTime(.07, ctx.currentTime + i*.09 + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + i*.09 + .7);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime + i*.09); o.stop(ctx.currentTime + i*.09 + .75);
+    });
+  }catch(e){}
+}
+function confetti(n){
+  if(reduced) return;
+  const colors = ['#0E8A5C','#1FA774','#B57312','#2E6FA8','#BFE6D2','#43CE97'];
+  for(let i=0;i<n;i++){
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (1.9 + Math.random()*1.6) + 's';
+    c.style.animationDelay = (Math.random()*.4) + 's';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 4200);
+  }
+}
+document.addEventListener('pointerdown', e=>{
+  const b = e.target.closest('.btn, .chip, .f-chip'); if(!b || reduced) return;
+  const r = b.getBoundingClientRect();
+  const span = document.createElement('span');
+  span.className = 'ripple';
+  const size = Math.max(r.width, r.height);
+  span.style.width = span.style.height = size+'px';
+  span.style.left = (e.clientX - r.left - size/2)+'px';
+  span.style.top  = (e.clientY - r.top - size/2)+'px';
+  b.style.position = 'relative'; b.style.overflow = 'hidden';
+  b.appendChild(span);
+  setTimeout(()=>span.remove(), 600);
+});
+
+/* Reveal + counters + tilt + hbar animation */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting) return;
+    en.target.classList.add('in'); io.unobserve(en.target);
+    en.target.querySelectorAll('.hb .tr i').forEach(b=>requestAnimationFrame(()=>{ b.style.width = b.dataset.w + '%'; }));
+  });
+},{threshold:.12, rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+const cio = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting) return;
+    cio.unobserve(en.target);
+    const el = en.target, target = parseFloat(el.dataset.count);
+    if(reduced){ el.textContent = target.toLocaleString('en-US'); return; }
+    const dur = 1400, t0 = performance.now();
+    (function tick(now){
+      const p = Math.min((now - t0)/dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased).toLocaleString('en-US');
+      if(p < 1) requestAnimationFrame(tick);
+    })(t0);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+if(window.matchMedia('(pointer:fine)').matches && !reduced){
+  document.addEventListener('mousemove', e=>{
+    const t = e.target.closest('.tilt');
+    document.querySelectorAll('.tilt').forEach(el=>{
+      if(el !== t){ el.style.transform=''; return; }
+      const r = el.getBoundingClientRect();
+      const rx = ((e.clientY - r.top)/r.height - .5) * -5;
+      const ry = ((e.clientX - r.left)/r.width - .5) * 5;
+      el.style.transform = 'translateY(-4px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';
+    });
+  });
+}
+
+/* ============================================================ 7 · Daily insight (typing animation) */
+const INSIGHTS = [
+  'Borrowing instead of buying this week saved students approximately \u09F318,000.',
+  'You are among the Top 15% most trusted borrowers on UITS.',
+  'You helped reduce campus waste by 38 kg this semester by sharing resources.',
+  'Tuesday 4\u20136 PM is the fastest pickup window on your campus \u2014 requests get approved 2\u00D7 quicker.',
+  'Three students near you searched for an ESP32 this week \u2014 your kit could be earning.'
+];
+let insIdx = 0, insTimer = null;
+function typeInsight(text){
+  const el = document.getElementById('insTxt');
+  if(insTimer) clearInterval(insTimer);
+  if(reduced){ el.textContent = text; return; }
+  el.textContent = '';
+  let i = 0;
+  insTimer = setInterval(()=>{
+    el.textContent = text.slice(0, ++i);
+    if(i >= text.length) clearInterval(insTimer);
+  }, 22);
+}
+function nextInsight(){ insIdx = (insIdx + 1) % INSIGHTS.length; typeInsight(INSIGHTS[insIdx]); }
+typeInsight(INSIGHTS[0]);
+
+/* ============================================================ 2 · Smart search */
+const ITEMS = [
+  {t:'ESP32 Development Kit + Breadboard', c:'IoT Devices', o:'Rafi H.', tr:92, p:50, d:200, dist:300, cond:'Excellent', avail:true, free:false, k:'esp32 iot dev board wifi'},
+  {t:'Arduino Uno R3 + Sensor Pack', c:'IoT Devices', o:'Sadia A.', tr:88, p:40, d:150, dist:450, cond:'Good', avail:true, free:false, k:'arduino iot sensor uno'},
+  {t:'Digital Multimeter', c:'Lab Equipment', o:'Sadia A.', tr:88, p:30, d:100, dist:450, cond:'Excellent', avail:false, free:false, k:'multimeter lab measure'},
+  {t:'Canon 200D DSLR + 18-55mm', c:'Lab Equipment', o:'Nusrat T.', tr:95, p:400, d:800, dist:400, cond:'Excellent', avail:false, free:false, k:'dslr camera canon photo'},
+  {t:'Signals & Systems \u2014 Oppenheim', c:'Books', o:'Sadia A.', tr:88, p:15, d:100, dist:450, cond:'Good', avail:true, free:false, k:'textbook book signals cheap'},
+  {t:'Casio fx-991EX Calculator', c:'Stationery', o:'Nusrat T.', tr:95, p:20, d:80, dist:400, cond:'Excellent', avail:true, free:false, k:'calculator casio scientific exam'},
+  {t:'Navy Blazer \u00B7 size M', c:'Clothing', o:'Nusrat T.', tr:95, p:60, d:250, dist:400, cond:'Excellent', avail:true, free:false, k:'blazer formal viva presentation'},
+  {t:'Lab Coat \u00B7 size L', c:'Clothing', o:'Rafi H.', tr:92, p:0, d:0, dist:300, cond:'Good', avail:true, free:true, k:'lab coat pharmacy donation'},
+  {t:'First-Aid Kit (sealed)', c:'Emergency Essentials', o:'Nabila R.', tr:96, p:0, d:0, dist:650, cond:'New', avail:true, free:true, k:'first aid emergency kit donation'}
+];
+const shield = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>';
+const filters = {iot:false, avail:false, cheap:false, near:false, cond:false, trust:false, free:false};
+
+function flipFilter(btn){
+  const k = btn.dataset.f;
+  filters[k] = !filters[k];
+  btn.setAttribute('aria-pressed', String(filters[k]));
+  renderResults();
+}
+function applyQuery(q){
+  document.getElementById('q').value = q;
+  onQuery();
+  document.getElementById('q').focus();
+}
+function matchList(){
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  return ITEMS.filter(it=>{
+    if(q && !(it.t.toLowerCase().includes(q) || it.k.includes(q) || it.c.toLowerCase().includes(q))) return false;
+    if(filters.iot && it.c !== 'IoT Devices') return false;
+    if(filters.avail && !it.avail) return false;
+    if(filters.cheap && it.p >= 50) return false;
+    if(filters.near && it.dist >= 500) return false;
+    if(filters.cond && !(it.cond === 'Excellent' || it.cond === 'New')) return false;
+    if(filters.trust && it.tr < 90) return false;
+    if(filters.free && !it.free) return false;
+    return true;
+  });
+}
+function renderResults(){
+  const list = matchList();
+  const q = document.getElementById('q').value.trim();
+  const anyF = Object.values(filters).some(Boolean);
+  const meta = document.getElementById('resMeta');
+  const grid = document.getElementById('resGrid');
+  if(!q && !anyF){ meta.innerHTML = 'Start typing or tap a filter \u2014 <strong>'+ITEMS.length+' resources</strong> live on your campus right now.'; grid.innerHTML=''; return; }
+  meta.innerHTML = '<strong>'+list.length+'</strong> ' + (list.length===1?'match':'matches') + (q ? ' for \u201C'+q+'\u201D' : '') + (anyF ? ' with your filters' : '');
+  grid.innerHTML = list.slice(0,6).map(it=>
+    '<div class="glass glass-hover res">' +
+      '<span class="rc">'+it.c+'</span>' +
+      '<p class="rt">'+it.t+'</p>' +
+      '<p class="rm">'+it.o+' <span class="badge badge-green">'+shield+'Trust '+it.tr+'</span> \u00B7 '+it.dist+' m ' + (it.avail?'<span class="badge badge-green">Available</span>':'<span class="badge badge-amber">Booked</span>') + '</p>' +
+      '<div class="rp"><span>'+(it.free ? 'Donation \uD83D\uDC9A' : '\u09F3'+it.p+'/day \u00B7 dep \u09F3'+it.d)+'</span><a class="btn-tertiary" href="sharebox-item-details.html">View</a></div>' +
+    '</div>').join('') || '<div class="glass empty"><span class="ei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8.5 11h5"/></svg></span><h3>Nothing matches yet</h3><p>Try loosening a filter, or post it on the Need Board and let the AI hunt for a match while you wait.</p><button class="btn btn-secondary btn-sm" onclick="toast(\u0027Post-a-need composer opens here\u0027)">Post a need instead</button></div>';
+}
+function onQuery(){
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const drop = document.getElementById('sDrop');
+  const input = document.getElementById('q');
+  renderResults();
+  if(!q){ drop.classList.remove('open'); input.setAttribute('aria-expanded','false'); return; }
+  const sugg = ITEMS.filter(it=>it.t.toLowerCase().includes(q) || it.k.includes(q)).slice(0,4);
+  drop.innerHTML = sugg.map(it=>{
+    const idx = it.t.toLowerCase().indexOf(q);
+    const label = idx >= 0 ? it.t.slice(0,idx)+'<mark>'+it.t.slice(idx, idx+q.length)+'</mark>'+it.t.slice(idx+q.length) : it.t;
+    return '<button class="sd-item" role="option" onclick="applyQuery(\u0027'+it.t.replace(/'/g,'')+'\u0027)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>'+label+'<span class="k">'+it.c+'</span></button>';
+  }).join('');
+  const has = sugg.length > 0;
+  drop.classList.toggle('open', has);
+  input.setAttribute('aria-expanded', String(has));
+}
+document.addEventListener('click', e=>{ if(!e.target.closest('.sbar')){ document.getElementById('sDrop').classList.remove('open'); } });
+renderResults();
+
+/* ============================================================ 3 · Recommendation rows (skeleton → cards) */
+const chipI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 2v3M14 2v3M10 19v3M14 19v3M2 10h3M2 14h3M19 10h3M19 14h3"/></svg>';
+const bookI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/></svg>';
+const camI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+const flaskI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6.3L4.6 18a2 2 0 0 0 1.8 3h11.2a2 2 0 0 0 1.8-3L14 9.3V3"/><path d="M7 15h10"/></svg>';
+const boltI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>';
+
+function recCard(o){
+  return '<article class="glass glass-hover rec-card">' +
+    '<div class="thumb" style="background:'+o.bg+'">'+o.icon+'<span class="why">'+o.why+'</span></div>' +
+    '<div class="body"><p class="rt">'+o.t+'</p><p class="rm">'+o.m+'</p>' +
+    '<div class="rp"><span>'+o.pl+'<strong> '+o.pv+'</strong></span><a class="btn-tertiary" href="sharebox-item-details.html">View</a></div></div></article>';
+}
+const ROW1 = [
+  {bg:'linear-gradient(135deg,#1FA774,#0A6B47)', icon:chipI, why:'Pairs with your Arduino history', t:'ESP32 DevKit + Breadboard', m:'Rafi H. \u00B7 Trust 92 \u00B7 300 m', pl:'Rent', pv:'\u09F350/day'},
+  {bg:'linear-gradient(135deg,#2E6FA8,#1F4E78)', icon:boltI, why:'You searched sensors twice', t:'37-in-1 Sensor Module Pack', m:'Sadia A. \u00B7 Trust 88 \u00B7 450 m', pl:'Borrow', pv:'\u09F3150 dep.'},
+  {bg:'linear-gradient(135deg,#B57312,#8C5A0E)', icon:flaskI, why:'Completes your lab setup', t:'Digital Multimeter', m:'Sadia A. \u00B7 free Thursday', pl:'Rent', pv:'\u09F330/day'},
+  {bg:'linear-gradient(135deg,#0E8A5C,#2E6FA8)', icon:chipI, why:'Owners near your dorm', t:'Raspberry Pi 4 \u00B7 4GB', m:'Mahin K. \u00B7 Trust 90 \u00B7 260 m', pl:'Rent', pv:'\u09F380/day'}
+];
+const ROW2 = [
+  {bg:'linear-gradient(135deg,#43CE97,#0E8A5C)', icon:bookI, why:'Borrowed by 68 CSE students', t:'Signals & Systems \u2014 Oppenheim', m:'Sadia A. \u00B7 latest edition', pl:'Borrow', pv:'\u09F3100 dep.'},
+  {bg:'linear-gradient(135deg,#8C5A0E,#B57312)', icon:boltI, why:'CSE exam-week staple', t:'Casio fx-991EX Calculator', m:'Nusrat T. \u00B7 exam approved', pl:'Rent', pv:'\u09F320/day'},
+  {bg:'linear-gradient(135deg,#1F4E78,#2E6FA8)', icon:chipI, why:'Course project favorite', t:'Soldering Iron Kit', m:'Tahmid A. \u2014 that\u2019s you!', pl:'Yours', pv:'6 loans'},
+  {bg:'linear-gradient(135deg,#0A6B47,#1FA774)', icon:bookI, why:'Read before every viva', t:'Cracking the Coding Interview', m:'Rafi H. \u00B7 Trust 92', pl:'Borrow', pv:'\u09F380 dep.'}
+];
+const ROW3 = [
+  {bg:'linear-gradient(135deg,#B57312,#C24C3B)', icon:camI, why:'\uD83D\uDD25 12 requests this week', t:'Canon 200D DSLR + Lens', m:'Nusrat T. \u00B7 club-week hero', pl:'Rent', pv:'\u09F3400/day'},
+  {bg:'linear-gradient(135deg,#2E6FA8,#43CE97)', icon:boltI, why:'Borrowed with DSLRs 80% of the time', t:'Camera Tripod \u00B7 1.6 m', m:'Farhan I. \u00B7 Trust 91', pl:'Borrow', pv:'\u09F3200 dep.'},
+  {bg:'linear-gradient(135deg,#0E8A5C,#0A6B47)', icon:flaskI, why:'Trending: practicals season', t:'Lab Coat \u00B7 size L', m:'Rafi H. \u00B7 donation \uD83D\uDC9A', pl:'Free', pv:'\u2014'},
+  {bg:'linear-gradient(135deg,#43CE97,#2E6FA8)', icon:chipI, why:'Goes with every ESP32 loan', t:'Jumper Wire Mega Pack', m:'Sadia A. \u00B7 Trust 88', pl:'Borrow', pv:'\u09F350 dep.'}
+];
+function skels(){ return Array(4).fill('<div class="glass sk-rec" aria-hidden="true"><div class="skeleton sk-t"></div><div class="skeleton sk-l" style="width:75%"></div><div class="skeleton sk-l" style="width:50%"></div></div>').join(''); }
+['row1','row2','row3'].forEach(id=>document.getElementById(id).innerHTML = skels());
+setTimeout(()=>{ document.getElementById('row1').innerHTML = ROW1.map(recCard).join(''); }, 800);
+setTimeout(()=>{ document.getElementById('row2').innerHTML = ROW2.map(recCard).join(''); }, 1050);
+setTimeout(()=>{ document.getElementById('row3').innerHTML = ROW3.map(recCard).join(''); }, 1300);
+
+/* ============================================================ 4 · Need Board */
+function helpNeed(btn, who){
+  btn.disabled = true;
+  btn.textContent = 'Offer sent ✓';
+  chime();
+  toast('Offer sent \u2014 '+who+' will be notified with your item and Trust Score');
+}
+
+/* ============================================================ 5 · Smart match */
+let lastFocus = null;
+function smartMatch(){
+  lastFocus = document.activeElement;
+  const o = document.getElementById('matchOverlay');
+  o.classList.add('open'); o.setAttribute('aria-hidden','false');
+  chime(); confetti(90);
+  o.querySelector('.btn-primary').focus();
+}
+function closeMatch(){
+  const o = document.getElementById('matchOverlay');
+  o.classList.remove('open'); o.setAttribute('aria-hidden','true');
+  if(lastFocus) lastFocus.focus();
+}
+document.getElementById('matchOverlay').addEventListener('click', e=>{ if(e.target.id==='matchOverlay') closeMatch(); });
+
+/* ============================================================ 1 · AI Share Assistant */
+let aiOpened = false;
+function toggleAI(force){
+  const p = document.getElementById('aiPanel');
+  const open = typeof force === 'boolean' ? force : !p.classList.contains('open');
+  p.classList.toggle('open', open);
+  p.setAttribute('aria-hidden', String(!open));
+  document.getElementById('aiFab').setAttribute('aria-expanded', String(open));
+  if(open && !aiOpened){
+    aiOpened = true;
+    aiReply('Hi! \uD83D\uDC4B<br>I\u2019m ShareBox AI.<br>How can I help you today?', null, 500);
+  }
+  if(open) document.getElementById('aiText').focus();
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ toggleAI(false); closeMatch(); } });
+
+function bubble(html, mine){
+  const log = document.getElementById('aiLog');
+  const m = document.createElement('div');
+  m.className = 'msg ' + (mine ? 'me' : 'ai');
+  m.innerHTML = html;
+  log.appendChild(m);
+  log.scrollTop = log.scrollHeight;
+  return m;
+}
+function miniCard(icon, bg, title, meta, action){
+  return '<span class="mini"><span class="mi" style="background:'+bg+'">'+icon+'</span><span><strong>'+title+'</strong><span>'+meta+'</span></span><button class="btn btn-primary btn-sm" onclick="nav(\u0027sharebox-borrow-flow.html\u0027)">Borrow</button></span>';
+}
+function aiReply(html, extra, delay){
+  const log = document.getElementById('aiLog');
+  const t = document.createElement('div');
+  t.className = 'msg ai typing';
+  t.setAttribute('aria-label','ShareBox AI is typing');
+  t.innerHTML = '<i></i><i></i><i></i>';
+  log.appendChild(t); log.scrollTop = log.scrollHeight;
+  setTimeout(()=>{
+    t.remove();
+    bubble(html + (extra || ''), false);
+  }, reduced ? 30 : (delay || 900 + Math.random()*500));
+}
+const AI_ROUTES = [
+  {re:/esp32|arduino|micro|dev\s*board/i, fn:()=>aiReply(
+    'Good timing \u2014 an ESP32 kit is free <strong>tomorrow</strong>, 300 m from you \uD83C\uDFAF',
+    miniCard(chipI,'linear-gradient(135deg,#1FA774,#0A6B47)','ESP32 DevKit + Breadboard','Rafi H. \u00B7 Trust 92 \u00B7 \u09F350/day \u00B7 \u09F3200 dep.','Borrow flow \u2014 ESP32') +
+    '<br>Rafi approves in ~10 min on average. Want me to pre-fill tomorrow\u2019s dates?')},
+  {re:/dslr|camera|canon|nikon/i, fn:()=>aiReply(
+    'One DSLR on campus, and it\u2019s a good one \uD83D\uDCF8 \u2014 free this weekend:',
+    miniCard(camI,'linear-gradient(135deg,#B57312,#8C5A0E)','Canon 200D + 18\u201355mm','Nusrat T. \u00B7 Trust 95 \u00B7 \u09F3400/day \u00B7 400 m','Borrow flow \u2014 Canon 200D') +
+    '<br>Tip: 80% of DSLR borrowers also grab Farhan\u2019s tripod (\u09F3200 dep.).')},
+  {re:/lab\s*coat|coat|pharmacy/i, fn:()=>aiReply(
+    'A size-L lab coat is listed as a <strong>donation</strong> \uD83D\uDC9A \u2014 no deposit at all:',
+    miniCard(flaskI,'linear-gradient(135deg,#0E8A5C,#0A6B47)','Lab Coat \u00B7 size L','Rafi H. \u00B7 300 m \u00B7 free to keep','Item details \u2014 Lab Coat') +
+    '<br>It can be yours before Thursday practicals if you request today.')},
+  {re:/calc/i, fn:()=>aiReply(
+    'Exam tomorrow? \uD83E\uDDEE The closest exam-approved calculator:',
+    miniCard(boltI,'linear-gradient(135deg,#8C5A0E,#B57312)','Casio fx-991EX','Nusrat T. \u00B7 Trust 95 \u00B7 \u09F320/day \u00B7 400 m','Borrow flow \u2014 Calculator') +
+    '<br>I can also post it to the Need Board so owners come to you.')},
+  {re:/textbook|book|cheap/i, fn:()=>aiReply(
+    'Cheapest shelf on campus right now \uD83D\uDCDA:',
+    miniCard(bookI,'linear-gradient(135deg,#43CE97,#0E8A5C)','Signals & Systems \u2014 Oppenheim','Sadia A. \u00B7 \u09F315/day or \u09F3100 dep. borrow','Item details \u2014 Signals & Systems') +
+    '<br>Borrowing it for the semester saves you roughly \u09F31,900 vs the bookstore.')},
+  {re:/iot\s*lab|recommend|suggest/i, fn:()=>aiReply(
+    'For the IoT lab I\u2019d bundle these \u2699\uFE0F: an <strong>ESP32 kit</strong> (Rafi, \u09F350/day), the <strong>37-in-1 sensor pack</strong> (Sadia, \u09F3150 dep.), and a <strong>multimeter</strong> (\u09F330/day). Total \u2248 \u09F3230 for the week \u2014 versus \u09F36,800 to buy it all. Want the full bundle in one request?')},
+  {re:/near|distance|close/i, fn:()=>aiReply(
+    'Closest available right now \uD83D\uDCCD: ESP32 kit (300 m), lab coat donation (300 m), and a Casio calculator (400 m). Everything under a 5-minute walk from the CSE building.')},
+  {re:/hi|hello|hey|salam/i, fn:()=>aiReply('Hey Tahmid! \uD83D\uDC4B Ask me for anything \u2014 gear, books, formal wear \u2014 and I\u2019ll check every shelf on campus in a second.')},
+  {re:/thank/i, fn:()=>aiReply('Anytime \uD83D\uDC9A Sharing looks good on you. Anything else the campus can lend?')}
+];
+function routeAI(text){
+  const hit = AI_ROUTES.find(r=>r.re.test(text));
+  if(hit) hit.fn();
+  else aiReply('I searched all 432 resources \u2014 no exact match for that yet \uD83D\uDD0D. Two options: post it on the <strong>Need Board</strong> and I\u2019ll ping matching owners the moment one appears, or try a broader word like \u201Ccamera\u201D or \u201Ccalculator\u201D.');
+}
+function ask(text){ bubble(text, true); routeAI(text); }
+function sendAI(){
+  const inp = document.getElementById('aiText');
+  const v = inp.value.trim();
+  if(!v) return;
+  inp.value = '';
+  ask(v);
+}
+
+/* ============================================================
+   PRESENTATION MODE · guided demo for judges (2\u20133 min walkthrough)
+   ============================================================ */
+const CURRENT_FILE = 'sharebox-ai-discovery.html';
+const PB_PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+const PB_PLAY_ICON  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>';
+const PB_CLOSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+const PB_PLAY_BADGE  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>';
+const PRESENT_STEPS = [
+  {file:'index.html', caption:'Welcome to ShareBox \u2014 a campus-only marketplace where verified students borrow, rent, sell, and donate what they already own.'},
+  {file:'sharebox-dashboard-glass.html', caption:'After signing in, students land on a personal dashboard \u2014 Trust Score, active borrows, and money saved, all at a glance.'},
+  {file:'sharebox-ai-discovery.html', caption:'Smart search and AI recommendations help students discover exactly what they need across campus.'},
+  {file:'sharebox-item-details.html', caption:'Every listing shows the owner\u2019s Trust Score, live availability, and transparent pricing before you commit.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:1, caption:'Requesting to borrow takes seconds \u2014 pick your dates, add a purpose, and pricing calculates instantly.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:6, caption:'Meeting in person is verified with a two-way QR scan, so every handoff is accountable.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:7, caption:'A live timeline keeps both sides in sync from pickup all the way to the due date.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:8, caption:'Condition photos and a quick inspection close the loop safely for both sides.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:9, caption:'The deposit refunds automatically the moment the return checks out clean.'},
+  {file:'sharebox-account.html', hash:'trust', caption:'Every clean return raises the borrower\u2019s Trust Score \u2014 unlocking lower deposits over time.'},
+  {file:'sharebox-dashboard-glass.html', hash:'sustainability', caption:'Zoomed in, every shared item keeps money in students\u2019 pockets and waste out of landfills.'},
+  {file:'sharebox-ai-discovery.html', hash:'community', caption:'Zoomed out, the whole campus is saving money and cutting waste together.'},
+  {file:'index.html', final:true, caption:'That\u2019s the complete ShareBox journey \u2014 from first visit to a trusted, sustainable campus community.'}
+];
+const PRESENT_DURATION = 12000;
+let presentTimer = null, presentPaused = false, presentElapsed = 0;
+
+function presentCurrentN(){
+  const n = parseInt(new URLSearchParams(location.search).get('present'), 10);
+  return (n >= 1 && n <= PRESENT_STEPS.length) ? n : null;
+}
+function presentStart(){ location.href = 'index.html?present=1'; }
+function presentResetTimer(){
+  clearInterval(presentTimer);
+  presentPaused = false; presentElapsed = 0;
+  presentTimer = setInterval(()=>{
+    if(presentPaused) return;
+    presentElapsed += 250;
+    if(presentElapsed >= PRESENT_DURATION) presentNext();
+  }, 250);
+}
+function presentToggle(){
+  presentPaused = !presentPaused;
+  const btn = document.getElementById('pbToggle');
+  if(btn){
+    btn.innerHTML = presentPaused ? PB_PLAY_ICON : PB_PAUSE_ICON;
+    btn.setAttribute('aria-label', presentPaused ? 'Resume demo' : 'Pause demo');
+  }
+}
+function presentRenderBar(n){
+  const bar = document.getElementById('presentBar');
+  if(!bar) return;
+  bar.hidden = false;
+  const step = PRESENT_STEPS[n-1];
+  bar.classList.toggle('final', !!step.final);
+  if(step.final){
+    bar.innerHTML = '<div class="pb-final-head"><span class="pb-check">'+PB_PLAY_BADGE.replace('<svg','<svg width="14" height="14"')+'</span><strong>Demo complete!</strong></div>' +
+      '<p class="pb-caption">'+step.caption+'</p>' +
+      '<div class="pb-actions"><button class="btn btn-secondary btn-sm" onclick="presentStart()">Restart demo</button><button class="btn btn-primary btn-sm" onclick="presentExit()">Exit demo</button></div>';
+    if(typeof confetti === 'function'){ try{ confetti(90); }catch(e){} }
+    if(typeof chime === 'function'){ try{ chime(); }catch(e){} }
+    clearInterval(presentTimer);
+  } else {
+    const pct = (n/PRESENT_STEPS.length*100).toFixed(1);
+    bar.innerHTML = '<div class="pb-top"><span class="pb-step">Step '+n+' of '+PRESENT_STEPS.length+'</span><div class="pb-track"><i style="width:'+pct+'%"></i></div>' +
+      '<button class="btn-icon" id="pbToggle" aria-label="Pause demo" onclick="presentToggle()">'+PB_PAUSE_ICON+'</button>' +
+      '<button class="btn-icon" aria-label="Exit demo" onclick="presentExit()">'+PB_CLOSE_ICON+'</button></div>' +
+      '<p class="pb-caption" aria-live="polite">'+step.caption+'</p>' +
+      '<div class="pb-actions"><button class="btn btn-secondary btn-sm" onclick="presentPrev()" '+(n===1?'disabled':'')+'>\u25C0 Previous</button><button class="btn btn-primary btn-sm" onclick="presentNext()">Next \u25B6</button></div>';
+    presentResetTimer();
+  }
+}
+function presentGoStep(n){
+  if(n < 1) n = 1;
+  if(n > PRESENT_STEPS.length){ n = PRESENT_STEPS.length; }
+  const step = PRESENT_STEPS[n-1];
+  if(step.file === CURRENT_FILE){
+    history.replaceState(null, '', location.pathname + '?present=' + n + (step.hash ? ('#'+step.hash) : ''));
+    presentRenderBar(n);
+    if(typeof step.borrowStep === 'number' && typeof presentGo === 'function') presentGo(step.borrowStep);
+    if(step.hash){
+      setTimeout(()=>{ const el = document.getElementById(step.hash); if(el) el.scrollIntoView({behavior: reduced?'auto':'smooth', block:'start'}); }, 250);
+    } else if(!step.final){
+      window.scrollTo({top:0, behavior: reduced?'auto':'smooth'});
+    }
+  } else {
+    location.href = step.file + '?present=' + n + (step.hash ? ('#'+step.hash) : '');
+  }
+}
+function presentNext(){ presentGoStep((presentCurrentN()||1) + 1); }
+function presentPrev(){ const n=(presentCurrentN()||1); if(n>1) presentGoStep(n-1); }
+function presentExit(){
+  clearInterval(presentTimer);
+  location.href = CURRENT_FILE;
+}
+(function presentInit(){
+  const n = presentCurrentN();
+  if(!n) return;
+  const step = PRESENT_STEPS[n-1];
+  presentRenderBar(n);
+  if(typeof step.borrowStep === 'number'){
+    setTimeout(()=>{ if(typeof presentGo === 'function') presentGo(step.borrowStep); }, 60);
+  }
+  if(step.hash){
+    setTimeout(()=>{ const el = document.getElementById(step.hash); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 500);
+  }
+})();
+
+</script>
+<script src="app-core.js"></script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E8A5C">
+<meta name="description" content="Verify your student ID with ShareBox to unlock higher-trust borrowing.">
+<title>Campus Verification — ShareBox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SHAREBOX CAMPUS VERIFICATION · Neo Glass + Soft 3D
+   ============================================================ */
+:root{
+  --green:#0E8A5C; --green-strong:#0A6B47; --green-hi:#1FA774;
+  --green-tint:rgba(14,138,92,.1); --green-glow:rgba(14,138,92,.32);
+  --amber:#B57312; --amber-tint:rgba(181,115,18,.12);
+  --red:#C24C3B; --red-tint:rgba(194,76,59,.12);
+  --blue:#2E6FA8; --blue-tint:rgba(46,111,168,.12);
+  --bg:#EEF3EC;
+  --ink:#141F19; --ink-soft:#51645A; --ink-faint:#87978D;
+  --glass:rgba(255,255,255,.62);
+  --glass-strong:rgba(255,255,255,.8);
+  --glass-soft:rgba(255,255,255,.4);
+  --glass-line:rgba(255,255,255,.75);
+  --glass-edge:rgba(20,31,25,.07);
+  --overlay:rgba(20,31,25,.4);
+  --grad-band:linear-gradient(125deg,#0A6B47,#0E8A5C 52%,#1FA774);
+  --sheen:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.5) 50%, transparent 60%);
+  --e-1:0 1px 2px rgba(20,31,25,.03), 0 4px 14px rgba(20,31,25,.05);
+  --e-2:0 2px 8px rgba(20,31,25,.04), 0 18px 44px rgba(20,31,25,.10);
+  --e-3:0 4px 16px rgba(20,31,25,.06), 0 36px 90px rgba(20,31,25,.18);
+  --inner-light:inset 0 1px 0 rgba(255,255,255,.85);
+  --font-display:"Bricolage Grotesque","Inter",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,sans-serif;
+  --s-1:.25rem; --s-2:.5rem; --s-3:.75rem; --s-4:1rem;
+  --s-5:1.5rem; --s-6:2rem; --s-7:3rem; --s-8:4rem;
+  --r-md:16px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+  --ease:cubic-bezier(.22,.8,.36,1);
+  --spring:cubic-bezier(.34,1.45,.5,1);
+  --t-fast:.16s; --t-med:.32s; --t-slow:.6s;
+  --topbar-h:72px; --max:640px;
+}
+[data-theme="dark"]{
+  --bg:#0A100D;
+  --ink:#EAF1EB; --ink-soft:#9DAFA3; --ink-faint:#66786C;
+  --green:#43CE97; --green-strong:#6ADFB1; --green-hi:#2FBE88;
+  --green-tint:rgba(67,206,151,.1); --green-glow:rgba(67,206,151,.3);
+  --amber:#E0A34A; --amber-tint:rgba(224,163,74,.13);
+  --red:#E27A6A; --red-tint:rgba(226,122,106,.13);
+  --blue:#6FA8DC; --blue-tint:rgba(111,168,220,.13);
+  --glass:rgba(21,32,26,.58);
+  --glass-strong:rgba(24,37,30,.8);
+  --glass-soft:rgba(24,37,30,.36);
+  --glass-line:rgba(255,255,255,.09);
+  --glass-edge:rgba(0,0,0,.4);
+  --overlay:rgba(0,0,0,.6);
+  --grad-band:linear-gradient(125deg,#0F5C40,#159A69 52%,#2FBE88);
+  --sheen:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.14) 50%, transparent 60%);
+  --e-1:0 1px 3px rgba(0,0,0,.25), 0 4px 16px rgba(0,0,0,.3);
+  --e-2:0 2px 8px rgba(0,0,0,.3), 0 20px 48px rgba(0,0,0,.45);
+  --e-3:0 4px 18px rgba(0,0,0,.4), 0 40px 100px rgba(0,0,0,.6);
+  --inner-light:inset 0 1px 0 rgba(255,255,255,.08);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0; min-height:100vh; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:.95rem; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; transition:background var(--t-med) var(--ease), color var(--t-med) var(--ease)}
+h1,h2,h3{font-family:var(--font-display); line-height:1.15; margin:0; letter-spacing:-.02em}
+p{margin:0}
+a{color:var(--green); text-decoration:none}
+img,svg{display:block; max-width:100%}
+button,input,select{font-family:inherit}
+::selection{background:var(--green-glow)}
+:focus{outline:none}
+:focus-visible{outline:2.5px solid var(--green); outline-offset:2px; border-radius:6px; box-shadow:0 0 0 5px var(--green-glow)}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+.skip-link{position:fixed; top:-100px; left:var(--s-4); z-index:400; background:var(--green); color:#fff; padding:var(--s-2) var(--s-4); border-radius:12px; font-weight:600; transition:top var(--t-fast) var(--ease)}
+.skip-link:focus{top:var(--s-4)}
+
+.ambient{position:fixed; inset:0; z-index:-2; overflow:hidden; pointer-events:none}
+.blob{position:absolute; border-radius:50%; filter:blur(90px); opacity:.55; will-change:transform}
+.blob.b1{width:560px; height:560px; background:radial-gradient(circle,#BFE6D2,transparent 65%); top:-160px; left:-140px; animation:drift1 26s ease-in-out infinite}
+.blob.b2{width:640px; height:640px; background:radial-gradient(circle,#D5E8DC,transparent 65%); bottom:-220px; right:-180px; animation:drift2 32s ease-in-out infinite}
+[data-theme="dark"] .blob.b1{background:radial-gradient(circle,rgba(28,84,62,.9),transparent 65%)}
+[data-theme="dark"] .blob.b2{background:radial-gradient(circle,rgba(20,58,44,.9),transparent 65%)}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(70px,50px) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-80px,-60px) scale(1.08)}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important}
+  .blob{display:none}
+}
+
+.glass{background:var(--glass); backdrop-filter:blur(15px) saturate(1.3); -webkit-backdrop-filter:blur(18px) saturate(1.4); border:1px solid var(--glass-line); box-shadow:var(--e-1), var(--inner-light), 0 0 0 1px var(--glass-edge); border-radius:var(--r-lg)}
+.btn{position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; gap:9px; font-weight:600; font-size:.92rem; line-height:1; border-radius:var(--r-md); border:1px solid transparent; padding:0 1.35rem; height:47px; cursor:pointer; white-space:nowrap; text-decoration:none!important; transition:transform var(--t-fast) var(--spring), box-shadow var(--t-med) var(--ease), background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
+.btn:hover{transform:translateY(-2px) scale(1.02)}
+.btn:active{transform:translateY(1px) scale(.98)}
+.btn:disabled{opacity:.5; cursor:not-allowed; transform:none; animation:none}
+.btn-primary{background:linear-gradient(160deg,var(--green-hi),var(--green) 45%,var(--green-strong)); color:#fff; border-color:rgba(255,255,255,.25); box-shadow:0 6px 20px var(--green-glow), var(--inner-light); animation:glowPulse 3.2s ease-in-out infinite}
+[data-theme="dark"] .btn-primary{color:#07110C}
+@keyframes glowPulse{0%,100%{box-shadow:0 6px 20px var(--green-glow)}50%{box-shadow:0 6px 30px var(--green-glow), 0 0 0 5px rgba(14,138,92,.07)}}
+.btn-primary::after{content:""; position:absolute; inset:0; background:var(--sheen); transform:translateX(-120%); transition:transform .7s var(--ease)}
+.btn-primary:hover::after{transform:translateX(120%)}
+.btn-secondary{background:var(--glass); backdrop-filter:blur(10px); color:var(--ink); border-color:var(--glass-line); box-shadow:var(--e-1), var(--inner-light)}
+.btn-secondary:hover{border-color:var(--green); color:var(--green)}
+.btn-danger{background:var(--red-tint); color:var(--red); border-color:rgba(194,76,59,.3)}
+.btn-tertiary{background:none; border:none; color:var(--green); font-weight:600; padding:0; height:auto; cursor:pointer; font-size:.86rem}
+.btn-tertiary:hover{text-decoration:underline}
+.btn-icon{width:42px; height:42px; padding:0; border-radius:14px; background:transparent; border:1px solid transparent; color:var(--ink-soft); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:all var(--t-fast) var(--spring); flex:none}
+.btn-icon:hover{background:var(--glass-strong); color:var(--ink); transform:scale(1.08); border-color:var(--glass-line); box-shadow:var(--e-1)}
+.btn-icon svg{width:20px; height:20px}
+.ripple{position:absolute; border-radius:50%; background:currentColor; opacity:.2; transform:scale(0); animation:ripple .55s var(--ease) forwards; pointer-events:none}
+@keyframes ripple{to{transform:scale(3.4); opacity:0}}
+.badge{display:inline-flex; align-items:center; gap:6px; font-size:.73rem; font-weight:600; padding:4px 11px; border-radius:var(--r-full); line-height:1.4}
+.badge svg{width:12px; height:12px; flex:none}
+.badge-green{background:var(--green-tint); color:var(--green-strong); border:1px solid rgba(14,138,92,.18)}
+[data-theme="dark"] .badge-green{color:var(--green)}
+.badge-amber{background:var(--amber-tint); color:var(--amber); border:1px solid rgba(181,115,18,.18)}
+.badge-red{background:var(--red-tint); color:var(--red); border:1px solid rgba(194,76,59,.18)}
+
+/* Topbar */
+.topbar{position:sticky; top:var(--s-3); z-index:90; height:var(--topbar-h); background:var(--glass); backdrop-filter:blur(18px) saturate(1.4); border:1px solid var(--glass-line); border-radius:var(--r-lg); box-shadow:var(--e-2), var(--inner-light); display:flex; align-items:center; gap:var(--s-3); padding:0 var(--s-4); max-width:calc(var(--max) + 2rem); margin:var(--s-3) auto 0; width:calc(100% - 2rem)}
+.brand{display:flex; align-items:center; gap:9px; color:var(--ink); text-decoration:none!important}
+.brand .wordmark{font-family:var(--font-display); font-weight:800; font-size:1.15rem; letter-spacing:-.02em}
+.topbar .grow{flex:1}
+.topbar .ttl{font-size:.86rem; font-weight:600; color:var(--ink-soft)}
+
+.page{max-width:var(--max); margin:0 auto; padding:var(--s-6) var(--s-4) var(--s-8)}
+
+/* Stepper */
+.stepper{display:flex; align-items:center; margin-bottom:var(--s-6); padding:0 var(--s-2)}
+.step-node{flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; position:relative}
+.step-node:not(:last-child)::after{content:""; position:absolute; top:19px; left:56%; width:88%; height:2px; background:var(--glass-edge); z-index:0}
+.step-node.done:not(:last-child)::after{background:var(--green-hi)}
+.step-dot{width:38px; height:38px; border-radius:var(--r-full); background:var(--glass-strong); border:2px solid var(--glass-edge); color:var(--ink-faint); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.86rem; z-index:1; transition:all var(--t-med) var(--spring); box-shadow:var(--e-1)}
+.step-node.done .step-dot{background:linear-gradient(160deg,var(--green-hi),var(--green-strong)); border-color:transparent; color:#fff}
+[data-theme="dark"] .step-node.done .step-dot{color:#07110C}
+.step-node.now .step-dot{border-color:var(--green); color:var(--green-strong); box-shadow:0 0 0 6px var(--green-tint); animation:tierPulse 2.4s ease-in-out infinite}
+[data-theme="dark"] .step-node.now .step-dot{color:var(--green)}
+@keyframes tierPulse{0%,100%{box-shadow:0 0 0 6px var(--green-tint)}50%{box-shadow:0 0 0 10px transparent}}
+.step-node .step-lbl{font-size:.68rem; font-weight:700; color:var(--ink-faint); text-align:center}
+.step-node.now .step-lbl{color:var(--green-strong)}
+[data-theme="dark"] .step-node.now .step-lbl{color:var(--green)}
+.step-node.done .step-lbl{color:var(--ink-soft)}
+
+.card{padding:var(--s-6)}
+.panel{display:none}
+.panel.active{display:block; animation:panelIn .45s var(--spring)}
+@keyframes panelIn{from{opacity:0; transform:translateY(16px) scale(.98)}to{opacity:1; transform:none}}
+.headline{margin-bottom:var(--s-5)}
+.headline h1{font-size:1.35rem; font-weight:800}
+.headline p{color:var(--ink-soft); font-size:.88rem; margin-top:6px}
+
+.field{display:flex; flex-direction:column; gap:6px; margin-bottom:var(--s-4)}
+.field label{font-size:.82rem; font-weight:600}
+.field .hint{font-size:.74rem; color:var(--ink-faint)}
+.input{width:100%; background:var(--glass-soft); color:var(--ink); border:1px solid var(--glass-line); border-radius:var(--r-md); padding:0 var(--s-4); height:47px; font-size:.92rem; transition:all var(--t-med) var(--ease)}
+.input:focus{background:var(--glass-strong); border-color:var(--green); box-shadow:0 0 0 4px var(--green-glow); outline:none}
+.input:disabled{opacity:.7; cursor:not-allowed}
+select.input{appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2387978D' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:38px}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3)}
+
+.vbanner{display:flex; gap:11px; align-items:flex-start; background:var(--blue-tint); border:1px solid rgba(46,111,168,.2); border-radius:var(--r-md); padding:var(--s-4); margin-bottom:var(--s-5); font-size:.84rem; color:var(--ink-soft)}
+.vbanner svg{width:18px; height:18px; color:var(--blue); flex:none; margin-top:1px}
+
+/* ID photo tiles */
+.id-grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3); margin-bottom:var(--s-4)}
+.id-tile{aspect-ratio:16/10; border:2px dashed var(--glass-edge); border-radius:var(--r-md); background:var(--glass-soft); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; color:var(--ink-faint); font-size:.8rem; font-weight:600; transition:all var(--t-med) var(--spring)}
+.id-tile:hover{border-color:var(--green); color:var(--green); transform:translateY(-3px)}
+.id-tile svg{width:26px; height:26px}
+.id-tile.shot{border-style:solid; border-color:var(--green-hi); background:var(--green-tint); color:var(--green-strong)}
+[data-theme="dark"] .id-tile.shot{color:var(--green)}
+
+.step-nav{display:flex; justify-content:space-between; gap:var(--s-3); margin-top:var(--s-6); flex-wrap:wrap}
+.step-nav .right{margin-left:auto; display:flex; gap:var(--s-3)}
+
+/* Review / status */
+.status-hero{text-align:center; padding:var(--s-4) 0}
+.status-ring{width:96px; height:96px; margin:0 auto var(--s-4); border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative}
+.status-ring.pending{background:var(--amber-tint)}
+.status-ring.pending .spin{position:absolute; inset:-4px; border-radius:50%; border:3px solid transparent; border-top-color:var(--amber); animation:spin 1.4s linear infinite}
+.status-ring svg{width:42px; height:42px}
+.status-ring.pending svg{color:var(--amber)}
+.status-ring.verified{background:var(--green-tint); animation:pop .55s var(--spring)}
+.status-ring.verified svg{color:var(--green-strong)}
+[data-theme="dark"] .status-ring.verified svg{color:var(--green)}
+.status-ring.rejected{background:var(--red-tint); animation:pop .55s var(--spring)}
+.status-ring.rejected svg{color:var(--red)}
+@keyframes pop{0%{transform:scale(.35); opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.review-meta{display:flex; flex-direction:column; gap:10px; margin-top:var(--s-5); text-align:left}
+.rm-row{display:flex; justify-content:space-between; font-size:.86rem; padding:10px 14px}
+.rm-row span:first-child{color:var(--ink-soft)}
+.rm-row strong{font-weight:700}
+.demo-controls{margin-top:var(--s-5); padding-top:var(--s-5); border-top:1px dashed var(--glass-edge); text-align:center}
+.demo-controls p{font-size:.76rem; color:var(--ink-faint); margin-bottom:10px}
+.demo-controls .row{display:flex; gap:var(--s-3); justify-content:center; flex-wrap:wrap}
+
+.reject-reason{background:var(--red-tint); border:1px solid rgba(194,76,59,.2); border-radius:var(--r-md); padding:var(--s-4); font-size:.86rem; color:var(--ink-soft); margin-top:var(--s-4); text-align:left}
+.reject-reason strong{color:var(--ink); display:block; margin-bottom:4px}
+
+.toast-region{position:fixed; bottom:var(--s-5); right:var(--s-5); z-index:320; display:flex; flex-direction:column; gap:var(--s-2); width:min(370px, calc(100vw - 32px)); pointer-events:none}
+.toast{background:var(--glass-strong); backdrop-filter:blur(18px) saturate(1.5); color:var(--ink); border:1px solid var(--glass-line); border-radius:var(--r-md); box-shadow:var(--e-3), var(--inner-light); padding:12px 16px; display:flex; align-items:center; gap:10px; font-size:.86rem; font-weight:500; pointer-events:auto; animation:toastIn .45s var(--spring)}
+.toast svg{width:16px; height:16px; flex:none; color:var(--green)}
+@keyframes toastIn{from{opacity:0; transform:translateY(14px) scale(.95)}to{opacity:1}}
+.confetti{position:fixed; top:-14px; z-index:340; width:9px; height:15px; border-radius:3px; pointer-events:none; animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(108vh) rotate(680deg); opacity:.9}}
+
+@media (max-width:520px){
+  .grid-2,.id-grid{grid-template-columns:1fr}
+  .step-node .step-lbl{display:none}
+  .topbar .ttl{display:none}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<div class="ambient" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div></div>
+
+<header class="topbar">
+  <button class="btn-icon" aria-label="Back to profile" onclick="nav('sharebox-account.html')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+  </button>
+  <a class="brand" href="sharebox-dashboard-glass.html">
+    <svg width="27" height="27" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--green)"/>
+      <path d="M10 13.5 16 9l6 4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M22 18.5 16 23l-6-4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".65"/>
+    </svg>
+    <span class="wordmark">ShareBox</span>
+  </a>
+  <span class="ttl">· Campus Verification</span>
+  <div class="grow"></div>
+  <button class="btn-icon" data-theme-toggle aria-label="Switch to dark mode" onclick="toggleTheme()"></button>
+</header>
+
+<main id="main" class="page">
+  <div class="stepper" id="stepper"></div>
+
+  <div class="glass card">
+
+    <!-- ============ STEP 1 · CONFIRM INFO ============ -->
+    <section class="panel active" data-step="1">
+      <div class="headline">
+        <h1>Confirm your details</h1>
+        <p>This is what appears on your ShareBox profile once verified.</p>
+      </div>
+      <div class="vbanner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/></svg>
+        <span>Student ID verification is optional but unlocks the Elite Sharer tier and lower deposits on high-value categories like electronics and cameras.</span>
+      </div>
+      <div class="field">
+        <label for="v-name">Full name</label>
+        <input class="input" id="v-name" type="text" value="Tahmid Ahmed">
+      </div>
+      <div class="field">
+        <label for="v-email">University email</label>
+        <input class="input" id="v-email" type="email" value="tahmid.a@northcampus.edu.bd" disabled>
+        <span class="hint">Already verified via email OTP at sign-up.</span>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="v-dept">Department</label>
+          <select class="input" id="v-dept"><option selected>CSE</option><option>EEE</option><option>BBA</option><option>Pharmacy</option><option>Architecture</option></select>
+        </div>
+        <div class="field">
+          <label for="v-year">Academic year</label>
+          <select class="input" id="v-year"><option>1st year</option><option>2nd year</option><option>3rd year</option><option selected>4th year</option></select>
+        </div>
+      </div>
+      <div class="step-nav">
+        <div class="right"><button class="btn btn-primary" onclick="go(2)">Continue to Student ID</button></div>
+      </div>
+    </section>
+
+    <!-- ============ STEP 2 · STUDENT ID ============ -->
+    <section class="panel" data-step="2">
+      <div class="headline">
+        <h1>Add your Student ID</h1>
+        <p>Your ID is only used to confirm enrollment — it&rsquo;s never shown to other students.</p>
+      </div>
+      <div class="field">
+        <label for="v-idnum">Student ID number</label>
+        <input class="input" id="v-idnum" type="text" placeholder="e.g. 2021-1-60-045" oninput="checkStep2()">
+      </div>
+      <div class="field">
+        <label>Upload photos</label>
+        <div class="id-grid">
+          <button class="id-tile" id="tileFront" onclick="capture('tileFront')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            Front of ID
+          </button>
+          <button class="id-tile" id="tileBack" onclick="capture('tileBack')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            Back of ID (optional)
+          </button>
+        </div>
+        <span class="hint">Good lighting, no glare, all four corners visible.</span>
+      </div>
+      <div class="step-nav">
+        <button class="btn btn-secondary" onclick="go(1)">Back</button>
+        <div class="right"><button class="btn btn-primary" id="s2next" disabled onclick="submitReview()">Submit for review</button></div>
+      </div>
+    </section>
+
+    <!-- ============ STEP 3 · UNDER REVIEW ============ -->
+    <section class="panel" data-step="3">
+      <div class="status-hero">
+        <div class="status-ring pending" id="statusRing"><span class="spin" aria-hidden="true"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <h1 style="font-size:1.25rem">Submitted — <span class="badge badge-amber" style="vertical-align:1px">Pending review</span></h1>
+        <p style="color:var(--ink-soft); margin-top:8px; font-size:.88rem">Our moderation team usually reviews Student ID uploads within <strong>24 hours</strong>. We&rsquo;ll notify you the moment it&rsquo;s done.</p>
+        <div class="review-meta">
+          <div class="glass rm-row"><span>Student ID</span><strong id="revIdNum">—</strong></div>
+          <div class="glass rm-row"><span>Submitted</span><strong>Jul 28, 2026 · 11:42 AM</strong></div>
+          <div class="glass rm-row"><span>Status</span><strong>Pending</strong></div>
+        </div>
+        <div class="demo-controls">
+          <p>This is a demo — moderator review has no backend, so preview either outcome:</p>
+          <div class="row">
+            <button class="btn btn-primary" onclick="resolve('verified')">Simulate: Verified</button>
+            <button class="btn btn-danger" onclick="resolve('rejected')">Simulate: Rejected</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STEP 4 · OUTCOME ============ -->
+    <section class="panel" data-step="4">
+      <div class="status-hero">
+        <div class="status-ring" id="outcomeRing"></div>
+        <h1 id="outcomeTitle" style="font-size:1.3rem">—</h1>
+        <p id="outcomeSub" style="color:var(--ink-soft); margin-top:8px; font-size:.88rem">—</p>
+        <div id="rejectBox"></div>
+        <div id="outcomeActions" style="margin-top:var(--s-5); display:flex; gap:var(--s-3); justify-content:center; flex-wrap:wrap"></div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="toast-region" id="toastRegion" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================ Theme */
+let theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const moon = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A8.5 8.5 0 0 1 11 3a8.5 8.5 0 1 0 10 10z"/></svg>';
+const sun  = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('[data-theme-toggle]').forEach(b=>{
+    b.innerHTML = theme==='light' ? moon : sun;
+    b.setAttribute('aria-label', theme==='light' ? 'Switch to dark mode' : 'Switch to light mode');
+  });
+}
+function toggleTheme(){ theme = theme==='light' ? 'dark' : 'light'; applyTheme(); }
+applyTheme();
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Toast / chime / confetti / ripple */
+function toast(msg){
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg><span>'+msg+'</span>';
+  document.getElementById('toastRegion').appendChild(el);
+  setTimeout(()=>el.remove(), 3400);
+}
+function note(what){ toast(what + ' — connects in the next build phase'); }
+function nav(url){ window.location.href = url; }
+function chime(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [523.25, 659.25, 783.99].forEach((f,i)=>{
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0, ctx.currentTime + i*.09);
+      g.gain.linearRampToValueAtTime(.07, ctx.currentTime + i*.09 + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + i*.09 + .7);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime + i*.09); o.stop(ctx.currentTime + i*.09 + .75);
+    });
+  }catch(e){}
+}
+function confetti(n){
+  if(reduced) return;
+  const colors = ['#0E8A5C','#1FA774','#B57312','#2E6FA8','#BFE6D2','#43CE97'];
+  for(let i=0;i<n;i++){
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (1.9 + Math.random()*1.6) + 's';
+    c.style.animationDelay = (Math.random()*.4) + 's';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 4200);
+  }
+}
+document.addEventListener('pointerdown', e=>{
+  const b = e.target.closest('.btn'); if(!b || reduced) return;
+  const r = b.getBoundingClientRect();
+  const span = document.createElement('span');
+  span.className = 'ripple';
+  const size = Math.max(r.width, r.height);
+  span.style.width = span.style.height = size+'px';
+  span.style.left = (e.clientX - r.left - size/2)+'px';
+  span.style.top  = (e.clientY - r.top - size/2)+'px';
+  b.style.position = 'relative'; b.style.overflow = 'hidden';
+  b.appendChild(span);
+  setTimeout(()=>span.remove(), 600);
+});
+
+/* ============================================================ Stepper */
+const LABELS = ['Your info','Student ID','Under review','Outcome'];
+let current = 1, maxReached = 1;
+function buildStepper(){
+  document.getElementById('stepper').innerHTML = LABELS.map((l,i)=>{
+    const n = i+1;
+    const cls = n < current ? 'done' : n === current ? 'now' : '';
+    return '<div class="step-node '+cls+'"><span class="step-dot">'+(n<current ? '\u2713' : n)+'</span><span class="step-lbl">'+l+'</span></div>';
+  }).join('');
+}
+function go(n){
+  current = n; maxReached = Math.max(maxReached, n);
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', parseInt(p.dataset.step,10)===n));
+  buildStepper();
+  window.scrollTo({top:0, behavior:reduced?'auto':'smooth'});
+}
+buildStepper();
+
+/* ============================================================ Step 2 · ID capture */
+function checkStep2(){
+  const num = document.getElementById('v-idnum').value.trim();
+  const frontDone = document.getElementById('tileFront').classList.contains('shot');
+  document.getElementById('s2next').disabled = !(num.length >= 4 && frontDone);
+}
+function capture(id){
+  const tile = document.getElementById(id);
+  tile.classList.add('shot');
+  tile.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>Captured';
+  toast((id==='tileFront' ? 'Front' : 'Back') + ' photo captured');
+  checkStep2();
+}
+
+/* ============================================================ Step 3 · submit + demo resolve */
+function submitReview(){
+  document.getElementById('revIdNum').textContent = document.getElementById('v-idnum').value.trim();
+  go(3);
+  chime();
+}
+function resolve(outcome){
+  const ring = document.getElementById('outcomeRing');
+  const title = document.getElementById('outcomeTitle');
+  const sub = document.getElementById('outcomeSub');
+  const rejectBox = document.getElementById('rejectBox');
+  const actions = document.getElementById('outcomeActions');
+  rejectBox.innerHTML = '';
+  if(outcome === 'verified'){
+    ring.className = 'status-ring verified';
+    ring.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>';
+    title.innerHTML = 'You&rsquo;re a Verified Student! 🎉';
+    sub.innerHTML = 'Your Student ID is confirmed. <strong>+5 Trust Score</strong> and the Campus Contributor badge have been added to your profile.';
+    actions.innerHTML = '<button class="btn btn-primary" onclick="nav(\u0027sharebox-dashboard-glass.html\u0027)">Continue to Dashboard</button>';
+    chime(); confetti(90);
+  } else {
+    ring.className = 'status-ring rejected';
+    ring.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+    title.textContent = 'We couldn\u2019t verify that ID';
+    sub.textContent = 'No trust or profile changes were made — you can resubmit any time.';
+    rejectBox.innerHTML = '<div class="glass reject-reason"><strong>Reason</strong>Photo unclear — please reupload a clearer photo of the front of your Student ID with all four corners visible and no glare.</div>';
+    actions.innerHTML = '<button class="btn btn-secondary" onclick="nav(\u0027sharebox-dashboard-glass.html\u0027)">Do this later</button><button class="btn btn-primary" onclick="retryFromStep2()">Resubmit ID</button>';
+  }
+  go(4);
+}
+function retryFromStep2(){
+  document.getElementById('tileFront').className = 'id-tile';
+  document.getElementById('tileFront').innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>Front of ID';
+  checkStep2();
+  go(2);
+}
+</script>
+<script src="app-core.js"></script>
+</body>
+</html>

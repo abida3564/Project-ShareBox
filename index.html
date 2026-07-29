@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E8A5C">
+<meta name="description" content="ShareBox — the campus resource-sharing ecosystem for verified university students. Share More. Spend Less. Waste Less.">
+<title>ShareBox — Everything You Need Is Already On Campus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SHAREBOX LANDING · Design tokens (Trust-Green system)
+   ============================================================ */
+:root{
+  --bg:#F5F7F3;
+  --surface:#FFFFFF;
+  --surface-2:#ECF1EA;
+  --ink:#16241C;
+  --ink-soft:#55685D;
+  --ink-faint:#8A9A90;
+  --line:#DFE7DF;
+  --line-strong:#C9D5CA;
+
+  --green:#0E8A5C;
+  --green-strong:#0A6B47;
+  --green-tint:#E2F3EA;
+  --green-glow:rgba(14,138,92,.28);
+  --amber:#B57312;
+  --amber-tint:#FAEEDB;
+  --blue:#2E6FA8;
+  --blue-tint:#E4EEF7;
+
+  --grad-hero:linear-gradient(180deg,var(--bg) 0%, #EAF3EC 100%);
+  --grad-band:linear-gradient(120deg,#0A6B47,#0E8A5C 55%,#1FA774);
+
+  --font-display:"Bricolage Grotesque","Inter",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,sans-serif;
+
+  --s-1:.25rem; --s-2:.5rem; --s-3:.75rem; --s-4:1rem;
+  --s-5:1.5rem; --s-6:2rem; --s-7:3rem; --s-8:4.5rem; --s-9:6.5rem;
+
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:24px; --r-full:999px;
+
+  --e-1:0 1px 2px rgba(22,36,28,.04), 0 3px 10px rgba(22,36,28,.04);
+  --e-2:0 2px 6px rgba(22,36,28,.05), 0 16px 38px rgba(22,36,28,.09);
+  --e-3:0 4px 14px rgba(22,36,28,.07), 0 32px 76px rgba(22,36,28,.15);
+
+  --ease:cubic-bezier(.22,.8,.36,1);
+  --t-fast:.15s; --t-med:.3s; --t-slow:.6s;
+  --max:1280px;
+}
+[data-theme="dark"]{
+  --bg:#0C1310;
+  --surface:#131C16;
+  --surface-2:#1B2620;
+  --ink:#E9F0EA;
+  --ink-soft:#9CAEA2;
+  --ink-faint:#67796D;
+  --line:#243128;
+  --line-strong:#324437;
+  --green:#43CE97;
+  --green-strong:#6ADFB1;
+  --green-tint:rgba(67,206,151,.13);
+  --green-glow:rgba(67,206,151,.3);
+  --amber:#E0A34A;
+  --amber-tint:rgba(224,163,74,.14);
+  --blue:#6FA8DC;
+  --blue-tint:rgba(111,168,220,.14);
+  --grad-hero:linear-gradient(180deg,#0C1310 0%, #101A14 100%);
+  --grad-band:linear-gradient(120deg,#0F5C40,#159A69 55%,#2FBE88);
+  --e-1:0 1px 2px rgba(0,0,0,.22), 0 3px 12px rgba(0,0,0,.28);
+  --e-2:0 2px 7px rgba(0,0,0,.28), 0 18px 42px rgba(0,0,0,.4);
+  --e-3:0 4px 16px rgba(0,0,0,.35), 0 34px 84px rgba(0,0,0,.55);
+}
+
+/* ============================================================ BASE */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:90px}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--font-body); font-size:1rem; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  transition:background var(--t-med) var(--ease), color var(--t-med) var(--ease);
+}
+h1,h2,h3,h4{font-family:var(--font-display); line-height:1.12; margin:0; letter-spacing:-.015em}
+p{margin:0}
+a{color:var(--green); text-decoration:none}
+img,svg{display:block; max-width:100%}
+button{font-family:inherit}
+::selection{background:var(--green-glow)}
+:focus{outline:none}
+:focus-visible{outline:2.5px solid var(--green); outline-offset:3px; border-radius:4px; box-shadow:0 0 0 5px var(--green-glow)}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+.skip-link{position:fixed; top:-100px; left:var(--s-4); z-index:300; background:var(--green); color:#fff; padding:var(--s-2) var(--s-4); border-radius:var(--r-sm); font-weight:600; transition:top var(--t-fast) var(--ease)}
+.skip-link:focus{top:var(--s-4)}
+.wrap{max-width:var(--max); margin:0 auto; padding-inline:var(--s-6)}
+
+/* Scroll reveal */
+.rv{opacity:0; transform:translateY(22px); transition:opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease)}
+.rv.in{opacity:1; transform:none}
+.rv-d1{transition-delay:.08s}.rv-d2{transition-delay:.16s}.rv-d3{transition-delay:.24s}.rv-d4{transition-delay:.32s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important}
+  .rv{opacity:1; transform:none}
+}
+
+/* ============================================================ BUTTONS */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  font-weight:600; font-size:1rem; line-height:1; border-radius:var(--r-md);
+  border:1.5px solid transparent; padding:0 1.6rem; height:50px; cursor:pointer;
+  white-space:nowrap; text-decoration:none!important;
+  transition:transform var(--t-fast) var(--ease), background var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-primary{background:var(--green); color:#fff; box-shadow:0 4px 14px var(--green-glow)}
+[data-theme="dark"] .btn-primary{color:#08110C}
+.btn-primary:hover{background:var(--green-strong); transform:translateY(-2px); box-shadow:0 8px 22px var(--green-glow)}
+.btn-secondary{background:var(--surface); color:var(--ink); border-color:var(--line-strong)}
+.btn-secondary:hover{border-color:var(--green); color:var(--green); transform:translateY(-2px)}
+.btn-ghost{background:transparent; color:var(--ink-soft); border:none; height:auto; padding:10px 14px; border-radius:var(--r-sm)}
+.btn-ghost:hover{color:var(--ink); background:var(--surface-2)}
+.btn-lg{height:56px; padding:0 2rem; font-size:1.05rem; border-radius:var(--r-lg)}
+.btn-icon{width:42px; height:42px; padding:0; border-radius:var(--r-md); background:transparent; border:none; color:var(--ink-soft); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease)}
+.btn-icon:hover{background:var(--surface-2); color:var(--ink)}
+
+.badge{display:inline-flex; align-items:center; gap:7px; font-size:.78rem; font-weight:600; padding:5px 12px; border-radius:var(--r-full)}
+.badge svg{width:13px; height:13px}
+.badge-green{background:var(--green-tint); color:var(--green-strong)}
+[data-theme="dark"] .badge-green{color:var(--green)}
+
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-lg); box-shadow:var(--e-1); transition:transform var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease), border-color var(--t-med) var(--ease)}
+.card-hover:hover{transform:translateY(-4px); box-shadow:var(--e-2); border-color:var(--line-strong)}
+
+.eyebrow{font-size:.75rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--green); margin-bottom:var(--s-3)}
+.section{padding:var(--s-8) 0}
+.section-head{max-width:640px; margin-bottom:var(--s-7)}
+.section-head.center{margin-inline:auto; text-align:center}
+.section-head h2{font-size:clamp(1.9rem,3.6vw,2.7rem); font-weight:800}
+.section-head p{color:var(--ink-soft); margin-top:var(--s-3); font-size:1.05rem}
+
+/* ============================================================ NAV */
+.nav{
+  position:sticky; top:0; z-index:100;
+  background:color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent;
+  transition:border-color var(--t-med) var(--ease), background var(--t-med) var(--ease);
+}
+.nav.scrolled{border-bottom-color:var(--line)}
+.nav .inner{max-width:var(--max); margin:0 auto; padding:0 var(--s-6); height:72px; display:flex; align-items:center; gap:var(--s-5)}
+.brand{display:flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none!important}
+.brand .wordmark{font-family:var(--font-display); font-weight:800; font-size:1.25rem; letter-spacing:-.02em}
+.nav-links{display:flex; gap:4px; margin-inline:auto; list-style:none; padding:0}
+.nav-links a{color:var(--ink-soft); font-weight:500; font-size:.94rem; padding:9px 14px; border-radius:var(--r-sm); text-decoration:none!important; transition:color var(--t-fast) var(--ease), background var(--t-fast) var(--ease)}
+.nav-links a:hover{color:var(--ink); background:var(--surface-2)}
+.nav-cta{display:flex; align-items:center; gap:var(--s-2)}
+.nav-cta .btn{height:42px; padding:0 1.2rem; font-size:.94rem}
+.menu-btn{display:none}
+
+.mobile-menu{
+  display:none; position:fixed; inset:72px 0 0 0; z-index:99; background:var(--bg);
+  padding:var(--s-5) var(--s-6); flex-direction:column; gap:var(--s-1);
+}
+.mobile-menu.open{display:flex}
+.mobile-menu a{padding:14px 8px; font-size:1.1rem; font-weight:600; color:var(--ink); border-bottom:1px solid var(--line); text-decoration:none!important}
+.mobile-menu .mm-cta{display:flex; gap:var(--s-3); margin-top:var(--s-5)}
+.mobile-menu .mm-cta .btn{flex:1}
+
+/* ============================================================ HERO */
+.hero{background:var(--grad-hero); overflow:hidden; position:relative}
+.hero .inner{
+  max-width:var(--max); margin:0 auto; padding:var(--s-8) var(--s-6) var(--s-9);
+  display:grid; grid-template-columns:1.05fr .95fr; gap:var(--s-7); align-items:center;
+}
+.hero h1{font-size:clamp(2.6rem,5.6vw,4.4rem); font-weight:800; letter-spacing:-.03em; line-height:1.02}
+.hero h1 .accent{color:var(--green); position:relative; white-space:nowrap}
+.hero h1 .accent svg{position:absolute; left:0; right:0; bottom:-10px; width:100%; height:12px; color:var(--green); opacity:.5}
+.hero .sub{color:var(--ink-soft); font-size:1.15rem; margin:var(--s-5) 0 var(--s-6); max-width:50ch}
+.hero .cta-row{display:flex; gap:var(--s-3); flex-wrap:wrap}
+.hero .proof{display:flex; align-items:center; gap:10px; margin-top:var(--s-5); font-size:.9rem; color:var(--ink-faint)}
+.hero .proof svg{width:15px; height:15px; color:var(--green)}
+
+/* Hero visual + floating cards */
+.hero-visual{position:relative; display:flex; align-items:center; justify-content:center; min-height:420px}
+.hero-visual > svg{width:min(430px,100%); height:auto; filter:drop-shadow(0 20px 40px rgba(22,36,28,.12))}
+.float-card{
+  position:absolute; display:flex; align-items:center; gap:10px;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r-md);
+  box-shadow:var(--e-2); padding:10px 16px; font-weight:700; font-size:.9rem;
+  animation:floaty 5.5s ease-in-out infinite;
+}
+.float-card .fi{width:30px; height:30px; border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center}
+.float-card .fi svg{width:15px; height:15px}
+.fc-borrow{top:6%; left:2%; animation-delay:0s}
+.fc-rent{top:16%; right:0%; animation-delay:1.3s}
+.fc-donate{bottom:16%; left:0%; animation-delay:2.6s}
+.fc-sell{bottom:5%; right:6%; animation-delay:3.9s}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+/* ============================================================ STATS */
+.stats{margin-top:calc(var(--s-7) * -1); position:relative; z-index:5}
+.stats .grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s-4)}
+.stat{padding:var(--s-5); text-align:center}
+.stat .num{font-family:var(--font-display); font-weight:800; font-size:clamp(1.8rem,3vw,2.5rem); letter-spacing:-.02em; font-variant-numeric:tabular-nums; color:var(--ink)}
+.stat .num .unit{font-size:.6em; color:var(--green)}
+.stat .lbl{color:var(--ink-soft); font-size:.92rem; margin-top:6px}
+
+/* ============================================================ TIMELINE */
+.timeline{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-5); position:relative; counter-reset:step}
+.tl-step{padding:var(--s-6) var(--s-5); position:relative; overflow:hidden}
+.tl-step::before{
+  counter-increment:step; content:"0" counter(step);
+  position:absolute; top:-14px; right:6px; font-family:var(--font-display);
+  font-size:5.2rem; font-weight:800; color:var(--green); opacity:.09; line-height:1;
+}
+.tl-step .glyph{width:52px; height:52px; border-radius:var(--r-md); background:var(--green-tint); color:var(--green-strong); display:flex; align-items:center; justify-content:center; margin-bottom:var(--s-4)}
+[data-theme="dark"] .tl-step .glyph{color:var(--green)}
+.tl-step .glyph svg{width:23px; height:23px}
+.tl-step h3{font-size:1.2rem; margin-bottom:8px}
+.tl-step p{color:var(--ink-soft); font-size:.96rem}
+.tl-connector{position:absolute; top:50%; left:33%; width:34%; border-top:2px dashed var(--line-strong); z-index:-1}
+
+/* ============================================================ CATEGORIES */
+.cat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-4)}
+.cat-card{padding:var(--s-5); display:flex; align-items:center; gap:var(--s-4); cursor:pointer; text-decoration:none!important; color:var(--ink)}
+.cat-card .ci{width:48px; height:48px; border-radius:var(--r-md); background:var(--surface-2); color:var(--green-strong); display:flex; align-items:center; justify-content:center; flex:none; transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease)}
+[data-theme="dark"] .cat-card .ci{color:var(--green)}
+.cat-card:hover .ci{background:var(--green); color:#fff; transform:scale(1.07) rotate(-4deg)}
+[data-theme="dark"] .cat-card:hover .ci{color:#08110C}
+.cat-card .ci svg{width:22px; height:22px}
+.cat-card strong{display:block; font-size:1rem}
+.cat-card span{font-size:.85rem; color:var(--ink-faint)}
+
+/* ============================================================ FEATURES */
+.feat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s-4)}
+.feat{padding:var(--s-5)}
+.feat .fi{width:44px; height:44px; border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; margin-bottom:var(--s-4); background:var(--green-tint); color:var(--green-strong)}
+[data-theme="dark"] .feat .fi{color:var(--green)}
+.feat .fi svg{width:20px; height:20px}
+.feat h4{font-size:1.02rem; font-weight:700; margin-bottom:6px; font-family:var(--font-body)}
+.feat p{font-size:.9rem; color:var(--ink-soft)}
+
+/* ============================================================ SUSTAINABILITY */
+.sustain{background:var(--grad-band); border-radius:var(--r-xl); color:#fff; overflow:hidden; position:relative}
+[data-theme="dark"] .sustain{color:#F2FBF6}
+.sustain .inner{display:grid; grid-template-columns:1.1fr .9fr; gap:var(--s-6); padding:var(--s-7); align-items:center}
+.sustain .eyebrow{color:rgba(255,255,255,.85)}
+.sustain h2{font-size:clamp(1.7rem,3.2vw,2.4rem); font-weight:800}
+.sustain p{opacity:.92; margin-top:var(--s-3); max-width:48ch}
+.sustain .eco-stats{display:flex; gap:var(--s-6); margin-top:var(--s-5); flex-wrap:wrap}
+.sustain .eco-stats .num{font-family:var(--font-display); font-size:1.9rem; font-weight:800; font-variant-numeric:tabular-nums}
+.sustain .eco-stats .lbl{font-size:.88rem; opacity:.85}
+.eco-visual{display:flex; align-items:center; justify-content:center}
+.eco-visual svg{width:min(300px,90%)}
+.leaf-sway{transform-origin:bottom center; animation:sway 6s ease-in-out infinite}
+.leaf-sway.l2{animation-delay:1.4s}
+.leaf-sway.l3{animation-delay:2.8s}
+@keyframes sway{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+.orbit-dot{animation:orbitPulse 3.5s ease-in-out infinite}
+@keyframes orbitPulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* ============================================================ TESTIMONIALS */
+.testi-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s-4)}
+.testi{padding:var(--s-5); display:flex; flex-direction:column; gap:var(--s-4)}
+.testi .stars{display:flex; gap:3px; color:var(--amber)}
+.testi .stars svg{width:15px; height:15px}
+.testi blockquote{margin:0; font-size:.98rem; color:var(--ink); line-height:1.6; flex:1}
+.testi .who{display:flex; align-items:center; gap:12px}
+.testi .pfp{width:42px; height:42px; border-radius:var(--r-full); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:.9rem; flex:none}
+.testi .who strong{display:block; font-size:.94rem}
+.testi .who span{font-size:.82rem; color:var(--ink-faint)}
+
+/* ============================================================ FAQ */
+.faq-list{max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:var(--s-3)}
+.faq{overflow:hidden}
+.faq button{
+  width:100%; background:none; border:none; cursor:pointer; text-align:left;
+  padding:var(--s-4) var(--s-5); display:flex; justify-content:space-between; align-items:center; gap:var(--s-4);
+  font-size:1.02rem; font-weight:600; color:var(--ink);
+}
+.faq button svg{width:18px; height:18px; flex:none; color:var(--green); transition:transform var(--t-med) var(--ease)}
+.faq button[aria-expanded="true"] svg{transform:rotate(45deg)}
+.faq .ans{max-height:0; overflow:hidden; transition:max-height var(--t-med) var(--ease)}
+.faq .ans p{padding:0 var(--s-5) var(--s-5); color:var(--ink-soft); font-size:.95rem}
+
+/* ============================================================ FINAL CTA */
+.final-cta{text-align:center; padding:var(--s-9) var(--s-6); position:relative; overflow:hidden}
+.final-cta h2{font-size:clamp(2rem,4.4vw,3.2rem); font-weight:800; letter-spacing:-.025em; max-width:18ch; margin-inline:auto}
+.final-cta p{color:var(--ink-soft); margin:var(--s-4) auto var(--s-6); max-width:46ch; font-size:1.08rem}
+.final-cta .cta-row{display:flex; gap:var(--s-3); justify-content:center; flex-wrap:wrap}
+.final-cta .ring{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:640px; height:640px; border:1.5px dashed var(--line-strong); border-radius:50%; z-index:-1; opacity:.5}
+.final-cta .ring.r2{width:420px; height:420px; opacity:.7}
+
+/* ============================================================ FOOTER */
+.site-footer{border-top:1px solid var(--line); background:var(--surface)}
+.site-footer .inner{max-width:var(--max); margin:0 auto; padding:var(--s-7) var(--s-6); display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr 1fr; gap:var(--s-6)}
+.site-footer h5{font-size:.86rem; font-weight:700; margin:0 0 var(--s-4)}
+.site-footer ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
+.site-footer a{color:var(--ink-soft); font-size:.9rem; text-decoration:none}
+.site-footer a:hover{color:var(--green); text-decoration:underline}
+.site-footer .about-blurb{font-size:.92rem; color:var(--ink-soft); max-width:30ch; margin-top:var(--s-3)}
+.socials{display:flex; gap:var(--s-2); margin-top:var(--s-4)}
+.socials a{width:38px; height:38px; border-radius:var(--r-md); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--ink-soft); transition:all var(--t-fast) var(--ease)}
+.socials a:hover{border-color:var(--green); color:var(--green); transform:translateY(-2px); text-decoration:none}
+.socials svg{width:17px; height:17px}
+.site-footer .legal{border-top:1px solid var(--line); padding:var(--s-4) var(--s-6); display:flex; justify-content:space-between; gap:var(--s-4); flex-wrap:wrap; font-size:.82rem; color:var(--ink-faint); max-width:var(--max); margin:0 auto}
+
+/* ============================================================ RESPONSIVE */
+@media (max-width:1100px){
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .site-footer .inner{grid-template-columns:1.4fr 1fr 1fr; row-gap:var(--s-6)}
+}
+@media (max-width:960px){
+  .nav-links,.nav-cta .btn-secondary,.nav-cta .btn-primary{display:none}
+  .menu-btn{display:inline-flex}
+  .hero .inner{grid-template-columns:1fr; text-align:center; padding-bottom:var(--s-8)}
+  .hero .sub{margin-inline:auto}
+  .hero .cta-row,.hero .proof{justify-content:center}
+  .hero-visual{min-height:380px; margin-top:var(--s-4)}
+  .stats .grid{grid-template-columns:repeat(2,1fr)}
+  .timeline{grid-template-columns:1fr}
+  .tl-connector{display:none}
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .testi-grid{grid-template-columns:1fr; max-width:560px; margin-inline:auto}
+  .sustain .inner{grid-template-columns:1fr; text-align:center}
+  .sustain p{margin-inline:auto}
+  .sustain .eco-stats{justify-content:center}
+  .eco-visual{order:-1}
+}
+@media (max-width:600px){
+  .wrap{padding-inline:var(--s-4)}
+  .nav .inner{padding-inline:var(--s-4)}
+  .section{padding:var(--s-7) 0}
+  .stats .grid{grid-template-columns:1fr 1fr; gap:var(--s-3)}
+  .cat-grid,.feat-grid{grid-template-columns:1fr}
+  .float-card{padding:8px 12px; font-size:.8rem}
+  .hero-visual{min-height:330px}
+  .btn-lg{width:100%}
+  .site-footer .inner{grid-template-columns:1fr 1fr}
+  .site-footer .inner > div:first-child{grid-column:1/-1}
+}
+
+/* ============================================================
+   PRESENTATION MODE · guided demo bar (v1 surface variant)
+   ============================================================ */
+.present-bar{position:fixed; left:50%; bottom:var(--s-5); transform:translateX(-50%); z-index:250; width:min(540px, calc(100vw - 32px)); background:var(--surface); border:1px solid var(--line); border-radius:var(--r-xl); box-shadow:var(--e-3); padding:var(--s-4) var(--s-5); animation:pbIn .5s var(--ease)}
+.present-bar[hidden]{display:none}
+@keyframes pbIn{from{opacity:0; transform:translateX(-50%) translateY(20px)}to{opacity:1; transform:translateX(-50%) translateY(0)}}
+.pb-top{display:flex; align-items:center; gap:10px}
+.pb-step{font-size:.7rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--green-strong); white-space:nowrap}
+.pb-track{flex:1; height:5px; border-radius:3px; background:var(--surface-2); overflow:hidden}
+.pb-track i{display:block; height:100%; background:linear-gradient(90deg,var(--green),var(--green-strong)); border-radius:3px; width:0; transition:width .4s var(--ease)}
+.present-bar .btn-icon{width:34px; height:34px; flex:none}
+.present-bar .btn-icon svg{width:16px; height:16px}
+.pb-caption{font-size:.85rem; color:var(--ink); margin-top:10px; line-height:1.5}
+.pb-actions{display:flex; gap:8px; margin-top:12px}
+.pb-actions .btn{flex:1}
+.present-bar.final{text-align:center}
+.pb-final-head{display:flex; align-items:center; justify-content:center; gap:9px; font-family:var(--font-display); font-weight:800; font-size:1.05rem}
+.pb-check{width:28px; height:28px; border-radius:50%; background:var(--green-tint); color:var(--green-strong); display:inline-flex; align-items:center; justify-content:center; font-size:.85rem}
+.demo-launch{display:inline-flex; align-items:center; gap:7px; height:42px; padding:0 15px; border-radius:var(--r-full); background:var(--surface-2); border:1px solid var(--line); color:var(--ink); font-weight:700; font-size:.82rem; cursor:pointer; text-decoration:none!important; transition:all var(--t-fast) var(--ease); flex:none}
+.demo-launch:hover{background:var(--green-tint); border-color:var(--green); color:var(--green-strong)}
+.demo-launch svg{width:15px; height:15px}
+@media (max-width:560px){
+  .present-bar{bottom:calc(var(--s-3) + 4px); padding:var(--s-3) var(--s-4)}
+  .demo-launch span{display:none}
+}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============================================================
+     1 · STICKY NAVIGATION
+     ============================================================ -->
+<header class="nav" id="nav">
+  <div class="inner">
+    <a class="brand" href="#top" aria-label="ShareBox home">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--green)"/>
+        <path d="M10 13.5 16 9l6 4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M22 18.5 16 23l-6-4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".65"/>
+      </svg>
+      <span class="wordmark">ShareBox</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#top">Home</a></li>
+        <li><a href="#categories">Browse Resources</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-cta">
+      <button class="btn-icon" data-theme-toggle aria-label="Switch to dark mode" onclick="toggleTheme()"></button>
+      <button class="demo-launch" onclick="presentStart()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg><span>Start Demo</span></button>
+      <a class="btn btn-ghost" href="sharebox-auth.html">Login</a>
+      <a class="btn btn-primary" href="#join">Sign Up</a>
+      <button class="btn-icon menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" onclick="toggleMenu()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#top" onclick="toggleMenu()">Home</a>
+  <a href="#categories" onclick="toggleMenu()">Browse Resources</a>
+  <a href="#how" onclick="toggleMenu()">How It Works</a>
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+  <div class="mm-cta">
+    <button class="demo-launch" onclick="presentStart()" style="width:100%; justify-content:center; margin-bottom:var(--s-3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg><span>Start Demo</span></button>
+    <a class="btn btn-secondary" href="sharebox-auth.html">Login</a>
+    <a class="btn btn-primary" href="#join" onclick="toggleMenu()">Sign Up</a>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- ============================================================
+     2 · HERO
+     ============================================================ -->
+<section class="hero" id="top">
+  <div class="inner">
+    <div>
+      <span class="badge badge-green rv in" style="margin-bottom:var(--s-4)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        For verified university students
+      </span>
+      <h1>Everything you need is <span class="accent">already on campus<svg viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9c50-7 146-7 196-2" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/></svg></span>.</h1>
+      <p class="sub">Students buy things they use once — a calculator for one exam, a blazer for one presentation, an Arduino for one project. ShareBox lets verified students borrow, rent, buy, and donate within campus, protected by deposits and Trust Scores.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-lg" href="#join">Get Started</a>
+        <a class="btn btn-secondary btn-lg" href="#categories">Browse Resources</a>
+      </div>
+      <p class="proof">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>
+        University-email verified · deposit protected · QR handoffs
+      </p>
+    </div>
+
+    <div class="hero-visual" role="img" aria-label="Illustration of students exchanging shared items — books, electronics, a laptop, a calculator, clothing, and stationery">
+      <!-- Illustration: two students passing shared items through the ShareBox loop -->
+      <svg viewBox="0 0 440 400" fill="none" aria-hidden="true">
+        <circle cx="220" cy="200" r="165" stroke="var(--line-strong)" stroke-width="2" stroke-dasharray="4 9"/>
+        <path d="M220 35a165 165 0 0 1 143 247" stroke="var(--green)" stroke-width="7" stroke-linecap="round"/>
+        <circle class="orbit-dot" cx="363" cy="282" r="9" fill="var(--green)"/>
+        <!-- central shared box -->
+        <rect x="145" y="130" width="150" height="150" rx="30" fill="var(--green-tint)"/>
+        <path d="M178 189 220 158l42 31" stroke="var(--green-strong)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M262 221 220 252l-42-31" stroke="var(--green-strong)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
+        <!-- student left -->
+        <circle cx="88" cy="205" r="26" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2.5"/>
+        <circle cx="88" cy="197" r="9" fill="var(--ink-faint)"/>
+        <path d="M74 222c3-9 25-9 28 0" stroke="var(--ink-faint)" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <!-- student right -->
+        <circle cx="352" cy="150" r="26" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2.5"/>
+        <circle cx="352" cy="142" r="9" fill="var(--ink-faint)"/>
+        <path d="M338 167c3-9 25-9 28 0" stroke="var(--ink-faint)" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <!-- book -->
+        <g transform="translate(120 88) rotate(-8)">
+          <rect width="52" height="38" rx="6" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2.5"/>
+          <path d="M26 5v28M10 12h9M33 12h9M10 20h9M33 20h9" stroke="var(--ink-faint)" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+        <!-- laptop -->
+        <g transform="translate(268 302) rotate(6)">
+          <rect width="58" height="34" rx="5" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2.5"/>
+          <rect x="6" y="6" width="46" height="18" rx="2" fill="var(--green-tint)"/>
+          <path d="M-4 34h66" stroke="var(--line-strong)" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <!-- microchip / IoT -->
+        <g transform="translate(320 62) rotate(10)">
+          <rect width="40" height="40" rx="7" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2.5"/>
+          <rect x="11" y="11" width="18" height="18" rx="3" fill="var(--green)"/>
+        </g>
+        <!-- calculator -->
+        <g transform="translate(72 288) rotate(-9)">
+          <rect width="38" height="52" rx="7" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2.5"/>
+          <rect x="7" y="7" width="24" height="11" rx="2" fill="var(--green-tint)"/>
+          <circle cx="12" cy="30" r="3" fill="var(--ink-faint)"/><circle cx="26" cy="30" r="3" fill="var(--ink-faint)"/>
+          <circle cx="12" cy="42" r="3" fill="var(--ink-faint)"/><circle cx="26" cy="42" r="3" fill="var(--ink-faint)"/>
+        </g>
+        <!-- hanger / clothing -->
+        <g transform="translate(30 120) rotate(-6)">
+          <path d="M24 4c-5 0-8 4-6 8l6 5L4 32h40z" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2.5" stroke-linejoin="round"/>
+        </g>
+        <!-- pencil -->
+        <g transform="translate(388 210) rotate(35)">
+          <rect width="10" height="44" rx="3" fill="var(--amber)" opacity=".85"/>
+          <path d="M0 44 5 56l5-12z" fill="var(--ink-faint)"/>
+        </g>
+      </svg>
+
+      <div class="float-card fc-borrow"><span class="fi" style="background:var(--green-tint); color:var(--green-strong)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11 3 15l4 4"/><path d="M3 15h13a5 5 0 0 0 0-10h-3"/></svg></span>Borrow</div>
+      <div class="float-card fc-rent"><span class="fi" style="background:var(--blue-tint); color:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Rent</div>
+      <div class="float-card fc-donate"><span class="fi" style="background:var(--amber-tint); color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9-8.5C1.5 8 3.5 5 6.7 5c2 0 3.6 1.2 4.3 2.4h2C13.7 6.2 15.3 5 17.3 5c3.2 0 5.2 3 3.7 6.5-2 4.2-9 8.5-9 8.5z"/></svg></span>Donate</div>
+      <div class="float-card fc-sell"><span class="fi" style="background:var(--green-tint); color:var(--green-strong)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6.5C17 4.6 14.8 3.5 12 3.5S7 4.6 7 6.5 9.2 9.5 12 9.5s5 1.1 5 3-2.2 3-5 3-5-1.1-5-3"/></svg></span>Sell</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3 · LIVE CAMPUS STATISTICS
+     ============================================================ -->
+<section class="stats wrap" aria-label="Campus statistics">
+  <div class="grid">
+    <div class="card stat rv"><p class="num"><span data-count="1248">0</span><span class="unit">+</span></p><p class="lbl">Verified Students</p></div>
+    <div class="card stat rv rv-d1"><p class="num"><span data-count="432">0</span><span class="unit">+</span></p><p class="lbl">Shared Resources</p></div>
+    <div class="card stat rv rv-d2"><p class="num"><span class="unit" style="margin-right:2px">$</span><span data-count="18400">0</span></p><p class="lbl">Estimated Student Savings</p></div>
+    <div class="card stat rv rv-d3"><p class="num"><span data-count="3.2" data-decimals="1">0</span><span class="unit"> tons</span></p><p class="lbl">Resources Reused</p></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     4 · HOW SHAREBOX WORKS
+     ============================================================ -->
+<section class="section wrap" id="how">
+  <div class="section-head center rv">
+    <p class="eyebrow">How it works</p>
+    <h2>Three steps, one campus loop</h2>
+    <p>From finding a resource to building your reputation — the whole cycle is designed to be safe on both sides of the handoff.</p>
+  </div>
+  <div class="timeline">
+    <div class="tl-connector" aria-hidden="true"></div>
+    <div class="card card-hover tl-step rv">
+      <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+      <h3>Find a resource</h3>
+      <p>Search the campus shelf or post on the Need Board — matching owners are notified the moment your request goes live.</p>
+    </div>
+    <div class="card card-hover tl-step rv rv-d1">
+      <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7h13M8 12h13M8 17h13"/><path d="m3 7 1 1 2-2M3 12l1 1 2-2M3 17l1 1 2-2"/></svg></div>
+      <h3>Borrow, rent, buy, or request</h3>
+      <p>A condition report and a small refundable deposit — sized by your Trust Score — protect both sides before the QR handoff.</p>
+    </div>
+    <div class="card card-hover tl-step rv rv-d2">
+      <div class="glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <h3>Return it safely</h3>
+      <p>Check out with a QR scan, get your deposit released, and watch your Trust Score grow with every on-time return.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     5 · FEATURED CATEGORIES
+     ============================================================ -->
+<section class="section wrap" id="categories">
+  <div class="section-head rv">
+    <p class="eyebrow">Featured categories</p>
+    <h2>What&rsquo;s on the campus shelf</h2>
+    <p>Nine categories, one rule: everything is owned by a verified student on your campus.</p>
+  </div>
+  <div class="cat-grid">
+    <a class="card card-hover cat-card rv" href="#join"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/></svg></span><span><strong>Books</strong><span>Textbooks &amp; references</span></span></a>
+    <a class="card card-hover cat-card rv rv-d1" href="#join"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M10 2v3M14 2v3M10 19v3M14 19v3M2 10h3M2 14h3M19 10h3M19 14h3"/></svg></span><span><strong>IoT Devices</strong><span>Arduino, ESP32, sensors</span></span></a>
+    <a class="card card-hover cat-card rv rv-d2" href="#join"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m14 5 5 5L8 21H3v-5z"/><path d="m12 7 5 5"/></svg></span><span><strong>Stationery</strong><span>Everything exam week needs</span></span></a>
+    <a class="card card-hover cat-card rv" href="#join"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 3-6 4 2.5 3.5L8 9v12h8V9l2.5 1.5L21 7l-6-4a3 3 0 0 1-6 0z"/></svg></span><span><strong>Clothing</strong><span>Presentation &amp; formal wear</span></span></a>
+    <a class="card card-hover cat-card rv rv-d1" href="#join"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V9l4 2 3-4 3 4h5a3 3 0 0 1 3 3v2z"/><path d="M3 16h18v2H3z"/></svg></span><span><strong>Shoes</strong><span>Formal, sport, seasonal</span></span></a>
+    <a class="card card-hover cat-card rv rv-d2" href="#join"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 13H6z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg></span><span><strong>Bags</strong><span>Laptop bags &amp; backpacks</span></span></a>
+    <a class="card card-hover cat-card rv" href="#join"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg></span><span><strong>Jewelry</strong><span>Occasion &amp; cultural wear</span></span></a>
+    <a class="card card-hover cat-card rv rv-d1" href="#join"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6.3L4.6 18a2 2 0 0 0 1.8 3h11.2a2 2 0 0 0 1.8-3L14 9.3V3"/><path d="M7 15h10"/></svg></span><span><strong>Lab Equipment</strong><span>Multimeters, glassware, kits</span></span></a>
+    <a class="card card-hover cat-card rv rv-d2" href="#join"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M9 6V4h6v2M12 10v6M9 13h6"/></svg></span><span><strong>Emergency Essentials</strong><span>Vetted first-aid supplies</span></span></a>
+  </div>
+</section>
+
+<!-- ============================================================
+     6 · WHY STUDENTS LOVE SHAREBOX
+     ============================================================ -->
+<section class="section wrap" id="about">
+  <div class="section-head center rv">
+    <p class="eyebrow">Why students love ShareBox</p>
+    <h2>Built for trust between strangers on the same campus</h2>
+    <p>Every feature exists to answer one question: &ldquo;What if something goes wrong?&rdquo; — so nothing has to.</p>
+  </div>
+  <div class="feat-grid">
+    <div class="card card-hover feat rv"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div><h4>Verified Campus Users</h4><p>Only university-email-verified students can join — no outsiders, ever.</p></div>
+    <div class="card card-hover feat rv rv-d1"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h4>Trust Score</h4><p>On-time returns grow your score, unlocking smaller deposits and bigger limits.</p></div>
+    <div class="card card-hover feat rv rv-d2"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18"/></svg></div><h4>Secure Deposits</h4><p>Small, refundable, and released automatically the moment a return checks out.</p></div>
+    <div class="card card-hover feat rv rv-d3"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8v8l9 5 9-5V8z"/><path d="m9 12 2 2 4-4"/></svg></div><h4>Damage Protection</h4><p>Condition reports before every handoff and clear category-based fee schedules.</p></div>
+    <div class="card card-hover feat rv"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z"/><path d="M14 14h3v3h-3zM17 17h3v3h-3z"/></svg></div><h4>QR Check-In / Check-Out</h4><p>Every physical handoff is a two-second scan, timestamped for both sides.</p></div>
+    <div class="card card-hover feat rv rv-d1"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg></div><h4>Ratings &amp; Reviews</h4><p>Two-sided reviews after every transaction keep the whole shelf honest.</p></div>
+    <div class="card card-hover feat rv rv-d2"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/><circle cx="12" cy="12" r="4"/></svg></div><h4>Need Board</h4><p>Post an urgent need — owners of matching items are notified instantly.</p></div>
+    <div class="card card-hover feat rv rv-d3"><div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.3-9-8.5C1.5 8 3.5 5 6.7 5c2 0 3.6 1.2 4.3 2.4h2C13.7 6.2 15.3 5 17.3 5c3.2 0 5.2 3 3.7 6.5-2 4.2-9 8.5-9 8.5z"/></svg></div><h4>Donation System</h4><p>Outgrown textbooks and gear find their next owner instead of a landfill.</p></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     7 · SUSTAINABILITY
+     ============================================================ -->
+<section class="section wrap">
+  <div class="sustain rv">
+    <div class="inner">
+      <div>
+        <p class="eyebrow">Sustainability</p>
+        <h2>Every shared item is one less bought — and one less thrown away.</h2>
+        <p>A campus is thousands of near-identical needs colliding with thousands of idle items. ShareBox closes that loop: sharing cuts student spending, keeps resources in circulation for years instead of weeks, and measurably reduces campus waste.</p>
+        <div class="eco-stats">
+          <div><p class="num">3.2 t</p><p class="lbl">waste diverted from landfill</p></div>
+          <div><p class="num">$18,400</p><p class="lbl">kept in students&rsquo; pockets</p></div>
+          <div><p class="num">4×</p><p class="lbl">average item lifespan</p></div>
+        </div>
+      </div>
+      <div class="eco-visual" aria-hidden="true">
+        <svg viewBox="0 0 260 260" fill="none">
+          <circle cx="130" cy="130" r="110" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="3 8"/>
+          <path d="M130 20a110 110 0 0 1 95 165" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9"/>
+          <circle class="orbit-dot" cx="225" cy="185" r="7" fill="#fff"/>
+          <path d="M60 200c40 8 100 8 140 0" stroke="rgba(255,255,255,.5)" stroke-width="4" stroke-linecap="round"/>
+          <g class="leaf-sway"><path d="M130 200c0-52 22-86 62-98-4 60-24 90-62 98z" fill="#fff" opacity=".92"/><path d="M130 200c14-38 32-62 54-80" stroke="var(--green)" stroke-width="3" stroke-linecap="round"/></g>
+          <g class="leaf-sway l2"><path d="M126 200c0-40-17-66-48-75 3 46 19 69 48 75z" fill="#fff" opacity=".65"/></g>
+          <g class="leaf-sway l3"><path d="M128 200c2-24 10-40 26-50-1 28-10 43-26 50z" fill="#fff" opacity=".45"/></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     8 · TESTIMONIALS
+     ============================================================ -->
+<section class="section wrap">
+  <div class="section-head center rv">
+    <p class="eyebrow">Student stories</p>
+    <h2>Heard around campus</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="card card-hover testi rv">
+      <div class="stars" role="img" aria-label="Rated 5 out of 5">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg>
+      </div>
+      <blockquote>&ldquo;I posted a need for a multimeter at 9 PM and had one in my hands before my 8 AM lab. The deposit came back the same evening I returned it.&rdquo;</blockquote>
+      <div class="who"><span class="pfp" style="background:linear-gradient(135deg,#0E8A5C,#0A6B47)">SA</span><span><strong>Sadia A.</strong><span>3rd year, Electrical Engineering</span></span></div>
+    </div>
+    <div class="card card-hover testi rv rv-d1">
+      <div class="stars" role="img" aria-label="Rated 5 out of 5">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg>
+      </div>
+      <blockquote>&ldquo;My ESP32 kits sat in a drawer between semesters. Now they&rsquo;re booked most weekends — and my Trust Score means I borrow deposit-free.&rdquo;</blockquote>
+      <div class="who"><span class="pfp" style="background:linear-gradient(135deg,#2E6FA8,#1F4E78)">RH</span><span><strong>Rafi H.</strong><span>4th year, Computer Science</span></span></div>
+    </div>
+    <div class="card card-hover testi rv rv-d2">
+      <div class="stars" role="img" aria-label="Rated 5 out of 5">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 9.5 8.5 3 9l4.8 4.4L6.5 20 12 16.8 17.5 20l-1.3-6.6L21 9l-6.5-.5z"/></svg>
+      </div>
+      <blockquote>&ldquo;Rented a blazer and shoes for my thesis defense for less than a coffee run. The QR check-in made the whole handoff feel completely safe.&rdquo;</blockquote>
+      <div class="who"><span class="pfp" style="background:linear-gradient(135deg,#B57312,#8C5A0E)">NT</span><span><strong>Nusrat T.</strong><span>Final year, Business Administration</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     9 · FAQ
+     ============================================================ -->
+<section class="section wrap" id="faq">
+  <div class="section-head center rv">
+    <p class="eyebrow">FAQ</p>
+    <h2>Good questions, honest answers</h2>
+  </div>
+  <div class="faq-list rv">
+    <div class="card faq">
+      <button aria-expanded="false" onclick="toggleFaq(this)">Who can join ShareBox?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="ans"><p>Only students verified through their university email address. Every profile shows its verified campus, so you always know who you&rsquo;re dealing with — and outsiders can&rsquo;t get in.</p></div>
+    </div>
+    <div class="card faq">
+      <button aria-expanded="false" onclick="toggleFaq(this)">What happens if an item gets damaged?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="ans"><p>Every borrow starts with a condition report, so both sides agree on the item&rsquo;s state before handoff. If damage occurs, clear category-specific fee schedules apply — no surprises, no arguments — and the refundable deposit covers it.</p></div>
+    </div>
+    <div class="card faq">
+      <button aria-expanded="false" onclick="toggleFaq(this)">How do deposits work?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="ans"><p>A small refundable deposit is held when you borrow or rent, and released automatically once the return is checked in and the condition matches. The higher your Trust Score, the smaller your deposits get.</p></div>
+    </div>
+    <div class="card faq">
+      <button aria-expanded="false" onclick="toggleFaq(this)">What is the Trust Score?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="ans"><p>It&rsquo;s your reputation on campus, built from on-time returns, item condition, and reviews. It unlocks real benefits: smaller deposits, higher borrowing limits, and priority on the Need Board.</p></div>
+    </div>
+    <div class="card faq">
+      <button aria-expanded="false" onclick="toggleFaq(this)">Is it free to use?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="ans"><p>Creating an account, browsing, borrowing, and donating are free. Renting and selling are priced by the owner; deposits are always refundable.</p></div>
+    </div>
+    <div class="card faq">
+      <button aria-expanded="false" onclick="toggleFaq(this)">What can&rsquo;t be shared on ShareBox?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <div class="ans"><p>Anything unsafe or restricted — including prescription medicines. Emergency essentials are limited to vetted, sealed first-aid supplies, reviewed before they ever appear on the shelf.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     10 · FINAL CTA
+     ============================================================ -->
+<section class="final-cta" id="join">
+  <div class="ring" aria-hidden="true"></div>
+  <div class="ring r2" aria-hidden="true"></div>
+  <div class="rv">
+    <p class="eyebrow">Join your campus</p>
+    <h2>Your campus already owns everything you need.</h2>
+    <p>Join thousands of verified students sharing smarter. Verification with your university email takes under two minutes.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" href="sharebox-auth.html">Create Free Account</a>
+      <a class="btn btn-secondary btn-lg" href="#categories">Browse Resources</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     11 · FOOTER
+     ============================================================ -->
+<footer class="site-footer" id="contact">
+  <div class="inner">
+    <div>
+      <a class="brand" href="#top">
+        <svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--green)"/>
+          <path d="M10 13.5 16 9l6 4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 18.5 16 23l-6-4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".65"/>
+        </svg>
+        <span class="wordmark">ShareBox</span>
+      </a>
+      <p class="about-blurb">The campus resource-sharing ecosystem. Share More. Spend Less. Waste Less.</p>
+      <div class="socials">
+        <a href="#" aria-label="ShareBox on Facebook" onclick="demoNote(event,'Facebook')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h-2a4 4 0 0 0-4 4v3H6v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h2z"/></svg></a>
+        <a href="#" aria-label="ShareBox on Instagram" onclick="demoNote(event,'Instagram')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/></svg></a>
+        <a href="#" aria-label="ShareBox on X" onclick="demoNote(event,'X')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m4 4 16 16M20 4 4 20"/></svg></a>
+        <a href="#" aria-label="ShareBox on LinkedIn" onclick="demoNote(event,'LinkedIn')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0"/></svg></a>
+      </div>
+    </div>
+    <div><h5>Product</h5><ul>
+      <li><a href="#categories">Browse Resources</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#about">Why ShareBox</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul></div>
+    <div><h5>Company</h5><ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#" onclick="demoNote(event,'Careers')">Careers</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul></div>
+    <div><h5>Legal</h5><ul>
+      <li><a href="#" onclick="demoNote(event,'Privacy')">Privacy</a></li>
+      <li><a href="#" onclick="demoNote(event,'Terms')">Terms</a></li>
+      <li><a href="#" onclick="demoNote(event,'Safety')">Safety Guidelines</a></li>
+    </ul></div>
+    <div><h5>University Support</h5><ul>
+      <li><a href="#" onclick="demoNote(event,'Partnerships')">Campus Partnerships</a></li>
+      <li><a href="#" onclick="demoNote(event,'Sustainability office')">Sustainability Offices</a></li>
+      <li><a href="#" onclick="demoNote(event,'Help center')">Help Center</a></li>
+    </ul></div>
+  </div>
+  <div class="legal">
+    <span>© 2026 ShareBox. All rights reserved.</span>
+    <span>Made for campuses, by students.</span>
+  </div>
+</footer>
+
+</main>
+
+<script>
+/* ============================================================
+   Theme (in-memory only; follows system preference by default)
+   ============================================================ */
+let theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const moon = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A8.5 8.5 0 0 1 11 3a8.5 8.5 0 1 0 10 10z"/></svg>';
+const sun  = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('[data-theme-toggle]').forEach(b=>{
+    b.innerHTML = theme==='light' ? moon : sun;
+    b.setAttribute('aria-label', theme==='light' ? 'Switch to dark mode' : 'Switch to light mode');
+  });
+}
+function toggleTheme(){ theme = theme==='light' ? 'dark' : 'light'; applyTheme(); }
+applyTheme();
+
+/* Nav border on scroll */
+const nav = document.getElementById('nav');
+addEventListener('scroll', ()=> nav.classList.toggle('scrolled', scrollY > 8), {passive:true});
+
+/* Mobile menu */
+function toggleMenu(){
+  const m = document.getElementById('mobileMenu');
+  const b = document.getElementById('menuBtn');
+  const open = !m.classList.contains('open');
+  m.classList.toggle('open', open);
+  b.setAttribute('aria-expanded', String(open));
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+/* Placeholder-link note (no backend / auth in this phase) */
+function demoNote(e, what){
+  e.preventDefault();
+  const note = document.createElement('div');
+  note.textContent = what + ' — connects in the next build phase';
+  note.setAttribute('role','status');
+  note.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:12px;font-size:.88rem;font-weight:500;z-index:400;box-shadow:var(--e-3)';
+  document.body.appendChild(note);
+  setTimeout(()=>note.remove(), 2600);
+}
+
+/* ============================================================
+   Scroll reveal (IntersectionObserver — lazy, once)
+   ============================================================ */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+  });
+},{threshold:.15, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ============================================================
+   Animated counters — start when visible, respect reduced motion
+   ============================================================ */
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cio = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting) return;
+    cio.unobserve(en.target);
+    const el = en.target;
+    const target = parseFloat(el.dataset.count);
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    if(reduced){ el.textContent = target.toLocaleString('en-US',{minimumFractionDigits:decimals, maximumFractionDigits:decimals}); return; }
+    const dur = 1600; const t0 = performance.now();
+    (function tick(now){
+      const p = Math.min((now - t0) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * eased).toLocaleString('en-US',{minimumFractionDigits:decimals, maximumFractionDigits:decimals});
+      if(p < 1) requestAnimationFrame(tick);
+    })(t0);
+  });
+},{threshold:.4});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+/* ============================================================
+   FAQ accordion — accessible, one open at a time
+   ============================================================ */
+function toggleFaq(btn){
+  const item = btn.parentElement;
+  const ans = item.querySelector('.ans');
+  const isOpen = btn.getAttribute('aria-expanded') === 'true';
+  document.querySelectorAll('.faq button[aria-expanded="true"]').forEach(b=>{
+    if(b !== btn){ b.setAttribute('aria-expanded','false'); b.parentElement.querySelector('.ans').style.maxHeight = '0'; }
+  });
+  btn.setAttribute('aria-expanded', String(!isOpen));
+  ans.style.maxHeight = isOpen ? '0' : ans.scrollHeight + 'px';
+}
+
+/* ============================================================
+   PRESENTATION MODE · guided demo for judges (2\u20133 min walkthrough)
+   ============================================================ */
+const CURRENT_FILE = 'index.html';
+const PB_PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+const PB_PLAY_ICON  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>';
+const PB_CLOSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+const PB_PLAY_BADGE  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>';
+const PRESENT_STEPS = [
+  {file:'index.html', caption:'Welcome to ShareBox \u2014 a campus-only marketplace where verified students borrow, rent, sell, and donate what they already own.'},
+  {file:'sharebox-dashboard-glass.html', caption:'After signing in, students land on a personal dashboard \u2014 Trust Score, active borrows, and money saved, all at a glance.'},
+  {file:'sharebox-ai-discovery.html', caption:'Smart search and AI recommendations help students discover exactly what they need across campus.'},
+  {file:'sharebox-item-details.html', caption:'Every listing shows the owner\u2019s Trust Score, live availability, and transparent pricing before you commit.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:1, caption:'Requesting to borrow takes seconds \u2014 pick your dates, add a purpose, and pricing calculates instantly.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:6, caption:'Meeting in person is verified with a two-way QR scan, so every handoff is accountable.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:7, caption:'A live timeline keeps both sides in sync from pickup all the way to the due date.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:8, caption:'Condition photos and a quick inspection close the loop safely for both sides.'},
+  {file:'sharebox-borrow-flow.html', borrowStep:9, caption:'The deposit refunds automatically the moment the return checks out clean.'},
+  {file:'sharebox-account.html', hash:'trust', caption:'Every clean return raises the borrower\u2019s Trust Score \u2014 unlocking lower deposits over time.'},
+  {file:'sharebox-dashboard-glass.html', hash:'sustainability', caption:'Zoomed in, every shared item keeps money in students\u2019 pockets and waste out of landfills.'},
+  {file:'sharebox-ai-discovery.html', hash:'community', caption:'Zoomed out, the whole campus is saving money and cutting waste together.'},
+  {file:'index.html', final:true, caption:'That\u2019s the complete ShareBox journey \u2014 from first visit to a trusted, sustainable campus community.'}
+];
+const PRESENT_DURATION = 12000;
+let presentTimer = null, presentPaused = false, presentElapsed = 0;
+
+function presentCurrentN(){
+  const n = parseInt(new URLSearchParams(location.search).get('present'), 10);
+  return (n >= 1 && n <= PRESENT_STEPS.length) ? n : null;
+}
+function presentStart(){ location.href = 'index.html?present=1'; }
+function presentResetTimer(){
+  clearInterval(presentTimer);
+  presentPaused = false; presentElapsed = 0;
+  presentTimer = setInterval(()=>{
+    if(presentPaused) return;
+    presentElapsed += 250;
+    if(presentElapsed >= PRESENT_DURATION) presentNext();
+  }, 250);
+}
+function presentToggle(){
+  presentPaused = !presentPaused;
+  const btn = document.getElementById('pbToggle');
+  if(btn){
+    btn.innerHTML = presentPaused ? PB_PLAY_ICON : PB_PAUSE_ICON;
+    btn.setAttribute('aria-label', presentPaused ? 'Resume demo' : 'Pause demo');
+  }
+}
+function presentRenderBar(n){
+  const bar = document.getElementById('presentBar');
+  if(!bar) return;
+  bar.hidden = false;
+  const step = PRESENT_STEPS[n-1];
+  bar.classList.toggle('final', !!step.final);
+  if(step.final){
+    bar.innerHTML = '<div class="pb-final-head"><span class="pb-check">'+PB_PLAY_BADGE.replace('<svg','<svg width="14" height="14"')+'</span><strong>Demo complete!</strong></div>' +
+      '<p class="pb-caption">'+step.caption+'</p>' +
+      '<div class="pb-actions"><button class="btn btn-secondary btn-sm" onclick="presentStart()">Restart demo</button><button class="btn btn-primary btn-sm" onclick="presentExit()">Exit demo</button></div>';
+    if(typeof confetti === 'function'){ try{ confetti(90); }catch(e){} }
+    if(typeof chime === 'function'){ try{ chime(); }catch(e){} }
+    clearInterval(presentTimer);
+  } else {
+    const pct = (n/PRESENT_STEPS.length*100).toFixed(1);
+    bar.innerHTML = '<div class="pb-top"><span class="pb-step">Step '+n+' of '+PRESENT_STEPS.length+'</span><div class="pb-track"><i style="width:'+pct+'%"></i></div>' +
+      '<button class="btn-icon" id="pbToggle" aria-label="Pause demo" onclick="presentToggle()">'+PB_PAUSE_ICON+'</button>' +
+      '<button class="btn-icon" aria-label="Exit demo" onclick="presentExit()">'+PB_CLOSE_ICON+'</button></div>' +
+      '<p class="pb-caption" aria-live="polite">'+step.caption+'</p>' +
+      '<div class="pb-actions"><button class="btn btn-secondary btn-sm" onclick="presentPrev()" '+(n===1?'disabled':'')+'>\u25C0 Previous</button><button class="btn btn-primary btn-sm" onclick="presentNext()">Next \u25B6</button></div>';
+    presentResetTimer();
+  }
+}
+function presentGoStep(n){
+  if(n < 1) n = 1;
+  if(n > PRESENT_STEPS.length){ n = PRESENT_STEPS.length; }
+  const step = PRESENT_STEPS[n-1];
+  if(step.file === CURRENT_FILE){
+    history.replaceState(null, '', location.pathname + '?present=' + n + (step.hash ? ('#'+step.hash) : ''));
+    presentRenderBar(n);
+    if(typeof step.borrowStep === 'number' && typeof presentGo === 'function') presentGo(step.borrowStep);
+    if(step.hash){
+      setTimeout(()=>{ const el = document.getElementById(step.hash); if(el) el.scrollIntoView({behavior: reduced?'auto':'smooth', block:'start'}); }, 250);
+    } else if(!step.final){
+      window.scrollTo({top:0, behavior: reduced?'auto':'smooth'});
+    }
+  } else {
+    location.href = step.file + '?present=' + n + (step.hash ? ('#'+step.hash) : '');
+  }
+}
+function presentNext(){ presentGoStep((presentCurrentN()||1) + 1); }
+function presentPrev(){ const n=(presentCurrentN()||1); if(n>1) presentGoStep(n-1); }
+function presentExit(){
+  clearInterval(presentTimer);
+  location.href = CURRENT_FILE;
+}
+(function presentInit(){
+  const n = presentCurrentN();
+  if(!n) return;
+  const step = PRESENT_STEPS[n-1];
+  presentRenderBar(n);
+  if(typeof step.borrowStep === 'number'){
+    setTimeout(()=>{ if(typeof presentGo === 'function') presentGo(step.borrowStep); }, 60);
+  }
+  if(step.hash){
+    setTimeout(()=>{ const el = document.getElementById(step.hash); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 500);
+  }
+})();
+
+</script>
+<div class="present-bar" id="presentBar" role="region" aria-label="Presentation mode controls" hidden></div>
+<script src="app-core.js"></script>
+</body>
+</html>

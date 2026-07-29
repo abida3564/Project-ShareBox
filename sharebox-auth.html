@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E8A5C">
+<meta name="description" content="Sign in to ShareBox — your verified campus sharing account.">
+<title>Sign in — ShareBox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SHAREBOX AUTH · Neo Glass + Soft 3D language
+   ============================================================ */
+:root{
+  --green:#0E8A5C; --green-strong:#0A6B47; --green-hi:#1FA774;
+  --green-tint:rgba(14,138,92,.1); --green-glow:rgba(14,138,92,.32);
+  --amber:#B57312; --amber-tint:rgba(181,115,18,.12);
+  --red:#C24C3B; --red-tint:rgba(194,76,59,.12);
+  --blue:#2E6FA8; --blue-tint:rgba(46,111,168,.12);
+  --bg:#EEF3EC;
+  --ink:#141F19; --ink-soft:#51645A; --ink-faint:#87978D;
+  --glass:rgba(255,255,255,.62);
+  --glass-strong:rgba(255,255,255,.8);
+  --glass-soft:rgba(255,255,255,.4);
+  --glass-line:rgba(255,255,255,.75);
+  --glass-edge:rgba(20,31,25,.07);
+  --overlay:rgba(20,31,25,.4);
+  --grad-band:linear-gradient(125deg,#0A6B47,#0E8A5C 52%,#1FA774);
+  --sheen:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.5) 50%, transparent 60%);
+  --e-1:0 1px 2px rgba(20,31,25,.03), 0 4px 14px rgba(20,31,25,.05);
+  --e-2:0 2px 8px rgba(20,31,25,.04), 0 18px 44px rgba(20,31,25,.10);
+  --e-3:0 4px 16px rgba(20,31,25,.06), 0 36px 90px rgba(20,31,25,.18);
+  --inner-light:inset 0 1px 0 rgba(255,255,255,.85);
+  --font-display:"Bricolage Grotesque","Inter",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,sans-serif;
+  --s-1:.25rem; --s-2:.5rem; --s-3:.75rem; --s-4:1rem;
+  --s-5:1.5rem; --s-6:2rem; --s-7:3rem; --s-8:4rem;
+  --r-md:16px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+  --ease:cubic-bezier(.22,.8,.36,1);
+  --spring:cubic-bezier(.34,1.45,.5,1);
+  --t-fast:.16s; --t-med:.32s; --t-slow:.6s;
+}
+[data-theme="dark"]{
+  --bg:#0A100D;
+  --ink:#EAF1EB; --ink-soft:#9DAFA3; --ink-faint:#66786C;
+  --green:#43CE97; --green-strong:#6ADFB1; --green-hi:#2FBE88;
+  --green-tint:rgba(67,206,151,.1); --green-glow:rgba(67,206,151,.3);
+  --amber:#E0A34A; --amber-tint:rgba(224,163,74,.13);
+  --red:#E27A6A; --red-tint:rgba(226,122,106,.13);
+  --blue:#6FA8DC; --blue-tint:rgba(111,168,220,.13);
+  --glass:rgba(21,32,26,.58);
+  --glass-strong:rgba(24,37,30,.8);
+  --glass-soft:rgba(24,37,30,.36);
+  --glass-line:rgba(255,255,255,.09);
+  --glass-edge:rgba(0,0,0,.4);
+  --overlay:rgba(0,0,0,.6);
+  --grad-band:linear-gradient(125deg,#0F5C40,#159A69 52%,#2FBE88);
+  --sheen:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.14) 50%, transparent 60%);
+  --e-1:0 1px 3px rgba(0,0,0,.25), 0 4px 16px rgba(0,0,0,.3);
+  --e-2:0 2px 8px rgba(0,0,0,.3), 0 20px 48px rgba(0,0,0,.45);
+  --e-3:0 4px 18px rgba(0,0,0,.4), 0 40px 100px rgba(0,0,0,.6);
+  --inner-light:inset 0 1px 0 rgba(255,255,255,.08);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0; min-height:100vh; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:.95rem; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; transition:background var(--t-med) var(--ease), color var(--t-med) var(--ease)}
+h1,h2,h3{font-family:var(--font-display); line-height:1.15; margin:0; letter-spacing:-.02em}
+p{margin:0}
+a{color:var(--green); text-decoration:none; font-weight:600}
+img,svg{display:block; max-width:100%}
+button,input{font-family:inherit}
+::selection{background:var(--green-glow)}
+:focus{outline:none}
+:focus-visible{outline:2.5px solid var(--green); outline-offset:2px; border-radius:6px; box-shadow:0 0 0 5px var(--green-glow)}
+.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+.skip-link{position:fixed; top:-100px; left:var(--s-4); z-index:400; background:var(--green); color:#fff; padding:var(--s-2) var(--s-4); border-radius:12px; font-weight:600; transition:top var(--t-fast) var(--ease)}
+.skip-link:focus{top:var(--s-4)}
+
+.ambient{position:fixed; inset:0; z-index:-2; overflow:hidden; pointer-events:none}
+.blob{position:absolute; border-radius:50%; filter:blur(90px); opacity:.55; will-change:transform}
+.blob.b1{width:560px; height:560px; background:radial-gradient(circle,#BFE6D2,transparent 65%); top:-160px; left:-140px; animation:drift1 26s ease-in-out infinite}
+.blob.b2{width:640px; height:640px; background:radial-gradient(circle,#D5E8DC,transparent 65%); bottom:-220px; right:-180px; animation:drift2 32s ease-in-out infinite}
+[data-theme="dark"] .blob.b1{background:radial-gradient(circle,rgba(28,84,62,.9),transparent 65%)}
+[data-theme="dark"] .blob.b2{background:radial-gradient(circle,rgba(20,58,44,.9),transparent 65%)}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(70px,50px) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-80px,-60px) scale(1.08)}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important}
+  .blob{display:none}
+}
+
+.glass{background:var(--glass); backdrop-filter:blur(15px) saturate(1.3); -webkit-backdrop-filter:blur(18px) saturate(1.4); border:1px solid var(--glass-line); box-shadow:var(--e-2), var(--inner-light), 0 0 0 1px var(--glass-edge); border-radius:var(--r-xl)}
+.btn{position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; gap:9px; font-weight:600; font-size:.92rem; line-height:1; border-radius:var(--r-md); border:1px solid transparent; padding:0 1.35rem; height:48px; cursor:pointer; white-space:nowrap; text-decoration:none!important; transition:transform var(--t-fast) var(--spring), box-shadow var(--t-med) var(--ease), background var(--t-fast) var(--ease), color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease); width:100%}
+.btn:hover{transform:translateY(-2px) scale(1.01)}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn:disabled{opacity:.55; cursor:not-allowed; transform:none; animation:none}
+.btn-primary{background:linear-gradient(160deg,var(--green-hi),var(--green) 45%,var(--green-strong)); color:#fff; border-color:rgba(255,255,255,.25); box-shadow:0 6px 20px var(--green-glow), var(--inner-light); animation:glowPulse 3.2s ease-in-out infinite}
+[data-theme="dark"] .btn-primary{color:#07110C}
+@keyframes glowPulse{0%,100%{box-shadow:0 6px 20px var(--green-glow)}50%{box-shadow:0 6px 30px var(--green-glow), 0 0 0 5px rgba(14,138,92,.07)}}
+.btn-primary::after{content:""; position:absolute; inset:0; background:var(--sheen); transform:translateX(-120%); transition:transform .7s var(--ease)}
+.btn-primary:hover::after{transform:translateX(120%)}
+.btn-secondary{background:var(--glass); backdrop-filter:blur(10px); color:var(--ink); border-color:var(--glass-line); box-shadow:var(--e-1), var(--inner-light)}
+.btn-secondary:hover{border-color:var(--green); color:var(--green)}
+.btn-tertiary{background:none; border:none; color:var(--green); font-weight:600; padding:0; height:auto; cursor:pointer; font-size:.86rem; width:auto}
+.btn-tertiary:hover{text-decoration:underline}
+.btn-icon{width:42px; height:42px; padding:0; border-radius:14px; background:transparent; border:1px solid transparent; color:var(--ink-soft); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition:all var(--t-fast) var(--spring); flex:none; width:42px}
+.btn-icon:hover{background:var(--glass-strong); color:var(--ink); transform:scale(1.08); border-color:var(--glass-line); box-shadow:var(--e-1)}
+.btn-icon svg{width:20px; height:20px}
+.ripple{position:absolute; border-radius:50%; background:currentColor; opacity:.2; transform:scale(0); animation:ripple .55s var(--ease) forwards; pointer-events:none}
+@keyframes ripple{to{transform:scale(3.4); opacity:0}}
+.spinner{width:18px; height:18px; border-radius:50%; border:2.5px solid rgba(255,255,255,.35); border-top-color:#fff; animation:spin .7s linear infinite; flex:none}
+[data-theme="dark"] .spinner{border-color:rgba(0,0,0,.25); border-top-color:#07110C}
+@keyframes spin{to{transform:rotate(360deg)}}
+.badge{display:inline-flex; align-items:center; gap:6px; font-size:.73rem; font-weight:600; padding:4px 11px; border-radius:var(--r-full); line-height:1.4}
+.badge svg{width:12px; height:12px; flex:none}
+.badge-green{background:var(--green-tint); color:var(--green-strong); border:1px solid rgba(14,138,92,.18)}
+[data-theme="dark"] .badge-green{color:var(--green)}
+
+/* Shell */
+.shell{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:var(--s-5)}
+.authwrap{width:100%; max-width:460px}
+.brandrow{display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:var(--s-6)}
+.brandrow .wordmark{font-family:var(--font-display); font-weight:800; font-size:1.35rem; letter-spacing:-.02em}
+.card{padding:var(--s-6)}
+.headline{text-align:center; margin-bottom:var(--s-5)}
+.headline h1{font-size:1.5rem; font-weight:800}
+.headline p{color:var(--ink-soft); font-size:.88rem; margin-top:6px}
+
+/* Segmented switch */
+.seg{display:flex; gap:4px; background:var(--glass-soft); border:1px solid var(--glass-line); border-radius:var(--r-full); padding:4px; margin-bottom:var(--s-5)}
+.seg button{flex:1; background:none; border:none; padding:10px; border-radius:var(--r-full); font-weight:700; font-size:.86rem; color:var(--ink-soft); cursor:pointer; transition:all var(--t-med) var(--spring)}
+.seg button.active{background:linear-gradient(160deg,var(--green-hi),var(--green) 55%,var(--green-strong)); color:#fff; box-shadow:0 6px 16px var(--green-glow), var(--inner-light)}
+[data-theme="dark"] .seg button.active{color:#07110C}
+
+/* Fields */
+.field{display:flex; flex-direction:column; gap:6px; margin-bottom:var(--s-4)}
+.field label{font-size:.82rem; font-weight:600}
+.field .hint{font-size:.74rem; color:var(--ink-faint)}
+.field .err{font-size:.76rem; color:var(--red); font-weight:600; display:none; align-items:center; gap:5px}
+.field .err svg{width:12px; height:12px; flex:none}
+.field.invalid .err{display:flex}
+.field.invalid .input{border-color:var(--red); box-shadow:0 0 0 4px var(--red-tint)}
+.field.invalid{animation:shake .4s var(--ease)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.input-wrap{position:relative}
+.input{width:100%; background:var(--glass-soft); color:var(--ink); border:1px solid var(--glass-line); border-radius:var(--r-md); padding:0 var(--s-4); height:48px; font-size:.92rem; transition:all var(--t-med) var(--ease)}
+.input:focus{background:var(--glass-strong); border-color:var(--green); box-shadow:0 0 0 4px var(--green-glow); outline:none}
+
+.file-input{height:auto;min-height:48px;padding:11px 12px;cursor:pointer}
+.file-input::file-selector-button{border:0;border-radius:10px;padding:8px 12px;margin-right:10px;background:var(--green);color:#fff;font-weight:700;cursor:pointer}
+.id-preview{display:none;margin-top:8px;padding:10px;border:1px dashed var(--glass-line);border-radius:var(--r-md);background:var(--glass-soft);align-items:center;gap:12px}
+.id-preview.show{display:flex}
+.id-preview img{width:84px;height:58px;object-fit:cover;border-radius:10px;border:1px solid var(--glass-line)}
+.id-preview span{font-size:.76rem;color:var(--ink-soft);overflow-wrap:anywhere}
+.input-wrap .eye{position:absolute; right:6px; top:50%; transform:translateY(-50%)}
+select.input{appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2387978D' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:38px}
+
+/* Password strength */
+.strength{display:flex; gap:5px; margin-top:8px}
+.strength i{height:4px; flex:1; border-radius:3px; background:var(--glass-edge); transition:background var(--t-med) var(--ease)}
+.strength.s1 i:nth-child(1){background:var(--red)}
+.strength.s2 i:nth-child(-n+2){background:var(--amber)}
+.strength.s3 i:nth-child(-n+3){background:var(--green-hi)}
+.strength.s4 i{background:var(--green-strong)}
+.strength-lbl{font-size:.72rem; color:var(--ink-faint); margin-top:4px}
+
+/* Row helpers */
+.row-between{display:flex; align-items:center; justify-content:space-between; gap:var(--s-3); margin:var(--s-2) 0 var(--s-5)}
+.remember{display:flex; align-items:center; gap:9px; cursor:pointer; font-size:.86rem; color:var(--ink-soft)}
+.remember input{width:18px; height:18px; accent-color:var(--green); cursor:pointer}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:var(--s-3)}
+.divider{display:flex; align-items:center; gap:12px; margin:var(--s-5) 0; color:var(--ink-faint); font-size:.78rem}
+.divider::before,.divider::after{content:""; flex:1; height:1px; background:var(--glass-edge)}
+.footnote{text-align:center; font-size:.86rem; color:var(--ink-soft); margin-top:var(--s-5)}
+
+/* OTP */
+.otp-row{display:flex; gap:10px; justify-content:center; margin:var(--s-5) 0}
+.otp-row input{width:48px; height:56px; text-align:center; font-size:1.4rem; font-weight:700; border-radius:14px; background:var(--glass-soft); border:1.5px solid var(--glass-line); color:var(--ink); transition:all var(--t-med) var(--spring)}
+.otp-row input:focus{border-color:var(--green); box-shadow:0 0 0 4px var(--green-glow); transform:scale(1.05)}
+.otp-row input.filled{border-color:var(--green-hi); background:var(--green-tint)}
+.resend{text-align:center; font-size:.84rem; color:var(--ink-soft)}
+.resend button{color:var(--green); font-weight:700; background:none; border:none; cursor:pointer; padding:0}
+.resend button:disabled{color:var(--ink-faint); cursor:not-allowed}
+
+/* Success */
+.success-hero{text-align:center; padding:var(--s-3) 0}
+.check-ring{width:80px; height:80px; margin:0 auto var(--s-4); border-radius:50%; background:var(--green-tint); display:flex; align-items:center; justify-content:center; animation:pop .55s var(--spring); box-shadow:0 0 0 12px rgba(14,138,92,.05)}
+.check-ring svg{width:38px; height:38px; color:var(--green-strong)}
+[data-theme="dark"] .check-ring svg{color:var(--green)}
+@keyframes pop{0%{transform:scale(.35); opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+.mail-ring{width:80px; height:80px; margin:0 auto var(--s-4); border-radius:50%; background:var(--blue-tint); display:flex; align-items:center; justify-content:center}
+.mail-ring svg{width:36px; height:36px; color:var(--blue)}
+
+/* Panels */
+.panel{display:none}
+.panel.active{display:block; animation:panelIn .45s var(--spring)}
+@keyframes panelIn{from{opacity:0; transform:translateY(14px) scale(.98)}to{opacity:1; transform:none}}
+
+/* Verify email banner */
+.vbanner{display:flex; gap:11px; align-items:flex-start; background:var(--blue-tint); border:1px solid rgba(46,111,168,.2); border-radius:var(--r-md); padding:var(--s-4); margin-bottom:var(--s-5); font-size:.84rem; color:var(--ink-soft)}
+.vbanner svg{width:18px; height:18px; color:var(--blue); flex:none; margin-top:1px}
+.vbanner strong{color:var(--ink)}
+
+/* Toast + confetti */
+.confetti{position:fixed; top:-14px; z-index:340; width:9px; height:15px; border-radius:3px; pointer-events:none; animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(108vh) rotate(680deg); opacity:.9}}
+.toast-region{position:fixed; bottom:var(--s-5); right:var(--s-5); z-index:320; display:flex; flex-direction:column; gap:var(--s-2); width:min(370px, calc(100vw - 32px)); pointer-events:none}
+.toast{background:var(--glass-strong); backdrop-filter:blur(18px) saturate(1.5); color:var(--ink); border:1px solid var(--glass-line); border-radius:var(--r-md); box-shadow:var(--e-3), var(--inner-light); padding:12px 16px; display:flex; align-items:center; gap:10px; font-size:.86rem; font-weight:500; pointer-events:auto; animation:toastIn .45s var(--spring)}
+.toast svg{width:16px; height:16px; flex:none; color:var(--green)}
+.toast.err svg{color:var(--red)}
+@keyframes toastIn{from{opacity:0; transform:translateY(14px) scale(.95)}to{opacity:1}}
+.theme-fab{position:fixed; top:var(--s-4); right:var(--s-4); z-index:50}
+
+@media (max-width:480px){
+  .grid-2{grid-template-columns:1fr}
+  .card{padding:var(--s-5)}
+  .otp-row input{width:42px; height:50px; font-size:1.2rem}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+<div class="ambient" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div></div>
+
+<button class="btn-icon theme-fab" data-theme-toggle aria-label="Switch to dark mode" onclick="toggleTheme()"></button>
+
+<main id="main" class="shell">
+  <div class="authwrap">
+    <div class="brandrow">
+      <svg width="34" height="34" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="28" height="28" rx="8" fill="var(--green)"/>
+        <path d="M10 13.5 16 9l6 4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M22 18.5 16 23l-6-4.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".65"/>
+      </svg>
+      <span class="wordmark">ShareBox</span>
+    </div>
+
+    <div class="glass card">
+
+      <!-- ============ LOGIN / REGISTER SWITCH ============ -->
+      <div id="switchWrap">
+        <div class="seg" role="tablist" aria-label="Choose sign in or create account">
+          <button role="tab" id="tabLogin" aria-selected="true" aria-controls="panel-login" class="active" onclick="showPanel('login')">Log in</button>
+          <button role="tab" id="tabRegister" aria-selected="false" aria-controls="panel-register" onclick="showPanel('register')">Create account</button>
+        </div>
+      </div>
+
+      <!-- ============ LOGIN ============ -->
+      <section class="panel active" id="panel-login" data-panel="login" aria-labelledby="tabLogin">
+        <div class="headline">
+          <h1>Welcome back</h1>
+          <p>Sign in with your university email to keep sharing.</p>
+        </div>
+        <form onsubmit="return doLogin(event)" novalidate>
+          <div class="field" id="f-login-email">
+            <label for="login-email">Email address</label>
+            <input class="input" type="email" id="login-email" placeholder="you@example.com" autocomplete="username" required>
+            <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Enter a valid university email.</span>
+          </div>
+          <div class="field" id="f-login-pass">
+            <label for="login-pass">Password</label>
+            <div class="input-wrap">
+              <input class="input" type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" required>
+              <button class="btn-icon eye" type="button" aria-label="Show password" onclick="togglePw('login-pass', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Incorrect email or password.</span>
+            <span class="hint">Tip for this demo: type &ldquo;wrong&rdquo; as the password to preview the error state.</span>
+          </div>
+          <div class="row-between">
+            <label class="remember"><input type="checkbox" id="remember" checked>Remember me</label>
+            <button type="button" class="btn-tertiary" onclick="showPanel('forgot')">Forgot password?</button>
+          </div>
+          <button class="btn btn-primary" id="loginBtn" type="submit">
+            <span class="btn-label">Log in</span>
+          </button>
+        </form>
+        <p class="footnote">New to ShareBox? <a href="#" onclick="showPanel('register'); return false;">Create an account</a></p>
+      </section>
+
+      <!-- ============ REGISTER ============ -->
+      <section class="panel" id="panel-register" data-panel="register" aria-labelledby="tabRegister">
+        <div class="headline">
+          <h1>Join your campus</h1>
+          <p>Verified students only — your university email keeps the shelf trustworthy.</p>
+        </div>
+        <form onsubmit="return doRegister(event)" novalidate>
+          <div class="field" id="f-reg-name">
+            <label for="reg-name">Full name</label>
+            <input class="input" type="text" id="reg-name" placeholder="Tahmid Ahmed" autocomplete="name" required>
+          </div>
+          <div class="field" id="f-reg-email">
+            <label for="reg-email">University email</label>
+            <input class="input" type="email" id="reg-email" placeholder="you@example.com" autocomplete="username" required>
+            <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Use your official university email address.</span>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="reg-dept">Department</label>
+              <select class="input" id="reg-dept"><option>CSE</option><option>EEE</option><option>BBA</option><option>Pharmacy</option><option>Architecture</option><option>Other</option></select>
+            </div>
+            <div class="field">
+              <label for="reg-year">Academic year</label>
+              <select class="input" id="reg-year"><option>1st year</option><option>2nd year</option><option>3rd year</option><option selected>4th year</option><option>Graduate</option></select>
+            </div>
+          </div>
+          <div class="field" id="f-reg-student-id">
+            <label for="reg-student-id">Student ID</label>
+            <input class="input" type="text" id="reg-student-id" placeholder="Enter your university student ID" autocomplete="off" required>
+            <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Student ID is required.</span>
+          </div>
+          <div class="field" id="f-reg-id-card">
+            <label for="reg-id-card">Student ID card photo</label>
+            <input class="input file-input" type="file" id="reg-id-card" accept="image/jpeg,image/png,image/webp" onchange="previewStudentIdCard(this)" required>
+            <span class="hint">Upload a clear photo showing the full card. JPG, PNG or WebP; maximum 8 MB.</span>
+            <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>A valid ID card photo is required.</span>
+            <div class="id-preview" id="id-card-preview"><img id="id-card-preview-img" alt="Student ID card preview"><span id="id-card-preview-name"></span></div>
+          </div>
+          <div class="field" id="f-reg-pass">
+            <label for="reg-pass">Password</label>
+            <div class="input-wrap">
+              <input class="input" type="password" id="reg-pass" placeholder="Create a password" autocomplete="new-password" oninput="checkStrength()" required>
+              <button class="btn-icon eye" type="button" aria-label="Show password" onclick="togglePw('reg-pass', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <div class="strength" id="strengthBar"><i></i><i></i><i></i><i></i></div>
+            <span class="strength-lbl" id="strengthLbl">Use 8+ characters with a number and a symbol.</span>
+          </div>
+          <div class="field" id="f-reg-confirm">
+            <label for="reg-confirm">Confirm password</label>
+            <input class="input" type="password" id="reg-confirm" placeholder="Re-enter password" autocomplete="new-password" required>
+            <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Passwords don&rsquo;t match.</span>
+          </div>
+          <label class="remember" style="margin-bottom:var(--s-5)"><input type="checkbox" id="terms" required>I agree to the Terms and the Campus Trust Policy.</label>
+          <button class="btn btn-primary" id="registerBtn" type="submit">
+            <span class="btn-label">Create account</span>
+          </button>
+        </form>
+        <p class="footnote">Already have an account? <a href="#" onclick="showPanel('login'); return false;">Log in</a></p>
+      </section>
+
+      <!-- ============ CAMPUS VERIFICATION (OTP) ============ -->
+      <section class="panel" id="panel-verify" data-panel="verify">
+        <div class="headline">
+          <div class="mail-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
+          <h1>Verify your campus email</h1>
+          <p>We sent a 6-digit code to <strong id="verifyEmail">you@northcampus.edu.bd</strong></p>
+        </div>
+        <div class="vbanner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 5 3 8.5 7 10 4-1.5 7-5 7-10V6z"/></svg>
+          <span>Campus verification keeps ShareBox a trusted, students-only marketplace. Your Student ID number and ID card photo are required during account creation and are kept for campus verification.</span>
+        </div>
+        <div class="otp-row" id="otpRow" role="group" aria-label="Enter 6-digit verification code">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 1">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 2">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 3">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 4">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 5">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 6">
+        </div>
+        <button class="btn btn-primary" id="verifyBtn" onclick="doVerify()"><span class="btn-label">Verify &amp; continue</span></button>
+        <p class="resend" style="margin-top:var(--s-4)">Didn&rsquo;t get it? <button id="resendBtn" onclick="resendCode()" disabled>Resend code (<span id="resendT">30</span>s)</button></p>
+        <p class="footnote"><button class="btn-tertiary" onclick="fillDemoCode()">Use demo code · 482913</button></p>
+      </section>
+
+      <!-- ============ FORGOT PASSWORD ============ -->
+      <section class="panel" id="panel-forgot" data-panel="forgot">
+        <div class="headline">
+          <h1>Reset your password</h1>
+          <p>Enter your university email and we&rsquo;ll send a reset link.</p>
+        </div>
+        <form onsubmit="return doForgot(event)" novalidate>
+          <div class="field" id="f-forgot-email">
+            <label for="forgot-email">University email</label>
+            <input class="input" type="email" id="forgot-email" placeholder="you@example.com" required>
+          </div>
+          <button class="btn btn-primary" id="forgotBtn" type="submit"><span class="btn-label">Send reset link</span></button>
+        </form>
+        <p class="footnote"><a href="#" onclick="showPanel('login'); return false;">Back to log in</a></p>
+      </section>
+
+      <!-- ============ FORGOT — SENT ============ -->
+      <section class="panel" id="panel-sent" data-panel="sent">
+        <div class="success-hero">
+          <div class="mail-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></div>
+          <h1 style="font-size:1.3rem">Check your inbox</h1>
+          <p style="color:var(--ink-soft); margin-top:8px; font-size:.88rem">We sent a reset link to <strong id="sentEmail" style="color:var(--ink)">you@northcampus.edu.bd</strong>. It expires in 15 minutes.</p>
+          <button class="btn btn-primary" style="margin-top:var(--s-5)" onclick="showPanel('reset')">Simulate clicking the email link</button>
+          <p class="resend" style="margin-top:var(--s-4)">Didn&rsquo;t get it? <button id="resendBtn2" onclick="resendCode(true)" disabled>Resend (<span id="resendT2">30</span>s)</button></p>
+        </div>
+      </section>
+
+      <!-- ============ RESET PASSWORD ============ -->
+      <section class="panel" id="panel-reset" data-panel="reset">
+        <div class="headline">
+          <h1>Set a new password</h1>
+          <p>Make it something only you&rsquo;d know.</p>
+        </div>
+        <form onsubmit="return doReset(event)" novalidate>
+          <div class="field" id="f-new-pass">
+            <label for="new-pass">New password</label>
+            <div class="input-wrap">
+              <input class="input" type="password" id="new-pass" placeholder="Create a new password" oninput="checkStrength('new-pass','strengthBar2','strengthLbl2')" required>
+              <button class="btn-icon eye" type="button" aria-label="Show password" onclick="togglePw('new-pass', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <div class="strength" id="strengthBar2"><i></i><i></i><i></i><i></i></div>
+            <span class="strength-lbl" id="strengthLbl2">Use 8+ characters with a number and a symbol.</span>
+          </div>
+          <div class="field" id="f-new-confirm">
+            <label for="new-confirm">Confirm new password</label>
+            <input class="input" type="password" id="new-confirm" placeholder="Re-enter password" required>
+            <span class="err"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Passwords don&rsquo;t match.</span>
+          </div>
+          <button class="btn btn-primary" id="resetBtn" type="submit"><span class="btn-label">Update password</span></button>
+        </form>
+      </section>
+
+      <!-- ============ WELCOME / DONE ============ -->
+      <section class="panel" id="panel-done" data-panel="done">
+        <div class="success-hero">
+          <div class="check-ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg></div>
+          <h1 id="doneTitle" style="font-size:1.3rem">You&rsquo;re verified! 🎉</h1>
+          <p id="doneSub" style="color:var(--ink-soft); margin-top:8px; font-size:.88rem">Welcome to ShareBox, Tahmid — your campus shelf is ready.</p>
+          <button class="btn btn-primary" id="doneBtn" style="margin-top:var(--s-5)" onclick="nav('sharebox-dashboard-glass.html')">Continue to dashboard</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<div class="toast-region" id="toastRegion" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================ Theme */
+let theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+const moon = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A8.5 8.5 0 0 1 11 3a8.5 8.5 0 1 0 10 10z"/></svg>';
+const sun  = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('[data-theme-toggle]').forEach(b=>{
+    b.innerHTML = theme==='light' ? moon : sun;
+    b.setAttribute('aria-label', theme==='light' ? 'Switch to dark mode' : 'Switch to light mode');
+  });
+}
+function toggleTheme(){ theme = theme==='light' ? 'dark' : 'light'; applyTheme(); }
+applyTheme();
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Toast / chime / confetti / ripple */
+function toast(msg, isErr){
+  const el = document.createElement('div');
+  el.className = 'toast' + (isErr ? ' err' : '');
+  el.innerHTML = (isErr
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg>') + '<span>'+msg+'</span>';
+  document.getElementById('toastRegion').appendChild(el);
+  setTimeout(()=>el.remove(), 3400);
+}
+function note(what){ toast(what + ' — connects in the next build phase'); }
+function nav(url){ window.location.href = url; }
+function chime(){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [523.25, 659.25, 783.99].forEach((f,i)=>{
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0, ctx.currentTime + i*.09);
+      g.gain.linearRampToValueAtTime(.07, ctx.currentTime + i*.09 + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + i*.09 + .7);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime + i*.09); o.stop(ctx.currentTime + i*.09 + .75);
+    });
+  }catch(e){}
+}
+function confetti(n){
+  if(reduced) return;
+  const colors = ['#0E8A5C','#1FA774','#B57312','#2E6FA8','#BFE6D2','#43CE97'];
+  for(let i=0;i<n;i++){
+    const c = document.createElement('span');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (1.9 + Math.random()*1.6) + 's';
+    c.style.animationDelay = (Math.random()*.4) + 's';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 4200);
+  }
+}
+document.addEventListener('pointerdown', e=>{
+  const b = e.target.closest('.btn, .seg button'); if(!b || reduced) return;
+  const r = b.getBoundingClientRect();
+  const span = document.createElement('span');
+  span.className = 'ripple';
+  const size = Math.max(r.width, r.height);
+  span.style.width = span.style.height = size+'px';
+  span.style.left = (e.clientX - r.left - size/2)+'px';
+  span.style.top  = (e.clientY - r.top - size/2)+'px';
+  b.style.position = 'relative'; b.style.overflow = 'hidden';
+  b.appendChild(span);
+  setTimeout(()=>span.remove(), 600);
+});
+
+/* ============================================================ Panels */
+function showPanel(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.dataset.panel === name));
+  document.getElementById('switchWrap').style.display = (name==='login'||name==='register') ? '' : 'none';
+  if(name==='login' || name==='register'){
+    document.getElementById('tabLogin').classList.toggle('active', name==='login');
+    document.getElementById('tabLogin').setAttribute('aria-selected', String(name==='login'));
+    document.getElementById('tabRegister').classList.toggle('active', name==='register');
+    document.getElementById('tabRegister').setAttribute('aria-selected', String(name==='register'));
+  }
+  window.scrollTo({top:0, behavior:reduced?'auto':'smooth'});
+}
+
+function togglePw(id, btn){
+  const inp = document.getElementById(id);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.innerHTML = show
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.2A11 11 0 0 1 12 5c7 0 11 7 11 7a13.4 13.4 0 0 1-3.4 4M6.1 6.1C3.4 7.9 1 12 1 12s4 7 11 7a10.4 10.4 0 0 0 4-0.8"/><path d="M9.9 9.9a3 3 0 1 0 4.2 4.2"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+  btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+}
+
+function markInvalid(fieldId, invalid){
+  const f = document.getElementById(fieldId);
+  f.classList.toggle('invalid', invalid);
+}
+function loadingState(btnId, on, label){
+  const btn = document.getElementById(btnId);
+  const lbl = btn.querySelector('.btn-label');
+  btn.disabled = on;
+  if(on){ btn.dataset.orig = lbl.textContent; lbl.innerHTML = '<span class="spinner" aria-hidden="true"></span> ' + (label||'Please wait…'); }
+  else{ lbl.textContent = btn.dataset.orig || lbl.textContent; }
+}
+
+/* ============================================================ Login */
+function doLogin(e){
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const emailOk = /\S+@\S+\.\S+/.test(email);
+  markInvalid('f-login-email', !emailOk);
+  markInvalid('f-login-pass', false);
+  if(!emailOk){ toast('Enter a valid university email', true); return false; }
+  loadingState('loginBtn', true, 'Signing in…');
+  setTimeout(()=>{
+    if(pass.trim().toLowerCase() === 'wrong'){
+      loadingState('loginBtn', false);
+      markInvalid('f-login-pass', true);
+      toast('Incorrect email or password', true);
+      return;
+    }
+    loadingState('loginBtn', false);
+    chime();
+    document.getElementById('doneTitle').textContent = 'Welcome back! 👋';
+    document.getElementById('doneSub').textContent = 'Signed in as ' + email + ' — redirecting to your dashboard.';
+    document.getElementById('doneBtn').textContent = 'Continue to dashboard';
+    document.getElementById('doneBtn').onclick = ()=>nav('sharebox-dashboard-glass.html');
+    showPanel('done');
+  }, 1100);
+  return false;
+}
+
+/* ============================================================ Register → Verify */
+function checkStrength(id, barId, lblId){
+  id = id || 'reg-pass'; barId = barId || 'strengthBar'; lblId = lblId || 'strengthLbl';
+  const v = document.getElementById(id).value;
+  let score = 0;
+  if(v.length >= 8) score++;
+  if(/[0-9]/.test(v)) score++;
+  if(/[^A-Za-z0-9]/.test(v)) score++;
+  if(/[A-Z]/.test(v) && /[a-z]/.test(v)) score++;
+  const bar = document.getElementById(barId);
+  bar.className = 'strength ' + (score>0 ? 's'+score : '');
+  const labels = ['Use 8+ characters with a number and a symbol.','Weak — add a number or symbol.','Fair — almost there.','Good — solid password.','Strong password ✓'];
+  document.getElementById(lblId).textContent = v ? labels[score] : labels[0];
+}
+function doRegister(e){
+  e.preventDefault();
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  const emailOk = /\S+@\S+\.(edu|ac)\S*/.test(email) || /\S+@\S+\.\S+/.test(email);
+  const matchOk = pass === confirm && pass.length >= 6;
+  markInvalid('f-reg-email', !emailOk);
+  markInvalid('f-reg-confirm', !matchOk);
+  if(!emailOk){ toast('Please use your university email', true); return false; }
+  if(!matchOk){ toast('Passwords don\u2019t match', true); return false; }
+  if(!document.getElementById('terms').checked){ toast('Please agree to the Terms to continue', true); return false; }
+  loadingState('registerBtn', true, 'Creating account…');
+  setTimeout(()=>{
+    loadingState('registerBtn', false);
+    document.getElementById('verifyEmail').textContent = email;
+    otpReset();
+    startResend('resendBtn','resendT');
+    showPanel('verify');
+    toast('Verification code sent to ' + email);
+  }, 1200);
+  return false;
+}
+
+/* ============================================================ OTP verification */
+function otpReset(){
+  document.querySelectorAll('#otpRow input').forEach(i=>{ i.value=''; i.classList.remove('filled'); });
+  document.querySelectorAll('#otpRow input')[0].focus();
+}
+document.getElementById('otpRow').addEventListener('input', e=>{
+  const t = e.target; if(!t.matches('input')) return;
+  t.value = t.value.replace(/[^0-9]/g,'').slice(0,1);
+  t.classList.toggle('filled', !!t.value);
+  if(t.value && t.nextElementSibling) t.nextElementSibling.focus();
+});
+document.getElementById('otpRow').addEventListener('keydown', e=>{
+  const t = e.target; if(!t.matches('input')) return;
+  if(e.key === 'Backspace' && !t.value && t.previousElementSibling) t.previousElementSibling.focus();
+});
+function fillDemoCode(){
+  const digits = '482913'.split('');
+  document.querySelectorAll('#otpRow input').forEach((inp,i)=>{ inp.value = digits[i]; inp.classList.add('filled'); });
+  toast('Demo code filled in');
+}
+function doVerify(){
+  const code = [...document.querySelectorAll('#otpRow input')].map(i=>i.value).join('');
+  if(code.length < 6){ toast('Enter all 6 digits', true); return; }
+  loadingState('verifyBtn', true, 'Verifying…');
+  setTimeout(()=>{
+    loadingState('verifyBtn', false);
+    if(code !== '482913'){
+      toast('That code didn\u2019t match — try the demo code below', true);
+      return;
+    }
+    chime(); confetti(90);
+    document.getElementById('doneTitle').textContent = 'Email verified! 🎉';
+    document.getElementById('doneSub').textContent = 'One more step — let\u2019s confirm your Student ID so the campus knows you\u2019re really you.';
+    document.getElementById('doneBtn').textContent = 'Continue to Campus Verification';
+    document.getElementById('doneBtn').onclick = ()=>nav('sharebox-verification.html');
+    showPanel('done');
+  }, 1000);
+}
+let resendTimer = null;
+function startResend(btnId, spanId){
+  let t = 30;
+  const btn = document.getElementById(btnId);
+  btn.disabled = true;
+  if(resendTimer) clearInterval(resendTimer);
+  resendTimer = setInterval(()=>{
+    t--; document.getElementById(spanId).textContent = t;
+    if(t <= 0){ clearInterval(resendTimer); btn.disabled = false; btn.innerHTML = 'Resend code'; }
+  }, 1000);
+}
+function resendCode(forgot){
+  toast('A new code was sent' + (forgot ? ' to your inbox' : ''));
+  if(forgot) startResend('resendBtn2','resendT2'); else startResend('resendBtn','resendT');
+}
+
+/* ============================================================ Forgot / Reset */
+function doForgot(e){
+  e.preventDefault();
+  const email = document.getElementById('forgot-email').value.trim();
+  const ok = /\S+@\S+\.\S+/.test(email);
+  markInvalid('f-forgot-email', !ok);
+  if(!ok){ toast('Enter a valid email address', true); return false; }
+  loadingState('forgotBtn', true, 'Sending…');
+  setTimeout(()=>{
+    loadingState('forgotBtn', false);
+    document.getElementById('sentEmail').textContent = email;
+    startResend('resendBtn2','resendT2');
+    showPanel('sent');
+  }, 1000);
+  return false;
+}
+function doReset(e){
+  e.preventDefault();
+  const pass = document.getElementById('new-pass').value;
+  const confirm = document.getElementById('new-confirm').value;
+  const ok = pass === confirm && pass.length >= 6;
+  markInvalid('f-new-confirm', !ok);
+  if(!ok){ toast('Passwords don\u2019t match', true); return false; }
+  loadingState('resetBtn', true, 'Updating…');
+  setTimeout(()=>{
+    loadingState('resetBtn', false);
+    chime();
+    toast('Password updated — please log in');
+    showPanel('login');
+  }, 1000);
+  return false;
+}
+</script>
+<script src="app-core.js"></script>
+<script>
+function previewStudentIdCard(input){
+  const preview=document.getElementById('id-card-preview');
+  const img=document.getElementById('id-card-preview-img');
+  const name=document.getElementById('id-card-preview-name');
+  const file=input.files && input.files[0];
+  if(!file){preview.classList.remove('show');img.removeAttribute('src');name.textContent='';return;}
+  if(!file.type.startsWith('image/')){toast('Please choose an image file',true);input.value='';preview.classList.remove('show');return;}
+  const url=URL.createObjectURL(file);
+  img.onload=()=>URL.revokeObjectURL(url);
+  img.src=url;name.textContent=file.name;preview.classList.add('show');
+}
+function compressIdCard(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('Could not read the ID card image.'));
+    reader.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error('The selected ID card image is not valid.'));
+      img.onload=()=>{
+        const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height));
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+        canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL('image/jpeg',.76));
+      };
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+</script>
+<script>
+(function(){
+function encodePassword(pass){
+  return btoa(unescape(encodeURIComponent(pass)));
+}
+function decodePassword(value){
+  try{return decodeURIComponent(escape(atob(value)));}catch(e){return '';}
+}
+window.doRegister=async function(e){
+  e.preventDefault();
+  const name=document.getElementById('reg-name').value.trim();
+  const email=document.getElementById('reg-email').value.trim().toLowerCase();
+  const department=document.getElementById('reg-dept').value;
+  const academicYear=document.getElementById('reg-year').value;
+  const studentId=document.getElementById('reg-student-id').value.trim();
+  const idCardInput=document.getElementById('reg-id-card');
+  const idCardFile=idCardInput.files && idCardInput.files[0];
+  const pass=document.getElementById('reg-pass').value;
+  const confirm=document.getElementById('reg-confirm').value;
+  const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const idOk=studentId.length>=3;
+  const photoOk=!!idCardFile && ['image/jpeg','image/png','image/webp'].includes(idCardFile.type) && idCardFile.size<=8*1024*1024;
+  markInvalid('f-reg-email',!emailOk);
+  markInvalid('f-reg-student-id',!idOk);
+  markInvalid('f-reg-id-card',!photoOk);
+  markInvalid('f-reg-confirm',pass!==confirm||pass.length<6);
+  if(!name){toast('Enter the name you want shown on your profile',true);return false;}
+  if(!emailOk){toast('Enter a valid education or personal email',true);return false;}
+  if(!idOk){toast('Enter your Student ID',true);return false;}
+  if(!photoOk){toast('Upload a JPG, PNG or WebP ID card photo under 8 MB',true);return false;}
+  if(pass!==confirm||pass.length<6){toast('Passwords must match and contain at least 6 characters',true);return false;}
+  if(!document.getElementById('terms').checked){toast('Please agree to the Terms',true);return false;}
+  const d=ShareBox.db();
+  if(d.users.some(u=>u.email===email)){toast('An account already exists with this email',true);return false;}
+  if(d.users.some(u=>(u.studentId||'').toLowerCase()===studentId.toLowerCase())){toast('This Student ID is already registered',true);return false;}
+  loadingState('registerBtn',true,'Creating account…');
+  try{
+    const idCardImage=await compressIdCard(idCardFile);
+    const user={
+      id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),
+      name,email,password:encodePassword(pass),department,academicYear,studentId,
+      idCardImage,idCardFileName:idCardFile.name,idVerificationStatus:'pending',
+      verified:false,phone:'',createdAt:new Date().toISOString()
+    };
+    d.users.push(user);
+    ShareBox.save(d);
+    ShareBox.setSession({userId:user.id});
+    ShareBox.addNotification('Welcome to ShareBox, '+user.name+'! Your Student ID verification is pending.',user.id);
+    toast('Account created and ID card submitted');
+    setTimeout(()=>location.href='sharebox-dashboard-glass.html',350);
+  }catch(err){
+    loadingState('registerBtn',false);
+    toast(err.message||'Could not save the ID card photo',true);
+  }
+  return false;
+};
+window.doLogin=function(e){
+  e.preventDefault();
+  const email=document.getElementById('login-email').value.trim().toLowerCase();
+  const pass=document.getElementById('login-pass').value;
+  const d=ShareBox.db();
+  const u=d.users.find(x=>x.email===email);
+  if(!u||decodePassword(u.password)!==pass){toast('Incorrect email or password',true);return false;}
+  ShareBox.setSession({userId:u.id});
+  ShareBox.addNotification('Signed in successfully',u.id);
+  const next=new URLSearchParams(location.search).get('next')||'sharebox-dashboard-glass.html';
+  location.href=next;
+  return false;
+};
+})();
+</script>
+</body>
+</html>
