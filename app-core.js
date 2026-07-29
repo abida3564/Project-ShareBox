@@ -47,3 +47,14 @@ window.addEventListener('storage',()=>{renderProducts();applyUser()});try{const 
 
 document.addEventListener('DOMContentLoaded',async()=>{replaceLogo();applyUser();addTopActions();addLogout();addRealtimeProducts();try{if(API&&!API.includes('YOUR-RENDER-SERVICE')){const out=await api('/api/products');const d=db();d.products=out.products||[];save(d);renderProducts();}}catch(e){console.warn('Backend sync:',e.message)}});
 })();
+
+
+document.addEventListener('DOMContentLoaded',async()=>{
+ try{
+  if(ShareBox.session()?.token){
+   const out=await ShareBox.api('/api/auth/me');
+   const ss=ShareBox.session();ShareBox.setSession({...ss,user:out.user,userId:out.user.id});
+   document.querySelectorAll('.avatar,.pfp').forEach(el=>{if(out.user.profilePhoto){el.textContent='';el.style.background=`url("${out.user.profilePhoto}") center/cover`}});
+  }
+ }catch(e){console.warn('Profile sync:',e.message)}
+});

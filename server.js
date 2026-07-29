@@ -57,6 +57,10 @@ function publicUser(row) {
     idVerificationStatus: row.id_verification_status,
     verified: row.verified,
     phone: row.phone || '',
+    profilePhoto: row.profile_photo || '',
+    coverPhoto: row.cover_photo || '',
+    bio: row.bio || '',
+    preferences: row.preferences || {},
     createdAt: row.created_at,
   };
 }
@@ -151,6 +155,38 @@ async function initializeDatabase() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
 
+
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_photo TEXT NOT NULL DEFAULT '';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS cover_photo TEXT NOT NULL DEFAULT '';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT NOT NULL DEFAULT '';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS preferences JSONB NOT NULL DEFAULT '{}'::jsonb;
+
+    CREATE TABLE IF NOT EXISTS needs (
+      id UUID PRIMARY KEY,
+      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      user_name TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL DEFAULT '',
+      category TEXT NOT NULL DEFAULT 'Other',
+      urgency TEXT NOT NULL DEFAULT '',
+      reward TEXT NOT NULL DEFAULT '',
+      return_time TEXT NOT NULL DEFAULT '',
+      status TEXT NOT NULL DEFAULT 'open',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS messages (
+      id UUID PRIMARY KEY,
+      sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      receiver_id UUID REFERENCES users(id) ON DELETE CASCADE,
+      sender_name TEXT NOT NULL,
+      receiver_name TEXT NOT NULL DEFAULT '',
+      body TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS needs_created_at_idx ON needs(created_at DESC);
+    CREATE INDEX IF NOT EXISTS messages_created_at_idx ON messages(created_at DESC);
     CREATE INDEX IF NOT EXISTS products_created_at_idx ON products(created_at DESC);
     CREATE INDEX IF NOT EXISTS notifications_user_id_idx ON notifications(user_id, created_at DESC);
     CREATE INDEX IF NOT EXISTS products_owner_id_idx ON products(owner_id, created_at DESC);
@@ -458,6 +494,134 @@ app.delete('/api/my/products/:id', auth, async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Could not delete resource.' });
+  }
+});
+
+
+app.patch('/api/auth/profile', auth, async (req, res) => {
+  try {
+    const { name, department, academicYear, phone, bio, profilePhoto, coverPhoto } = req.body || {};
+    const result = await pool.query(
+      `UPDATE users
+       SET name = COALESCE(NULLIF($1,''), name),
+           department = COALESCE($2, department),
+           academic_year = COALESCE($3, academic_year),
+           phone = COALESCE($4, phone),
+           bio = COALESCE($5, bio),
+           profile_photo = COALESCE($6, profile_photo),
+           cover_photo = COALESCE($7, cover_photo)
+       WHERE id = $8 RETURNING *`,
+      [String(name||'').trim(), department ?? null, academicYear ?? null, phone ?? null,
+       bio ?? null, profilePhoto ?? null, coverPhoto ?? null, req.user.userId]
+    );
+    if (!result.rowCount) return res.status(404).json({ message: 'User not found.' });
+    return res.json({ user: publicUser(result.rows[0]) });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not update profile.' });
+  }
+});
+
+app.get('/api/my/settings', auth, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT preferences FROM users WHERE id=$1', [req.user.userId]);
+    return res.json({ settings: result.rows[0]?.preferences || {} });
+  } catch (error) {
+    return res.status(500).json({ message: 'Could not load settings.' });
+  }
+});
+
+app.patch('/api/my/settings', auth, async (req, res) => {
+  try {
+    const settings = req.body || {};
+    const result = await pool.query(
+      `UPDATE users SET preferences = preferences || $1::jsonb WHERE id=$2 RETURNING preferences`,
+      [JSON.stringify(settings), req.user.userId]
+    );
+    return res.json({ settings: result.rows[0]?.preferences || {} });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not save settings.' });
+  }
+});
+
+app.get('/api/needs', async (_req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id,user_id,user_name,title,description,category,urgency,reward,return_time,status,created_at
+       FROM needs WHERE status='open' ORDER BY created_at DESC`
+    );
+    return res.json({ needs: result.rows.map(r => ({
+      id:r.id,userId:r.user_id,userName:r.user_name,title:r.title,description:r.description,
+      category:r.category,urgency:r.urgency,reward:r.reward,returnTime:r.return_time,
+      status:r.status,createdAt:r.created_at
+    }))});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not load needs.' });
+  }
+});
+
+app.post('/api/needs', auth, async (req, res) => {
+  try {
+    const { title, description='', category='Other', urgency='', reward='', returnTime='' } = req.body || {};
+    if (!String(title||'').trim()) return res.status(400).json({ message: 'Need title is required.' });
+    const owner = await pool.query('SELECT name FROM users WHERE id=$1', [req.user.userId]);
+    const id = crypto.randomUUID();
+    const result = await pool.query(
+      `INSERT INTO needs (id,user_id,user_name,title,description,category,urgency,reward,return_time)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+      [id, req.user.userId, owner.rows[0]?.name || 'Campus member', String(title).trim(),
+       description, category, urgency, reward, returnTime]
+    );
+    return res.status(201).json({ need: result.rows[0] });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not post need.' });
+  }
+});
+
+app.delete('/api/needs/:id', auth, async (req, res) => {
+  try {
+    const result = await pool.query('DELETE FROM needs WHERE id=$1 AND user_id=$2 RETURNING id',[req.params.id,req.user.userId]);
+    if (!result.rowCount) return res.status(404).json({ message: 'Need not found.' });
+    return res.json({ success:true });
+  } catch (error) {
+    return res.status(500).json({ message: 'Could not delete need.' });
+  }
+});
+
+app.get('/api/messages', auth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id,sender_id,receiver_id,sender_name,receiver_name,body,created_at
+       FROM messages WHERE sender_id=$1 OR receiver_id=$1 ORDER BY created_at ASC`,
+      [req.user.userId]
+    );
+    return res.json({ messages: result.rows.map(r=>({
+      id:r.id,senderId:r.sender_id,receiverId:r.receiver_id,senderName:r.sender_name,
+      receiverName:r.receiver_name,body:r.body,createdAt:r.created_at
+    }))});
+  } catch (error) {
+    return res.status(500).json({ message: 'Could not load messages.' });
+  }
+});
+
+app.post('/api/messages', auth, async (req, res) => {
+  try {
+    const { receiverId=null, receiverName='', body } = req.body || {};
+    if (!String(body||'').trim()) return res.status(400).json({ message: 'Message cannot be empty.' });
+    const sender = await pool.query('SELECT name FROM users WHERE id=$1',[req.user.userId]);
+    const id=crypto.randomUUID();
+    const result=await pool.query(
+      `INSERT INTO messages (id,sender_id,receiver_id,sender_name,receiver_name,body)
+       VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
+      [id,req.user.userId,receiverId,sender.rows[0]?.name||'Campus member',receiverName,String(body).trim()]
+    );
+    return res.status(201).json({ message: result.rows[0] });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not send message.' });
   }
 });
 

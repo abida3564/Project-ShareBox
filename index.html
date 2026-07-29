@@ -957,6 +957,35 @@ function presentExit(){
 })();
 
 </script>
+
+<style>
+#liveCampusListings{padding:72px 20px;background:linear-gradient(180deg,transparent,#edf6f0)}
+#liveCampusListings .live-wrap{max-width:1200px;margin:auto}
+#liveCampusListings .live-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:24px}
+#liveCampusListings .live-head h2{font-size:clamp(2rem,4vw,3.2rem);margin:0}
+#landingProductGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:18px}
+.landing-product{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 14px 40px rgba(22,36,28,.08)}
+.landing-product .pic{height:180px;background:#e3ede6 center/cover no-repeat;display:grid;place-items:center;font-size:46px}
+.landing-product .info{padding:16px}.landing-product h3{margin:5px 0}.landing-product .small{color:var(--ink-soft);font-size:.85rem}
+@media(max-width:620px){#liveCampusListings .live-head{align-items:flex-start;flex-direction:column}}
+</style>
+<section id="liveCampusListings">
+ <div class="live-wrap">
+  <div class="live-head"><div><p class="eyebrow">LIVE CAMPUS LISTINGS</p><h2>Shared by UITS students</h2><p>Borrow, rent, buy or receive resources already available on campus.</p></div><a class="btn btn-primary" href="sharebox-resources.html">Browse all</a></div>
+  <div id="landingProductGrid"><p>Loading live listings…</p></div>
+ </div>
+</section>
+<script>
+document.addEventListener('DOMContentLoaded',async()=>{
+ const grid=document.getElementById('landingProductGrid');if(!grid)return;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+ try{
+  const out=await ShareBox.api('/api/products');const products=(out.products||[]).slice(0,8);
+  grid.innerHTML=products.length?products.map(p=>`<article class="landing-product"><div class="pic" style="${p.photos?.[0]?`background-image:url('${p.photos[0]}')`:''}">${p.photos?.[0]?'':'📦'}</div><div class="info"><small>${esc((p.type||'share').toUpperCase())} · ${esc(p.category||'Other')}</small><h3>${esc(p.name)}</h3><p class="small">${esc(p.ownerName||'Campus member')} · ${esc(p.location||'UITS')}</p><a class="btn btn-secondary" href="sharebox-item-details.html?id=${encodeURIComponent(p.id)}">View resource</a></div></article>`).join(''):'<p>No public products yet. Be the first to share something.</p>';
+ }catch(e){grid.innerHTML='<p>Live listings are temporarily unavailable.</p>'}
+});
+</script>
+
 <div class="present-bar" id="presentBar" role="region" aria-label="Presentation mode controls" hidden></div>
 <script src="api-config.js"></script>
 <script src="app-core.js"></script>

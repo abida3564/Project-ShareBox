@@ -440,9 +440,9 @@ button{font-family:inherit}
       <a class="nav-link" href="sharebox-resources.html?view=mine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>My Resources</a>
       <a class="nav-link" href="#" onclick="showTab('wallet'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18"/></svg>Wallet</a>
       <a class="nav-link" href="sharebox-ai-discovery.html#needboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/><circle cx="12" cy="12" r="4"/></svg>Need Board</a>
-      <a class="nav-link" href="#" onclick="note('Messages'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>Messages</a>
+      <a class="nav-link" href="sharebox-messages.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 14a3 3 0 0 1-3 3H8l-5 4V6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3z"/></svg>Messages</a>
       <a class="nav-link" href="#" aria-current="page" onclick="showTab('profile'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg>Profile</a>
-      <a class="nav-link" href="#" onclick="note('Settings'); return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/></svg>Settings</a>
+      <a class="nav-link" href="sharebox-settings.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/></svg>Settings</a>
       <div class="nav-sep" role="separator"></div>
       <a class="nav-link" href="sharebox-admin.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>Admin<span class="adm">STAFF</span></a>
     </nav>
@@ -478,10 +478,10 @@ button{font-family:inherit}
       <section class="tabpanel active" id="panel-profile" role="tabpanel" aria-labelledby="tab-profile">
         <div class="glass rv" style="overflow:hidden">
           <div class="cover">
-            <button class="btn-icon edit-cover" aria-label="Change cover image" onclick="toast('Cover photo editor opens here (demo)')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
+            <button class="btn-icon edit-cover" aria-label="Change cover image" onclick="document.getElementById('coverInput').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
           </div>
           <div class="profile-head">
-            <div class="big-avatar">TA<button class="edit-av" aria-label="Change avatar" onclick="toast('Avatar photo editor opens here (demo)')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></button></div>
+            <div class="big-avatar">TA<button class="edit-av" aria-label="Change avatar" onclick="document.getElementById('avatarInput').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></button></div>
             <div class="profile-name">
               <h1>Tahmid Ahmed <span class="verify-tick" title="Verified student" aria-label="Verified student"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12.5 5 5L20 6.5"/></svg></span></h1>
               <div class="meta">
@@ -494,7 +494,7 @@ button{font-family:inherit}
               <button class="btn-tertiary" style="margin-top:8px" onclick="nav('sharebox-verification.html')">Manage verification</button>
             </div>
             <div class="profile-actions">
-              <button class="btn btn-secondary btn-sm" onclick="toast('Profile editor opens here (demo)')">Edit profile</button>
+              <button class="btn btn-secondary btn-sm" onclick="openProfileEditor()">Edit profile</button>
               <button class="btn btn-primary btn-sm" onclick="nav('sharebox-upload-wizard.html')">Share an item</button>
             </div>
           </div>
@@ -1113,5 +1113,23 @@ function presentExit(){
 <script src="app-core.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded',async()=>{try{const [statsOut,prodOut]=await Promise.all([ShareBox.api('/api/my/stats'),ShareBox.api('/api/my/products')]);const s=statsOut.stats||{},products=prodOut.products||[];document.getElementById('profileTotalItems').textContent=s.totalItems||0;document.getElementById('profileActiveListings').textContent=s.activeListings||0;document.getElementById('profileTotalViews').textContent=s.totalViews||0;const box=document.getElementById('profileResourceList');box.innerHTML=products.length?products.slice(0,5).map(p=>`<div class="hist-row"><div class="hb"><strong>${ShareBox.escapeHtml(p.name)}</strong><span>${ShareBox.escapeHtml(p.category||'Other')} · ${ShareBox.escapeHtml(p.status||'approved')} · ${p.views||0} views</span></div><a class="btn-tertiary" href="sharebox-item-details.html?id=${encodeURIComponent(p.id)}">View</a></div>`).join(''):'<p style="color:var(--ink-soft)">No resources published yet.</p>'}catch(e){const box=document.getElementById('profileResourceList');if(box)box.innerHTML='<p style="color:var(--red)">'+e.message+'</p>'}});
-</script></body>
+</script>
+<style>
+#sbProfileModal{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:99999;display:none;place-items:center;padding:18px}
+#sbProfileModal.open{display:grid}#sbProfileModal .box{width:min(560px,100%);background:var(--bg);border-radius:22px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+#sbProfileModal input,#sbProfileModal textarea,#sbProfileModal select{width:100%;padding:11px;margin:5px 0 10px;border:1px solid var(--glass-edge);border-radius:12px;background:var(--glass-strong);color:var(--ink);font:inherit}
+</style>
+<input hidden type="file" id="avatarInput" accept="image/*"><input hidden type="file" id="coverInput" accept="image/*">
+<div id="sbProfileModal"><form class="box" id="sbProfileForm"><h2>Edit profile</h2><label>Full name</label><input id="sbEditName" required><label>Department</label><input id="sbEditDept"><label>Academic year</label><input id="sbEditYear"><label>Phone</label><input id="sbEditPhone"><label>Bio</label><textarea id="sbEditBio"></textarea><div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn btn-secondary" onclick="closeProfileEditor()">Cancel</button><button class="btn btn-primary">Save changes</button></div></form></div>
+<script>
+function fileToDataURL(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onerror=reject;r.onload=()=>resolve(r.result);r.readAsDataURL(file)})}
+async function saveProfilePatch(patch){const out=await ShareBox.api('/api/auth/profile',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(patch)});const ss=ShareBox.session();ShareBox.setSession({...ss,user:out.user,userId:out.user.id});location.reload()}
+avatarInput.onchange=async()=>{const f=avatarInput.files[0];if(!f)return;if(f.size>3*1024*1024)return alert('Choose an image under 3 MB.');try{await saveProfilePatch({profilePhoto:await fileToDataURL(f)})}catch(e){alert(e.message)}};
+coverInput.onchange=async()=>{const f=coverInput.files[0];if(!f)return;if(f.size>5*1024*1024)return alert('Choose an image under 5 MB.');try{await saveProfilePatch({coverPhoto:await fileToDataURL(f)})}catch(e){alert(e.message)}};
+function openProfileEditor(){const u=ShareBox.currentUser()||{};sbEditName.value=u.name||'';sbEditDept.value=u.department||'';sbEditYear.value=u.academicYear||'';sbEditPhone.value=u.phone||'';sbEditBio.value=u.bio||'';sbProfileModal.classList.add('open')}
+function closeProfileEditor(){sbProfileModal.classList.remove('open')}
+sbProfileForm.onsubmit=async e=>{e.preventDefault();try{await saveProfilePatch({name:sbEditName.value.trim(),department:sbEditDept.value.trim(),academicYear:sbEditYear.value.trim(),phone:sbEditPhone.value.trim(),bio:sbEditBio.value.trim()})}catch(err){alert(err.message)}};
+document.addEventListener('DOMContentLoaded',()=>{const u=ShareBox.currentUser()||{};const av=document.querySelector('.big-avatar');const cover=document.querySelector('.cover');if(u.profilePhoto&&av){av.style.background=`url("${u.profilePhoto}") center/cover`;if(av.firstChild)av.firstChild.nodeValue=''}if(u.coverPhoto&&cover)cover.style.background=`url("${u.coverPhoto}") center/cover`;const bio=document.querySelector('.profile-name p');if(bio&&u.bio)bio.textContent=u.bio});
+</script>
+</body>
 </html>

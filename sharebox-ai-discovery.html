@@ -495,7 +495,7 @@ button{font-family:inherit}
   <!-- ============ 4 · NEED BOARD ============ -->
   <div class="section-row" id="needboard" style="scroll-margin-top:calc(var(--topbar-h) + var(--s-6))">
     <h2>Need Board</h2>
-    <button class="btn btn-primary btn-sm" onclick="toast('Post-a-need composer opens here — it lives in the Upload flow too')">
+    <button class="btn btn-primary btn-sm" onclick="openNeedComposer()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Post a need
     </button>
     <span class="sub">Someone on campus needs what&rsquo;s sitting in your room. The AI pings owners of matching items automatically.</span>
@@ -862,7 +862,7 @@ function renderResults(){
       '<p class="rt">'+it.t+'</p>' +
       '<p class="rm">'+it.o+' <span class="badge badge-green">'+shield+'Trust '+it.tr+'</span> \u00B7 '+it.dist+' m ' + (it.avail?'<span class="badge badge-green">Available</span>':'<span class="badge badge-amber">Booked</span>') + '</p>' +
       '<div class="rp"><span>'+(it.free ? 'Donation \uD83D\uDC9A' : '\u09F3'+it.p+'/day \u00B7 dep \u09F3'+it.d)+'</span><a class="btn-tertiary" href="sharebox-item-details.html">View</a></div>' +
-    '</div>').join('') || '<div class="glass empty"><span class="ei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8.5 11h5"/></svg></span><h3>Nothing matches yet</h3><p>Try loosening a filter, or post it on the Need Board and let the AI hunt for a match while you wait.</p><button class="btn btn-secondary btn-sm" onclick="toast(\u0027Post-a-need composer opens here\u0027)">Post a need instead</button></div>';
+    '</div>').join('') || '<div class="glass empty"><span class="ei"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/><path d="M8.5 11h5"/></svg></span><h3>Nothing matches yet</h3><p>Try loosening a filter, or post it on the Need Board and let the AI hunt for a match while you wait.</p><button class="btn btn-secondary btn-sm" onclick="openNeedComposer()">Post a need instead</button></div>';
 }
 function onQuery(){
   const q = document.getElementById('q').value.trim().toLowerCase();
@@ -1136,5 +1136,26 @@ function presentExit(){
 </script>
 <script src="api-config.js"></script>
 <script src="app-core.js"></script>
+
+<style>
+#sbNeedModal{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:99999;display:none;place-items:center;padding:18px}
+#sbNeedModal.open{display:grid}#sbNeedModal .box{width:min(560px,100%);background:var(--bg,#fff);border-radius:22px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+#sbNeedModal input,#sbNeedModal textarea,#sbNeedModal select{width:100%;padding:11px 12px;margin:6px 0 11px;border:1px solid rgba(0,0,0,.12);border-radius:12px;font:inherit}
+#sbNeedModal textarea{min-height:90px}.sb-need-actions{display:flex;gap:8px;justify-content:flex-end}.sb-db-need{position:relative}.sb-delete-need{position:absolute;right:12px;bottom:12px}
+</style>
+<div id="sbNeedModal"><form class="box" id="sbNeedForm"><h2 style="margin-top:0">Post a need</h2><label>What do you need?</label><input id="sbNeedTitle" required placeholder="Scientific calculator for tomorrow's exam"><label>Description</label><textarea id="sbNeedDesc" placeholder="Add size, model or other details"></textarea><label>Category</label><select id="sbNeedCat"><option>Stationery</option><option>Electronics</option><option>Books</option><option>Dress</option><option>Other</option></select><label>Urgency</label><input id="sbNeedUrgency" placeholder="By tomorrow 8 AM"><label>Reward (optional)</label><input id="sbNeedReward" placeholder="৳50 or coffee"><label>Return time</label><input id="sbNeedReturn" placeholder="Tomorrow 2 PM"><div class="sb-need-actions"><button type="button" class="btn btn-secondary" onclick="closeNeedComposer()">Cancel</button><button class="btn btn-primary">Post need</button></div></form></div>
+<script>
+function openNeedComposer(){document.getElementById('sbNeedModal').classList.add('open')}
+function closeNeedComposer(){document.getElementById('sbNeedModal').classList.remove('open')}
+async function loadDatabaseNeeds(){
+ const grid=document.querySelector('.need-grid');if(!grid)return;
+ try{const out=await ShareBox.api('/api/needs');const me=ShareBox.currentUser();const needs=out.needs||[];
+ grid.innerHTML=needs.length?needs.map(n=>`<article class="glass need-card sb-db-need"><div class="need-avatar">${ShareBox.initials(n.userName)}</div><div class="need-body"><h3>Need: ${ShareBox.escapeHtml(n.title)}</h3><p>${ShareBox.escapeHtml(n.userName)} · ${ShareBox.escapeHtml(n.category)}</p><div class="need-tags">${n.urgency?`<span class="badge badge-amber">${ShareBox.escapeHtml(n.urgency)}</span>`:''}${n.reward?`<span class="badge badge-green">Reward: ${ShareBox.escapeHtml(n.reward)}</span>`:''}${n.returnTime?`<span class="badge">Returns: ${ShareBox.escapeHtml(n.returnTime)}</span>`:''}</div>${n.description?`<p style="margin-top:8px">${ShareBox.escapeHtml(n.description)}</p>`:''}</div><button class="btn btn-primary btn-sm" onclick="location.href='sharebox-messages.html'">Help</button>${me&&n.userId===me.id?`<button class="btn-tertiary sb-delete-need" onclick="deleteNeed('${n.id}')">Delete</button>`:''}</article>`).join(''):'<div class="glass empty"><h3>No open needs yet</h3><p>Post the first need for your campus.</p></div>';
+ }catch(e){console.warn('Needs:',e.message)}
+}
+async function deleteNeed(id){if(!confirm('Delete this need?'))return;try{await ShareBox.api('/api/needs/'+id,{method:'DELETE'});loadDatabaseNeeds()}catch(e){alert(e.message)}}
+document.getElementById('sbNeedForm').addEventListener('submit',async e=>{e.preventDefault();try{await ShareBox.api('/api/needs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:sbNeedTitle.value.trim(),description:sbNeedDesc.value.trim(),category:sbNeedCat.value,urgency:sbNeedUrgency.value.trim(),reward:sbNeedReward.value.trim(),returnTime:sbNeedReturn.value.trim()})});e.target.reset();closeNeedComposer();loadDatabaseNeeds();toast('Your need is now live')}catch(err){toast(err.message,true)}});
+document.addEventListener('DOMContentLoaded',loadDatabaseNeeds);
+</script>
 </body>
 </html>
