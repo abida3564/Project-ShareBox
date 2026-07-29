@@ -12,7 +12,7 @@ function currentUser(){const s=session();if(!s)return null;if(s.user)return s.us
 function addNotification(text,userId){const d=db();d.notifications.unshift({id:crypto.randomUUID(),text,userId:userId||null,createdAt:new Date().toISOString(),read:false});d.notifications=d.notifications.slice(0,50);save(d)}
 function money(v){return '৳'+Number(v||0).toLocaleString('en-US')}
 async function api(path,options={}){if(!API||API.includes('YOUR-RENDER-SERVICE'))throw new Error('Backend URL is not configured in api-config.js');const s=session();const headers={...(options.headers||{})};if(s?.token)headers.Authorization='Bearer '+s.token;const r=await fetch(API+path,{...options,headers});let data={};try{data=await r.json()}catch(e){}if(!r.ok)throw new Error(data.message||'Request failed');return data}
-window.ShareBox={db,save,session,setSession,currentUser,initials,addNotification,money,api,API};
+window.ShareBox={db,save,session,setSession,currentUser,initials,addNotification,money,api,API,escapeHtml};
 
 const path=location.pathname.split('/').pop()||'index.html';
 const publicPages=['index.html','sharebox-auth.html'];

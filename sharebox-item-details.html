@@ -1270,5 +1270,7 @@ function presentExit(){
 </script>
 <script src="api-config.js"></script>
 <script src="app-core.js"></script>
-</body>
+<script>
+document.addEventListener('DOMContentLoaded',async()=>{const id=new URLSearchParams(location.search).get('id');if(!id)return;try{const out=await ShareBox.api('/api/products/'+encodeURIComponent(id)),p=out.product;document.title=(p.name||'Resource')+' — ShareBox';const h=document.querySelector('h1');if(h)h.textContent=p.name||'Resource';document.querySelectorAll('.owner-name,[data-owner-name]').forEach(x=>x.textContent=p.ownerName||'Campus member');const desc=document.querySelector('.description p,.item-description p');if(desc)desc.textContent=p.description||desc.textContent}catch(e){console.warn(e.message)}});
+</script></body>
 </html>

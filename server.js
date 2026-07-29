@@ -75,6 +75,31 @@ function auth(req, res, next) {
   }
 }
 
+
+function signAdminToken(adminId) {
+  return jwt.sign({ adminId, role: 'admin' }, JWT_SECRET, { expiresIn: '12h' });
+}
+
+function adminAuth(req, res, next) {
+  const raw = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  if (raw) {
+    try {
+      const decoded = jwt.verify(raw, JWT_SECRET);
+      if (decoded.role === 'admin' && decoded.adminId) {
+        req.admin = decoded;
+        return next();
+      }
+    } catch (_error) {}
+  }
+
+  // Backward-compatible emergency access using Render ADMIN_KEY.
+  if (process.env.ADMIN_KEY && req.headers['x-admin-key'] === process.env.ADMIN_KEY) {
+    req.admin = { role: 'admin', legacyKey: true };
+    return next();
+  }
+  return res.status(401).json({ message: 'Admin login required.' });
+}
+
 async function initializeDatabase() {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
@@ -99,8 +124,24 @@ async function initializeDatabase() {
       owner_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       owner_name TEXT NOT NULL,
       data JSONB NOT NULL DEFAULT '{}'::jsonb,
+      status TEXT NOT NULL DEFAULT 'approved',
+      views INTEGER NOT NULL DEFAULT 0,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+
+    CREATE TABLE IF NOT EXISTS admins (
+      id UUID PRIMARY KEY,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      active BOOLEAN NOT NULL DEFAULT TRUE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'approved';
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS views INTEGER NOT NULL DEFAULT 0;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
     CREATE TABLE IF NOT EXISTS notifications (
       id UUID PRIMARY KEY,
@@ -112,7 +153,32 @@ async function initializeDatabase() {
 
     CREATE INDEX IF NOT EXISTS products_created_at_idx ON products(created_at DESC);
     CREATE INDEX IF NOT EXISTS notifications_user_id_idx ON notifications(user_id, created_at DESC);
+    CREATE INDEX IF NOT EXISTS products_owner_id_idx ON products(owner_id, created_at DESC);
+    CREATE INDEX IF NOT EXISTS products_status_idx ON products(status, created_at DESC);
   `);
+
+  // Product approval is not required: publish all existing records immediately.
+  await pool.query("UPDATE products SET status = 'approved', updated_at = NOW() WHERE status <> 'approved'");
+
+  // Create/update the first database-backed admin account.
+  // Login email defaults to admin@sharebox.local and password defaults to ADMIN_KEY.
+  const adminEmail = String(process.env.ADMIN_EMAIL || 'admin@sharebox.local').trim().toLowerCase();
+  const adminPassword = String(process.env.ADMIN_PASSWORD || process.env.ADMIN_KEY || '');
+  if (adminPassword) {
+    const existing = await pool.query('SELECT id FROM admins WHERE email = $1 LIMIT 1', [adminEmail]);
+    const hash = await bcrypt.hash(adminPassword, 10);
+    if (existing.rowCount) {
+      await pool.query('UPDATE admins SET password_hash = $1, active = TRUE WHERE email = $2', [hash, adminEmail]);
+    } else {
+      await pool.query(
+        'INSERT INTO admins (id, name, email, password_hash) VALUES ($1,$2,$3,$4)',
+        [crypto.randomUUID(), 'ShareBox Administrator', adminEmail, hash],
+      );
+    }
+    console.log(`Database admin ready: ${adminEmail}`);
+  } else {
+    console.warn('ADMIN_PASSWORD or ADMIN_KEY is missing; database admin login was not seeded.');
+  }
 }
 
 app.use((req, _res, next) => {
@@ -222,16 +288,29 @@ app.get('/api/auth/me', auth, async (req, res) => {
   }
 });
 
-app.get('/api/products', async (_req, res) => {
+app.get('/api/products', async (req, res) => {
   try {
-    const result = await pool.query('SELECT id, owner_id, owner_name, data, created_at FROM products ORDER BY created_at DESC');
-    const products = result.rows.map((row) => ({
+    const q = String(req.query.q || '').trim().toLowerCase();
+    const category = String(req.query.category || '').trim().toLowerCase();
+    const result = await pool.query(
+      `SELECT id, owner_id, owner_name, data, status, views, updated_at, created_at
+       FROM products
+       ORDER BY created_at DESC`,
+    );
+    let products = result.rows.map((row) => ({
       ...row.data,
       id: row.id,
       ownerId: row.owner_id,
       ownerName: row.owner_name,
+      status: row.status,
+      views: row.views,
+      updatedAt: row.updated_at,
       createdAt: row.created_at,
     }));
+    if (q) products = products.filter((p) =>
+      [p.name, p.category, p.subcategory, p.description, p.ownerName, ...(p.tags || [])]
+        .join(' ').toLowerCase().includes(q));
+    if (category) products = products.filter((p) => String(p.category || '').toLowerCase() === category);
     return res.json({ products });
   } catch (error) {
     console.error(error);
@@ -253,9 +332,9 @@ app.post('/api/products', auth, async (req, res) => {
     delete cleanData.createdAt;
 
     const result = await pool.query(
-      `INSERT INTO products (id, owner_id, owner_name, data)
-       VALUES ($1, $2, $3, $4::jsonb)
-       RETURNING id, owner_id, owner_name, data, created_at`,
+      `INSERT INTO products (id, owner_id, owner_name, data, status)
+       VALUES ($1, $2, $3, $4::jsonb, 'approved')
+       RETURNING id, owner_id, owner_name, data, status, views, updated_at, created_at`,
       [id, owner.id, owner.name, JSON.stringify(cleanData)],
     );
     const row = result.rows[0];
@@ -264,6 +343,9 @@ app.post('/api/products', auth, async (req, res) => {
       id: row.id,
       ownerId: row.owner_id,
       ownerName: row.owner_name,
+      status: row.status,
+      views: row.views,
+      updatedAt: row.updated_at,
       createdAt: row.created_at,
     };
     return res.status(201).json({ product });
@@ -276,7 +358,9 @@ app.post('/api/products', auth, async (req, res) => {
 app.get('/api/products/:id', async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, owner_id, owner_name, data, created_at FROM products WHERE id = $1 LIMIT 1',
+      `UPDATE products SET views = views + 1
+       WHERE id = $1
+       RETURNING id, owner_id, owner_name, data, status, views, updated_at, created_at`,
       [req.params.id],
     );
     if (!result.rowCount) return res.status(404).json({ message: 'Product not found.' });
@@ -287,12 +371,93 @@ app.get('/api/products/:id', async (req, res) => {
         id: row.id,
         ownerId: row.owner_id,
         ownerName: row.owner_name,
+        status: row.status,
+        views: row.views,
+        updatedAt: row.updated_at,
         createdAt: row.created_at,
       },
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Could not load product.' });
+  }
+});
+
+
+app.get('/api/my/products', auth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, owner_id, owner_name, data, status, views, updated_at, created_at
+       FROM products WHERE owner_id = $1 ORDER BY created_at DESC`,
+      [req.user.userId],
+    );
+    const products = result.rows.map((row) => ({
+      ...row.data, id: row.id, ownerId: row.owner_id, ownerName: row.owner_name,
+      status: row.status, views: row.views, updatedAt: row.updated_at, createdAt: row.created_at,
+    }));
+    return res.json({ products });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not load your resources.' });
+  }
+});
+
+app.get('/api/my/stats', auth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT COUNT(*)::int AS total_items,
+              COUNT(*)::int AS active_listings,
+              COALESCE(SUM(views), 0)::int AS total_views
+       FROM products WHERE owner_id = $1`,
+      [req.user.userId],
+    );
+    return res.json({
+      stats: {
+        totalItems: result.rows[0].total_items,
+        activeListings: result.rows[0].active_listings,
+        totalViews: result.rows[0].total_views,
+        itemsLent: result.rows[0].active_listings,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not load statistics.' });
+  }
+});
+
+app.patch('/api/my/products/:id', auth, async (req, res) => {
+  try {
+    const cleanData = { ...req.body };
+    ['id','ownerId','ownerName','status','views','createdAt','updatedAt'].forEach((key) => delete cleanData[key]);
+    const result = await pool.query(
+      `UPDATE products SET data = data || $1::jsonb, updated_at = NOW()
+       WHERE id = $2 AND owner_id = $3
+       RETURNING id, owner_id, owner_name, data, status, views, updated_at, created_at`,
+      [JSON.stringify(cleanData), req.params.id, req.user.userId],
+    );
+    if (!result.rowCount) return res.status(404).json({ message: 'Resource not found.' });
+    const row = result.rows[0];
+    return res.json({ product: {
+      ...row.data, id: row.id, ownerId: row.owner_id, ownerName: row.owner_name,
+      status: row.status, views: row.views, updatedAt: row.updated_at, createdAt: row.created_at,
+    }});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not update resource.' });
+  }
+});
+
+app.delete('/api/my/products/:id', auth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'DELETE FROM products WHERE id = $1 AND owner_id = $2 RETURNING id',
+      [req.params.id, req.user.userId],
+    );
+    if (!result.rowCount) return res.status(404).json({ message: 'Resource not found.' });
+    return res.json({ success: true, id: result.rows[0].id });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not delete resource.' });
   }
 });
 
@@ -319,11 +484,34 @@ app.get('/api/notifications', auth, async (req, res) => {
   }
 });
 
-// Optional, secure admin summary. Set ADMIN_KEY in Render and send it as x-admin-key.
-app.get('/api/admin/users', async (req, res) => {
-  if (!process.env.ADMIN_KEY || req.headers['x-admin-key'] !== process.env.ADMIN_KEY) {
-    return res.status(401).json({ message: 'Unauthorized.' });
+// Database-backed admin authentication and management.
+app.post('/api/admin/login', async (req, res) => {
+  try {
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    const password = String(req.body?.password || '');
+    const result = await pool.query('SELECT * FROM admins WHERE email = $1 AND active = TRUE LIMIT 1', [email]);
+    const admin = result.rows[0];
+    if (!admin || !(await bcrypt.compare(password, admin.password_hash))) {
+      return res.status(401).json({ message: 'Incorrect admin email or password.' });
+    }
+    return res.json({
+      token: signAdminToken(admin.id),
+      admin: { id: admin.id, name: admin.name, email: admin.email },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Admin login failed.' });
   }
+});
+
+app.get('/api/admin/me', adminAuth, async (req, res) => {
+  if (req.admin.legacyKey) return res.json({ admin: { name: 'Legacy Administrator', email: 'ADMIN_KEY' } });
+  const result = await pool.query('SELECT id, name, email FROM admins WHERE id = $1 AND active = TRUE LIMIT 1', [req.admin.adminId]);
+  if (!result.rowCount) return res.status(401).json({ message: 'Admin account is unavailable.' });
+  return res.json({ admin: result.rows[0] });
+});
+
+app.get('/api/admin/users', adminAuth, async (_req, res) => {
   try {
     const result = await pool.query(
       `SELECT id, name, email, department, academic_year, student_id,
@@ -337,22 +525,15 @@ app.get('/api/admin/users', async (req, res) => {
   }
 });
 
-
-app.get('/api/admin/products', async (req, res) => {
-  if (!process.env.ADMIN_KEY || req.headers['x-admin-key'] !== process.env.ADMIN_KEY) {
-    return res.status(401).json({ message: 'Unauthorized.' });
-  }
+app.get('/api/admin/products', adminAuth, async (_req, res) => {
   try {
     const result = await pool.query(
-      `SELECT id, owner_id, owner_name, data, created_at
+      `SELECT id, owner_id, owner_name, data, status, views, updated_at, created_at
        FROM products ORDER BY created_at DESC`,
     );
     const products = result.rows.map((row) => ({
-      ...row.data,
-      id: row.id,
-      ownerId: row.owner_id,
-      ownerName: row.owner_name,
-      createdAt: row.created_at,
+      ...row.data, id: row.id, ownerId: row.owner_id, ownerName: row.owner_name,
+      status: row.status, views: row.views, updatedAt: row.updated_at, createdAt: row.created_at,
     }));
     return res.json({ count: result.rowCount, products });
   } catch (error) {
@@ -361,18 +542,14 @@ app.get('/api/admin/products', async (req, res) => {
   }
 });
 
-app.patch('/api/admin/users/:id/verification', async (req, res) => {
-  if (!process.env.ADMIN_KEY || req.headers['x-admin-key'] !== process.env.ADMIN_KEY) {
-    return res.status(401).json({ message: 'Unauthorized.' });
-  }
+app.patch('/api/admin/users/:id/verification', adminAuth, async (req, res) => {
   const status = String(req.body?.status || '').toLowerCase();
   if (!['pending', 'approved', 'rejected'].includes(status)) {
     return res.status(400).json({ message: 'Invalid verification status.' });
   }
   try {
     const result = await pool.query(
-      `UPDATE users
-       SET id_verification_status = $1, verified = $2
+      `UPDATE users SET id_verification_status = $1, verified = $2
        WHERE id = $3
        RETURNING id, name, email, department, academic_year, student_id,
                  id_card_file_name, id_verification_status, verified, created_at`,
@@ -383,6 +560,17 @@ app.patch('/api/admin/users/:id/verification', async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Could not update verification.' });
+  }
+});
+
+app.delete('/api/admin/products/:id', adminAuth, async (req, res) => {
+  try {
+    const result = await pool.query('DELETE FROM products WHERE id = $1 RETURNING id', [req.params.id]);
+    if (!result.rowCount) return res.status(404).json({ message: 'Product not found.' });
+    return res.json({ success: true, id: result.rows[0].id });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Could not delete product.' });
   }
 });
 

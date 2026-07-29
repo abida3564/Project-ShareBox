@@ -74,3 +74,16 @@ Student ID card images are stored privately as PostgreSQL `BYTEA` data. They are
 ## Admin dashboard
 
 After deployment, open `sharebox-admin.html` from the GitHub Pages site. Enter the same `ADMIN_KEY` configured in Render. The key is stored only in the current browser tab (`sessionStorage`). The dashboard shows users, products/resources, search, and verification controls.
+
+
+## Database-backed admin login
+Set Render environment variables:
+
+- `ADMIN_EMAIL=admin@sharebox.local`
+- `ADMIN_PASSWORD=<a strong private password>`
+
+If `ADMIN_PASSWORD` is omitted, the existing `ADMIN_KEY` is used as the first admin password. The admin account is stored in PostgreSQL table `admins` and logs in at `sharebox-admin.html`.
+
+
+## Product publishing rule
+Products are published immediately after upload. No admin approval is required. An authenticated admin can delete inappropriate products from the admin dashboard.
