@@ -23,20 +23,13 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
-const allowedOrigins = (process.env.FRONTEND_URL || 'https://keyacse.github.io')
-  .split(',')
-  .map((value) => value.trim().replace(/\/$/, ''))
-  .filter(Boolean);
-
 app.use(cors({
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
-      return callback(null, true);
-    }
-    return callback(new Error(`CORS blocked origin: ${origin}`));
-  },
-  credentials: false,
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-admin-key']
 }));
+
+app.options('*', cors());
 app.use(express.json({ limit: '30mb' }));
 app.use(express.urlencoded({ extended: true, limit: '30mb' }));
 
