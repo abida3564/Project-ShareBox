@@ -1,16 +1,18 @@
 (function(){
 'use strict';
 const DBKEY='sharebox_db_v3', SESSION='sharebox_session_v3';
+const API=(window.SHAREBOX_API_URL||'').replace(/\/$/,'');
 const seed={users:[],products:[],notifications:[]};
 function db(){try{return Object.assign({},seed,JSON.parse(localStorage.getItem(DBKEY)||'{}'));}catch(e){return structuredClone(seed)}}
 function save(x){localStorage.setItem(DBKEY,JSON.stringify(x)); localStorage.setItem('sharebox_sync',String(Date.now())); try{new BroadcastChannel('sharebox-live').postMessage({type:'sync'});}catch(e){}}
 function session(){try{return JSON.parse(localStorage.getItem(SESSION)||'null')}catch(e){return null}}
 function setSession(v){v?localStorage.setItem(SESSION,JSON.stringify(v)):localStorage.removeItem(SESSION)}
 function initials(n){return (n||'User').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()}
-function currentUser(){const s=session(),d=db();return s&&d.users.find(u=>u.id===s.userId)}
+function currentUser(){const s=session();if(!s)return null;if(s.user)return s.user;const d=db();return d.users.find(u=>u.id===s.userId)||null}
 function addNotification(text,userId){const d=db();d.notifications.unshift({id:crypto.randomUUID(),text,userId:userId||null,createdAt:new Date().toISOString(),read:false});d.notifications=d.notifications.slice(0,50);save(d)}
 function money(v){return '৳'+Number(v||0).toLocaleString('en-US')}
-window.ShareBox={db,save,session,setSession,currentUser,initials,addNotification,money};
+async function api(path,options={}){if(!API||API.includes('YOUR-RENDER-SERVICE'))throw new Error('Backend URL is not configured in api-config.js');const s=session();const headers={...(options.headers||{})};if(s?.token)headers.Authorization='Bearer '+s.token;const r=await fetch(API+path,{...options,headers});let data={};try{data=await r.json()}catch(e){}if(!r.ok)throw new Error(data.message||'Request failed');return data}
+window.ShareBox={db,save,session,setSession,currentUser,initials,addNotification,money,api,API};
 
 const path=location.pathname.split('/').pop()||'index.html';
 const publicPages=['index.html','sharebox-auth.html'];
@@ -43,5 +45,5 @@ function renderProducts(){const grid=document.getElementById('sb-product-grid');
 function priceLine(p){if(p.type==='donate')return 'Free donation';if(p.type==='sell')return money(p.sellPrice);if(p.type==='borrow')return 'Borrow · deposit '+money(p.deposit);return [p.perHour&&money(p.perHour)+'/hour',p.perDay&&money(p.perDay)+'/day',p.perWeek&&money(p.perWeek)+'/week'].filter(Boolean).join(' · ')}
 window.addEventListener('storage',()=>{renderProducts();applyUser()});try{const c=new BroadcastChannel('sharebox-live');c.onmessage=()=>{renderProducts();applyUser()}}catch(e){}
 
-document.addEventListener('DOMContentLoaded',()=>{replaceLogo();applyUser();addTopActions();addLogout();addRealtimeProducts()});
+document.addEventListener('DOMContentLoaded',async()=>{replaceLogo();applyUser();addTopActions();addLogout();addRealtimeProducts();try{if(API&&!API.includes('YOUR-RENDER-SERVICE')){const out=await api('/api/products');const d=db();d.products=out.products||[];save(d);renderProducts();}}catch(e){console.warn('Backend sync:',e.message)}});
 })();

@@ -1064,6 +1064,7 @@ function aiCats(){
   toast('✨ Also fits: Lab Equipment → Measurement. Cross-listing arrives in a later phase');
 }
 </script>
+<script src="api-config.js"></script>
 <script src="app-core.js"></script>
 <style>.pthumb img{width:100%;height:100%;object-fit:cover}.sb-camera-modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:10000;display:grid;place-items:center;padding:20px}.sb-camera-box{width:min(680px,100%);background:#111;border-radius:20px;padding:16px}.sb-camera-box video{width:100%;border-radius:14px;max-height:70vh}.sb-camera-actions{display:flex;gap:10px;margin-top:12px}.sb-camera-actions button{flex:1}</style>
 <script>
@@ -1078,7 +1079,7 @@ const oldPreview=window.buildPreview;window.buildPreview=function(){oldPreview()
 window.publish=function(){
  const u=ShareBox.currentUser();if(!u){location.href='sharebox-auth.html?next=sharebox-upload-wizard.html';return}
  const d=ShareBox.db(),type=listType||'borrow';const item={id:crypto.randomUUID(),ownerId:u.id,ownerName:u.name,name:document.getElementById('f-name').value.trim(),category:chosenCategory(),subcategory:chosenSubcategory(),location:chosenLocation(),description:document.getElementById('f-desc').value,condition:document.getElementById('f-cond').value,contact:document.getElementById('f-contact').value.trim(),damageCost:Number(document.getElementById('f-damage').value||0),negotiable:document.getElementById('f-neg').value==='yes',type,photos:[...photos],createdAt:new Date().toISOString(),deposit:Number((type==='rent'?document.getElementById('p-rdep'):document.getElementById('p-bdep'))?.value||0),perHour:Number(document.getElementById('p-rhour')?.value||0),perDay:Number(document.getElementById('p-rday')?.value||0),perWeek:Number(document.getElementById('p-rweek')?.value||0),sellPrice:Number(document.getElementById('p-sprice')?.value||0)};
- if(!item.name||!item.contact){toast('Item name and contact number are required');return} d.products.unshift(item);ShareBox.save(d);ShareBox.addNotification(item.name+' was published in real time',u.id);
+ if(!item.name||!item.contact){toast('Item name and contact number are required');return} ShareBox.api('/api/products',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(item)}).then(out=>{d.products.unshift(out.product);ShareBox.save(d);ShareBox.addNotification(item.name+' was published in real time',u.id);}).catch(err=>toast(err.message||'Could not publish item'));
  current=7;maxReached=7;document.querySelectorAll('.step').forEach(x=>x.classList.toggle('active',x.dataset.step==='7'));buildRail();window.scrollTo({top:0});chime();confetti(110);countUp('rReach',340);countUp('rDays',5);countUp('rTrust',3);
 };
 })();

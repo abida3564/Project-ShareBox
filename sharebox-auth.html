@@ -689,6 +689,7 @@ function doReset(e){
   return false;
 }
 </script>
+<script src="api-config.js"></script>
 <script src="app-core.js"></script>
 <script>
 function previewStudentIdCard(input){
@@ -724,12 +725,6 @@ function compressIdCard(file){
 </script>
 <script>
 (function(){
-function encodePassword(pass){
-  return btoa(unescape(encodeURIComponent(pass)));
-}
-function decodePassword(value){
-  try{return decodeURIComponent(escape(atob(value)));}catch(e){return '';}
-}
 window.doRegister=async function(e){
   e.preventDefault();
   const name=document.getElementById('reg-name').value.trim();
@@ -737,58 +732,37 @@ window.doRegister=async function(e){
   const department=document.getElementById('reg-dept').value;
   const academicYear=document.getElementById('reg-year').value;
   const studentId=document.getElementById('reg-student-id').value.trim();
-  const idCardInput=document.getElementById('reg-id-card');
-  const idCardFile=idCardInput.files && idCardInput.files[0];
+  const idCardFile=document.getElementById('reg-id-card').files?.[0];
   const pass=document.getElementById('reg-pass').value;
   const confirm=document.getElementById('reg-confirm').value;
-  const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const idOk=studentId.length>=3;
-  const photoOk=!!idCardFile && ['image/jpeg','image/png','image/webp'].includes(idCardFile.type) && idCardFile.size<=8*1024*1024;
-  markInvalid('f-reg-email',!emailOk);
-  markInvalid('f-reg-student-id',!idOk);
-  markInvalid('f-reg-id-card',!photoOk);
-  markInvalid('f-reg-confirm',pass!==confirm||pass.length<6);
-  if(!name){toast('Enter the name you want shown on your profile',true);return false;}
-  if(!emailOk){toast('Enter a valid education or personal email',true);return false;}
-  if(!idOk){toast('Enter your Student ID',true);return false;}
-  if(!photoOk){toast('Upload a JPG, PNG or WebP ID card photo under 8 MB',true);return false;}
+  if(!name||!email||!studentId||!idCardFile){toast('Complete all required fields and upload your ID card',true);return false;}
   if(pass!==confirm||pass.length<6){toast('Passwords must match and contain at least 6 characters',true);return false;}
   if(!document.getElementById('terms').checked){toast('Please agree to the Terms',true);return false;}
-  const d=ShareBox.db();
-  if(d.users.some(u=>u.email===email)){toast('An account already exists with this email',true);return false;}
-  if(d.users.some(u=>(u.studentId||'').toLowerCase()===studentId.toLowerCase())){toast('This Student ID is already registered',true);return false;}
   loadingState('registerBtn',true,'Creating account…');
   try{
-    const idCardImage=await compressIdCard(idCardFile);
-    const user={
-      id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),
-      name,email,password:encodePassword(pass),department,academicYear,studentId,
-      idCardImage,idCardFileName:idCardFile.name,idVerificationStatus:'pending',
-      verified:false,phone:'',createdAt:new Date().toISOString()
-    };
-    d.users.push(user);
-    ShareBox.save(d);
-    ShareBox.setSession({userId:user.id});
-    ShareBox.addNotification('Welcome to ShareBox, '+user.name+'! Your Student ID verification is pending.',user.id);
+    const fd=new FormData();
+    Object.entries({name,email,password:pass,department,academicYear,studentId}).forEach(([k,v])=>fd.append(k,v));
+    fd.append('idCard',idCardFile);
+    const out=await ShareBox.api('/api/auth/register',{method:'POST',body:fd});
+    ShareBox.setSession({userId:out.user.id,user:out.user,token:out.token});
+    const d=ShareBox.db();d.users=[out.user];ShareBox.save(d);
     toast('Account created and ID card submitted');
     setTimeout(()=>location.href='sharebox-dashboard-glass.html',350);
-  }catch(err){
-    loadingState('registerBtn',false);
-    toast(err.message||'Could not save the ID card photo',true);
-  }
+  }catch(err){loadingState('registerBtn',false);toast(err.message||'Registration failed',true);}
   return false;
 };
-window.doLogin=function(e){
+window.doLogin=async function(e){
   e.preventDefault();
   const email=document.getElementById('login-email').value.trim().toLowerCase();
-  const pass=document.getElementById('login-pass').value;
-  const d=ShareBox.db();
-  const u=d.users.find(x=>x.email===email);
-  if(!u||decodePassword(u.password)!==pass){toast('Incorrect email or password',true);return false;}
-  ShareBox.setSession({userId:u.id});
-  ShareBox.addNotification('Signed in successfully',u.id);
-  const next=new URLSearchParams(location.search).get('next')||'sharebox-dashboard-glass.html';
-  location.href=next;
+  const password=document.getElementById('login-pass').value;
+  loadingState('loginBtn',true,'Signing in…');
+  try{
+    const out=await ShareBox.api('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    ShareBox.setSession({userId:out.user.id,user:out.user,token:out.token});
+    const d=ShareBox.db();d.users=[out.user];ShareBox.save(d);
+    const next=new URLSearchParams(location.search).get('next')||'sharebox-dashboard-glass.html';
+    location.href=next;
+  }catch(err){loadingState('loginBtn',false);toast(err.message||'Login failed',true);}
   return false;
 };
 })();
